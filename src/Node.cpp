@@ -1,4 +1,24 @@
 #include "Node.hpp"
+#include <glm/gtc/type_ptr.hpp>
+
+static Node* Node::build(const aiScene* scene, const aiNode* node, Node* parent) {
+    glm::mat4 transform = glm::make_mat4(&aiNode->mTransformation.a1); //TODO: see it working
+    std::vector<Node*> children = std::vector<Node*>(node->mNumChildren);
+    std::vector<Mesh*> meshes = std::vector<Mesh*>(node->mNumMeshes);
+    
+    Node* builtNode = new Node(node->mName.C_Str(), transform, parent, children, meshes);
+
+    for (int i = 0; i < children.size(); i++) {
+        builtNode->children[i] = build(scene, node->mChildren[i], builtNode);
+    }
+    for (int i = 0; i < meshes.size(); i++) {
+        //builtNode->meshes[i] = Mesh::build(scene, scene->mMeshes[node->mMesh]) //TODO
+    }
+}
+
+static Node* Node::build(const aiScene* scene, const aiNode* node) {
+    return build(scene, node, nullptr);
+}
 
 Node::Node(const std::string& name, const glm::mat4& transform, Node *parent, 
     const std::vector<Node*>& children, const std::vector<Mesh*>& meshes)

@@ -42,7 +42,7 @@ include_directories (src/
                      vendor/glfw/include/
                      vendor/glm/
                      vendor/stb/
-                     vendor/assimp/include)
+                     vendor/assimp/include/)
 
 #
 # Add files

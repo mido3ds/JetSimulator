@@ -1,6 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <assimp/scene.h>
 #include <vector>
 #include "Material.hpp"
 
@@ -13,6 +14,8 @@ private:
 
     Mesh & operator =(Mesh const &) = delete;
 public:
+    static Mesh* build(const aiScene* scene, const aiMesh* mesh);
+
     Mesh(std::vector<glm::vec3> *positions, 
         std::vector<glm::vec3> *normals, 
         std::vector<glm::vec3> *textCoords,

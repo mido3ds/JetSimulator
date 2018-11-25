@@ -1,5 +1,22 @@
 #include "Mesh.hpp"
+#include <cassert>
 using namespace std;
+
+static Mesh* Mesh::build(const aiScene* scene, const aiMesh* mesh) {
+    assert(scene->HasFaces() && scene->HasNormals() && scene->HasPositions() && scene->HasTextureCoords());
+
+    std::vector<glm::vec3> *positions = new std::vector<glm::vec3>(mesh->mNumVertices), 
+                            *normals = new std::vector<glm::vec3>(mesh->mNumVertices), 
+                            *textCoords = new std::vector<glm::vec3>(mesh->mNumVertices);
+    std::vector<glm::ivec3> *indices = new std::vector<glm::ivec3>(mesh->mNumFaces);
+
+    aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
+
+    // for (int i = 0; i < positions->size(); i++) {
+    //     positions[i] = glm::make_vec3(mesh->mVertices[])
+    // }
+    return nullptr;//TODO
+}
 
 Mesh::Mesh(vector<glm::vec3> *positions, 
         vector<glm::vec3> *normals, 
