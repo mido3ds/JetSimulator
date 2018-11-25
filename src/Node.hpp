@@ -3,6 +3,7 @@
 #include <assimp/scene.h>
 #include <vector>
 #include <string>
+#include "Mesh.hpp"
 
 class Node {
 private:
@@ -14,14 +15,13 @@ public:
         const std::vector<Node*>& children, const std::vector<Mesh*>& meshes);
     ~Node();
 
-    glm::mat4 getTransform();
-    glm::mat4 getTotalTransform();
-    Node* getNodeByName(const std::string name);
+    glm::mat4 getTotalTransform() const;
+    Node* getNodeByName(const std::string& name);
     void draw();
 
     const std::string name;
     const Node *parent;
-    const std::vector<Node*> children;
-    const std::vector<Mesh*> meshes;
+    std::vector<Node*> children;
+    std::vector<Mesh*> meshes;
     glm::mat4 transform;
 };

@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "Mesh.hpp"
+#include "Texture.hpp"
+#include "Node.hpp"
 
 #define MODEL_NOT_LOADED "$notloaded$"
 

@@ -1,5 +1,6 @@
 #include "Texture.hpp"
 #include <glad/glad.h>
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 Texture::Texture(std::string *path, Type type) :path(path), type(type) {}
@@ -26,14 +27,15 @@ void Texture::load() {
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
 
+    delete path;
     path = 0;
 }
 
-bool Texture::isLoaded() {
+bool Texture::isLoaded() const {
     return texId;
 }
 
-void Texture::bind() {
+void Texture::bind() const {
     glActiveTexture(GL_TEXTURE0+type);
     glBindTexture(GL_TEXTURE_2D, texId);
 }

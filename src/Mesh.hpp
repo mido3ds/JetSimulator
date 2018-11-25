@@ -14,13 +14,13 @@ private:
 
     Mesh & operator =(Mesh const &) = delete;
 public:
-    static Mesh* build(const aiScene* scene, const aiMesh* mesh);
+    static Mesh* build(aiMesh* mesh, const Material* material);
 
     Mesh(std::vector<glm::vec3> *positions, 
         std::vector<glm::vec3> *normals, 
         std::vector<glm::vec3> *textCoords,
         std::vector<glm::ivec3> *indices,
-        Material *material);
+        const Material *material);
     ~Mesh();
 
     void load();

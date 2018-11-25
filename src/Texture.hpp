@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <glad/glad.h>
 
 class Texture {
 public:
@@ -11,8 +12,8 @@ public:
     ~Texture();
 
     void load();
-    bool isLoaded();
-    void bind();
+    bool isLoaded() const;
+    void bind() const;
 
 private:
     std::string *path;

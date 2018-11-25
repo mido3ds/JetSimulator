@@ -37,7 +37,6 @@ add_subdirectory (vendor/assimp)
 # Set include paths
 #
 include_directories (src/
-                     common/
                      vendor/glad/include/
                      vendor/glfw/include/
                      vendor/glm/
@@ -54,12 +53,6 @@ file (GLOB_RECURSE PROJECT_SOURCES src/*.cpp
                                    src/*.cxx
                                    src/*.cc
                                    src/*.c)
-file (GLOB_RECURSE COMMON_HEADERS  common/*.hpp
-                                   common/*.h)
-file (GLOB_RECURSE COMMON_SOURCES  common/*.cpp
-                                   common/*.cxx
-                                   common/*.cc
-                                   common/*.c)
 file (GLOB         PROJECT_CONFIGS CMakeLists.txt)
 
 
@@ -76,7 +69,6 @@ source_group ("vendors" FILES ${VENDORS_SOURCES})
 add_definitions (-DGLFW_INCLUDE_NONE
                  -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
 add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
-                                ${COMMON_SOURCES} ${COMMON_HEADERS}
                                 ${PROJECT_CONFIGS} ${VENDORS_SOURCES})
 target_link_libraries (${PROJECT_NAME}
                        glfw

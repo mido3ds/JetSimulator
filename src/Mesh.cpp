@@ -1,31 +1,38 @@
 #include "Mesh.hpp"
 #include <cassert>
+#include <glm/gtc/type_ptr.hpp>
 using namespace std;
 
-static Mesh* Mesh::build(const aiScene* scene, const aiMesh* mesh) {
-    assert(scene->HasFaces() && scene->HasNormals() && scene->HasPositions() && scene->HasTextureCoords());
+Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
+    assert(mesh->HasFaces() && mesh->HasNormals() && mesh->HasPositions() && mesh->HasTextureCoords(0));
 
     std::vector<glm::vec3> *positions = new std::vector<glm::vec3>(mesh->mNumVertices), 
                             *normals = new std::vector<glm::vec3>(mesh->mNumVertices), 
                             *textCoords = new std::vector<glm::vec3>(mesh->mNumVertices);
     std::vector<glm::ivec3> *indices = new std::vector<glm::ivec3>(mesh->mNumFaces);
 
-    aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
+    for (int i = 0; i < positions->size(); i++) {
+        positions[0][i] = glm::make_vec3(&mesh->mVertices[i].x);
+        normals[0][i] = glm::make_vec3(&mesh->mNormals[i].x);
+        textCoords[0][i] = glm::make_vec3(&mesh->mTextureCoords[0][i].x);
+    }
 
-    // for (int i = 0; i < positions->size(); i++) {
-    //     positions[i] = glm::make_vec3(mesh->mVertices[])
-    // }
-    return nullptr;//TODO
+    for (int i = 0; i < indices->size(); i++) {
+        indices[0][i] = glm::ivec3(mesh->mFaces[i].mIndices[0], 
+            mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2]);
+    }
+
+    return new Mesh(positions, normals, textCoords, indices, material);
 }
 
 Mesh::Mesh(vector<glm::vec3> *positions, 
         vector<glm::vec3> *normals, 
         vector<glm::vec3> *textCoords,
         vector<glm::ivec3> *indices,
-        Material *material) 
+        const Material *material) 
     :positions(positions), normals(normals), 
     textCoords(textCoords), indices(indices), material(material) {
-    elementCount = indices.size();
+    elementCount = indices->size();
 }
 
 Mesh::~Mesh() {
@@ -72,7 +79,8 @@ void Mesh::load() {
     delete normals;
     delete textCoords;
     delete indices;
-    positions = normals = textCoords = indices = nullptr;
+    positions = normals = textCoords = nullptr;
+    indices = nullptr;
 }
 
 bool Mesh::isLoaded() {
