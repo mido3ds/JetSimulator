@@ -4,7 +4,7 @@
 using namespace std;
 
 Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
-    assert(mesh->HasFaces() && mesh->HasNormals() && mesh->HasPositions() && mesh->HasTextureCoords(0));
+    assert(mesh->HasFaces() && mesh->HasNormals() && mesh->HasPositions());
 
     std::vector<glm::vec3> *positions = new std::vector<glm::vec3>(mesh->mNumVertices), 
                             *normals = new std::vector<glm::vec3>(mesh->mNumVertices), 
@@ -14,7 +14,10 @@ Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
     for (int i = 0; i < positions->size(); i++) {
         positions[0][i] = glm::make_vec3(&mesh->mVertices[i].x);
         normals[0][i] = glm::make_vec3(&mesh->mNormals[i].x);
-        textCoords[0][i] = glm::make_vec3(&mesh->mTextureCoords[0][i].x);
+
+        if (mesh->HasTextureCoords(0)) {
+            textCoords[0][i] = glm::make_vec3(&mesh->mTextureCoords[0][i].x);
+        }
     }
 
     for (int i = 0; i < indices->size(); i++) {

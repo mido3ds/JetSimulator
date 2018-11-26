@@ -2,7 +2,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Node* Node::build(const aiScene* scene, const aiNode* node, Node* parent, std::vector<Mesh*>& allMeshes) {
-    glm::mat4 transform = glm::make_mat4(&node->mTransformation.a1); //TODO: see it working
+    glm::mat4 transform = glm::make_mat4(&node->mTransformation.a1);
     std::vector<Node*> children(node->mNumChildren);
 
     std::vector<Mesh*> meshes(node->mNumMeshes);

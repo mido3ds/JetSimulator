@@ -8,7 +8,7 @@ public:
         Diffuse, Specular
     };
 
-    Texture(std::string *path, Texture::Type type);
+    Texture(const std::string& path, Texture::Type type);
     ~Texture();
 
     void load();
@@ -16,7 +16,7 @@ public:
     void bind() const;
 
 private:
-    std::string *path;
+    std::string path;
     GLuint texId = 0;
     Type type;
 };

@@ -2,34 +2,48 @@
 #include <cassert>
 using std::string;
 
-Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture*>& textMap) {
+#define DEFUALT_DIFF_PATH "assets/defaults/diffuse.bmp"
+#define DEFAULT_SPC_PATH "assets/defaults/specular.bmp"
+#define DEFAULT_SHININESS 0 // TODO: what is best?
+
+Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture*>& textMap, const string& path) {
     float shininess;
-    aiString diffPath, specPath;
+    aiString ai_diffPath, ai_specPath;
+    string diffPath(path + "/"), specPath(path + "/");
     aiReturn ret;
 
-    ret = mat->GetTexture(aiTextureType_DIFFUSE, 0, &diffPath);
-    assert(ret == aiReturn_SUCCESS);//TODO: load default diffuse map image
-    ret = mat->GetTexture(aiTextureType_SPECULAR, 0, &specPath);
-    assert(ret == aiReturn_SUCCESS);
+    ret = mat->GetTexture(aiTextureType_DIFFUSE, 0, &ai_diffPath);
+    if (ret != aiReturn_SUCCESS)
+        diffPath = DEFUALT_DIFF_PATH;
+    else 
+        diffPath += ai_diffPath.C_Str();
+
+    ret = mat->GetTexture(aiTextureType_SPECULAR, 0, &ai_specPath);
+    if (ret != aiReturn_SUCCESS)
+        specPath = DEFAULT_SPC_PATH;
+    else
+        specPath += ai_specPath.C_Str();
+
     ret = aiGetMaterialFloat(mat, AI_MATKEY_SHININESS_STRENGTH, (ai_real*)&shininess);
-    if (ret != aiReturn_SUCCESS) shininess = DEFAULT_SHININESS;
+    if (ret != aiReturn_SUCCESS) 
+        shininess = DEFAULT_SHININESS;
 
     Texture* diff;
-    auto diffItr = textMap.find(diffPath.C_Str());
+    auto diffItr = textMap.find(diffPath);
     if (diffItr != textMap.end()) {
         diff = diffItr->second;
     } else {
-        diff = new Texture(new string(diffPath.C_Str()), Texture::Diffuse);
-        textMap[diffPath.C_Str()] = diff;
+        diff = new Texture(diffPath, Texture::Diffuse);
+        textMap[diffPath] = diff;
     }
 
     Texture* spec;
-    auto spcItr = textMap.find(specPath.C_Str());
+    auto spcItr = textMap.find(specPath);
     if (spcItr != textMap.end()) {
         spec = spcItr->second;
     } else {
-        spec = new Texture(new string(specPath.C_Str()), Texture::Specular);
-        textMap[diffPath.C_Str()] = spec;
+        spec = new Texture(specPath, Texture::Specular);
+        textMap[specPath] = spec;
     }
 
     return new Material(diff, spec, shininess);

@@ -11,29 +11,25 @@ Model::Model(const std::string& path) :path(path) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, 
         aiProcess_JoinIdenticalVertices || aiProcess_Triangulate || 
-        aiProcess_SortByPType || aiProcess_RemoveComponent ||
-        aiProcess_GenSmoothNormals || aiProcess_RemoveRedundantMaterials || 
-        aiProcess_OptimizeMeshes || aiProcess_FixInfacingNormals ||
-        aiProcess_FindInvalidData || aiProcess_GenUVCoords);
+        aiProcess_RemoveComponent || aiProcess_GenSmoothNormals || 
+        aiProcess_OptimizeMeshes ||  aiProcess_GenUVCoords);
     assert(scene && importer.GetErrorString());
 
     // materials
     std::map<std::string, Texture*> textMap;
-    materials.reserve(scene->mNumMaterials);
-    for (int i = 0; i < materials.size(); i++) {
-        materials[i] = Material::build(scene->mMaterials[i], textMap);
+    for (int i = 0; i < scene->mNumMaterials; i++) {
+        materials.push_back(Material::build(scene->mMaterials[i], textMap, path));
     }
 
     // textures
-    int i = 0;
-    textures.reserve(textMap.size());
-    for (const auto& text: textMap) textures[i++] = text.second;
+    for (const auto& text: textMap) { 
+        textures.push_back(text.second); 
+    }
 
     // meshes
-    meshes.reserve(scene->mNumMeshes);
-    for (int i = 0; i < meshes.size(); i++) {
+    for (int i = 0; i < scene->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[i];
-        meshes[i] = Mesh::build(mesh, materials[mesh->mMaterialIndex]);
+        meshes.push_back(Mesh::build(mesh, materials[mesh->mMaterialIndex]));
     }
 
     // nodes
