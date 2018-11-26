@@ -7,9 +7,9 @@
 
 class Node {
 private:
-    static Node* build(const aiScene* scene, const aiNode* node, Node* parent);
+    static Node* build(const aiScene* scene, const aiNode* node, Node* parent, std::vector<Mesh*>& allMeshes);
 public:
-    static Node* build(const aiScene* scene, const aiNode* node);
+    static Node* build(const aiScene* scene, const aiNode* node, std::vector<Mesh*>& allMeshes);
 
     Node(const std::string& name, const glm::mat4& transform, Node *parent, 
         const std::vector<Node*>& children, const std::vector<Mesh*>& meshes);

@@ -1,14 +1,13 @@
 #include "Model.hpp"
 #include "Mesh.hpp"
 #include "Node.hpp"
-#include "Material.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
 #include <map>
 
-Model::Model(const std::string& path) 
-    :path(path) {
+Model::Model(const std::string& path) :path(path) {
+    // import
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, 
         aiProcess_JoinIdenticalVertices || aiProcess_Triangulate || 
@@ -18,13 +17,17 @@ Model::Model(const std::string& path)
         aiProcess_FindInvalidData || aiProcess_GenUVCoords);
     assert(scene && importer.GetErrorString());
 
-    // textures
-    std::vector<Material*> materials(scene->mNumMaterials);
+    // materials
     std::map<std::string, Texture*> textMap;
+    materials.reserve(scene->mNumMaterials);
     for (int i = 0; i < materials.size(); i++) {
         materials[i] = Material::build(scene->mMaterials[i], textMap);
     }
-    //TODO: turn textMap int textures
+
+    // textures
+    int i = 0;
+    textures.reserve(textMap.size());
+    for (const auto& text: textMap) textures[i++] = text.second;
 
     // meshes
     meshes.reserve(scene->mNumMeshes);
@@ -34,7 +37,7 @@ Model::Model(const std::string& path)
     }
 
     // nodes
-    rootNode = Node::build(scene, scene->mRootNode);
+    rootNode = Node::build(scene, scene->mRootNode, meshes);
 }
 
 Model::Model(const std::vector<Mesh*>& meshes, 
@@ -42,6 +45,7 @@ Model::Model(const std::vector<Mesh*>& meshes,
     :path(MODEL_NOT_LOADED), meshes(meshes), textures(textures), rootNode(rootNode) {}
 
 Model::~Model() {
+    for (Material* mat: materials) delete mat;
     for (Texture* tex: textures) delete tex;
     for (Mesh* mesh: meshes) delete mesh;
     delete rootNode;
