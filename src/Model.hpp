@@ -14,11 +14,19 @@ private:
     std::vector<Texture*> textures;
     std::vector<Mesh*> meshes;
     Node* rootNode;
+
+    Model(Model const&) =delete;
+    Model& operator=(Model const&) =delete;
 public:
     Model(const std::string& path);
-    Model(const std::vector<Mesh*>& meshes, 
-        const std::vector<Texture*>& textures, Node* rootNode);
     ~Model();
 
+    void load();
+    void draw();
+
     const std::string path;
+    std::vector<Material*> getMaterials();
+    std::vector<Texture*> getTextures();
+    std::vector<Mesh*> getMeshes();
+    Node* getRootNode();
 };

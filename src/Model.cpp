@@ -6,7 +6,16 @@
 #include <assimp/postprocess.h> 
 #include <map>
 
-Model::Model(const std::string& path) :path(path) {
+Model::Model(const std::string& path) :path(path) {}
+
+Model::~Model() {
+    for (Material* mat: materials) delete mat;
+    for (Texture* tex: textures) delete tex;
+    for (Mesh* mesh: meshes) delete mesh;
+    delete rootNode;
+}
+
+void Model::load() {
     // import
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, 
@@ -36,13 +45,22 @@ Model::Model(const std::string& path) :path(path) {
     rootNode = Node::build(scene, scene->mRootNode, meshes);
 }
 
-Model::Model(const std::vector<Mesh*>& meshes, 
-        const std::vector<Texture*>& textures, Node* rootNode) 
-    :path(MODEL_NOT_LOADED), meshes(meshes), textures(textures), rootNode(rootNode) {}
+void Model::draw() {
+    rootNode->draw();
+}
 
-Model::~Model() {
-    for (Material* mat: materials) delete mat;
-    for (Texture* tex: textures) delete tex;
-    for (Mesh* mesh: meshes) delete mesh;
-    delete rootNode;
+std::vector<Material*> Model::getMaterials() {
+    return materials;
+}
+
+std::vector<Texture*> Model::getTextures() {
+    return textures;
+}
+
+std::vector<Mesh*> Model::getMeshes() {
+    return meshes;
+}
+
+Node* Model::getRootNode() {
+    return rootNode;
 }

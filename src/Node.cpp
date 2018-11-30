@@ -46,5 +46,6 @@ Node* Node::getNodeByName(const std::string& name) {
 
 void Node::draw() {
     //TODO: bind material
+    //TODO: bind transformation
     for (Mesh* mesh: meshes) mesh->draw();
 }
