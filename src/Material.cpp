@@ -4,7 +4,7 @@ using std::string;
 
 #define DEFUALT_DIFF_PATH "assets/defaults/diffuse.bmp"
 #define DEFAULT_SPC_PATH "assets/defaults/specular.bmp"
-#define DEFAULT_SHININESS 0 // TODO: what is best?
+#define DEFAULT_SHININESS 16
 
 Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture*>& textMap, const string& path) {
     float shininess;

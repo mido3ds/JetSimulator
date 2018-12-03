@@ -22,7 +22,8 @@ public:
     ~Model();
 
     void load();
-    void draw();
+    virtual void update(double dT);
+    virtual void draw();
 
     const std::string path;
     std::vector<Material*> getMaterials();

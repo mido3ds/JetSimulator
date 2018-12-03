@@ -7,4 +7,6 @@ class Jet: public Model {
 private:
 public:
     Jet();
+    virtual void update(double dT) override;
+    virtual void draw() override;
 };

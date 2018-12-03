@@ -16,11 +16,11 @@ Application::Config JetSimulator::getConfig() {
 }
 
 void JetSimulator::onCreate() {
-
+    phongShader = new PhongShader();
 }
 
 void JetSimulator::onDestroy() {
-
+    delete phongShader;
 }
 
 void JetSimulator::onUpdate(double dt) {

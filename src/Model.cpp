@@ -45,6 +45,8 @@ void Model::load() {
     rootNode = Node::build(scene, scene->mRootNode, meshes);
 }
 
+void Model::update(double dT) {}
+
 void Model::draw() {
     rootNode->draw();
 }

@@ -7,8 +7,8 @@ Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
     assert(mesh->HasFaces() && mesh->HasNormals() && mesh->HasPositions());
 
     std::vector<glm::vec3> *positions = new std::vector<glm::vec3>(mesh->mNumVertices), 
-                            *normals = new std::vector<glm::vec3>(mesh->mNumVertices), 
-                            *textCoords = new std::vector<glm::vec3>(mesh->mNumVertices);
+                            *normals = new std::vector<glm::vec3>(mesh->mNumVertices);
+    std::vector<glm::vec2> *textCoords = new std::vector<glm::vec2>(mesh->mNumVertices);
     std::vector<glm::ivec3> *indices = new std::vector<glm::ivec3>(mesh->mNumFaces);
 
     for (int i = 0; i < positions->size(); i++) {
@@ -16,7 +16,7 @@ Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
         normals[0][i] = glm::make_vec3(&mesh->mNormals[i].x);
 
         if (mesh->HasTextureCoords(0)) {
-            textCoords[0][i] = glm::make_vec3(&mesh->mTextureCoords[0][i].x);
+            textCoords[0][i] = glm::make_vec2(&mesh->mTextureCoords[0][i].x);
         }
     }
 
@@ -30,7 +30,7 @@ Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
 
 Mesh::Mesh(vector<glm::vec3> *positions, 
         vector<glm::vec3> *normals, 
-        vector<glm::vec3> *textCoords,
+        vector<glm::vec2> *textCoords,
         vector<glm::ivec3> *indices,
         const Material *material) 
     :positions(positions), normals(normals), 
@@ -69,7 +69,7 @@ void Mesh::load() {
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-    glBufferData(GL_ARRAY_BUFFER, textCoords->size() * sizeof(glm::vec3), textCoords->data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, textCoords->size() * sizeof(glm::vec2), textCoords->data(), GL_STATIC_DRAW);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(2);
 
@@ -82,7 +82,8 @@ void Mesh::load() {
     delete normals;
     delete textCoords;
     delete indices;
-    positions = normals = textCoords = nullptr;
+    positions = normals = nullptr; 
+    textCoords = nullptr;
     indices = nullptr;
 }
 
