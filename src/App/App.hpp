@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-class AbstractApp {
+class App {
 private:
     GLFWwindow* window;
     double updateTime;
@@ -10,8 +10,8 @@ private:
     void createWindow();
     void mainLoop();
 
-    AbstractApp(AbstractApp const &) = delete;
-    AbstractApp & operator =(AbstractApp const &) = delete;
+    App(App const &) = delete;
+    App & operator =(App const &) = delete;
 public:
     struct Config {
         char* title;
@@ -24,13 +24,13 @@ public:
         int updateRate; // update per second
     };
 
-    AbstractApp();
-    ~AbstractApp();
+    App();
+    ~App();
 
     void run();
     void close();
 
-    static AbstractApp* getApp();
+    static App* getApp();
 
     bool isKeyPressed(int key);
     glm::vec2 getMousePos();

@@ -1,7 +1,7 @@
 #include "JetSimulator.hpp"
 #include <glad/glad.h>
 
-AbstractApp::Config JetSimulator::getConfig() {
+App::Config JetSimulator::getConfig() {
     Config c;
     c.title = "JetSimulator";
     c.width = 800;
