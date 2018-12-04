@@ -46,8 +46,8 @@ uniform vec3 uViewPos;
 uniform DirLight uDirLight;
 uniform PointLight uPointLights[MAX_POINT_LIGHTS];
 uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];
-uniform int numPointLights;
-uniform int numSpotLights;
+uniform int uNumPointLights;
+uniform int uNumSpotLights;
 
 void main() {
     vec3 viewToFragDir = normalize(uViewPos - shFragPos);
@@ -56,10 +56,10 @@ void main() {
     vec3 color = vec3(0);
 
     color += DirLight_calc(uDirLight, shNormal, viewToFragDir, uMaterial.shininess, diffMap, specMap);
-    for (int i = 0; i < numPointLights; i++) {
+    for (int i = 0; i < uNumPointLights; i++) {
         color += PointLight_calc(uPointLights[i], shNormal, viewToFragDir, uMaterial.shininess, shFragPos, diffMap, specMap);
     }
-    for (int i = 0; i < numSpotLights; i++) {
+    for (int i = 0; i < uNumSpotLights; i++) {
         color += SpotLight_calc(uSpotLights[i], shNormal, viewToFragDir, uMaterial.shininess, shFragPos, diffMap, specMap);
     }
 

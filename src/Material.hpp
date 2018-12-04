@@ -11,8 +11,6 @@ public:
     Material(const Texture* diffuse, const Texture* specular, const float shininess);
     Material(const Texture* diffuse, const Texture* specular);
 
-    void bind() const;
-
     const Texture* diffuse;
     const Texture* specular;
     const float shininess;

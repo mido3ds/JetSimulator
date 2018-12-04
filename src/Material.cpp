@@ -57,10 +57,3 @@ Material::Material(const Texture* diffuse,
 
 Material::Material(const Texture* diffuse, const Texture* specular) 
     :Material(diffuse, specular, DEFAULT_SHININESS) {}
-
-
-void Material::bind() const {
-    diffuse->bind();
-    specular->bind();
-    //TODO: send shinines to shader
-}

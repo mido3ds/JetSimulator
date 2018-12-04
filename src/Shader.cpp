@@ -66,3 +66,47 @@ void Shader::link() {
     }
     assert(status);
 }
+
+GLuint Shader::getUniformLocation(std::string uniform) {
+    return glGetUniformLocation(programID, uniform.c_str());
+}
+
+void Shader::setUniform(int loc, int v) {
+    glUniform1i(loc, v);
+}
+
+void Shader::setUniform(int loc, float v) {
+     glUniform1f(loc, v);
+}
+
+void Shader::setUniform(int loc, glm::mat4 mat) {
+     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setUniform(int loc, glm::mat3 mat) {
+    glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setUniform(int loc, glm::vec4 v) {
+    glUniform4fv(loc, 1, glm::value_ptr(v));
+}
+
+void Shader::setUniform(int loc, glm::vec3 v) {
+    glUniform3fv(loc, 1, glm::value_ptr(v));
+}
+
+void Shader::setUniform(int loc, glm::vec2 v) {
+    glUniform2fv(loc, 1, glm::value_ptr(v));
+}
+
+void Shader::setUniform(int loc, glm::ivec4 v) {
+    glUniform4iv(loc, 1, glm::value_ptr(v));
+}
+
+void Shader::setUniform(int loc, glm::ivec3 v) {
+    glUniform3iv(loc, 1, glm::value_ptr(v));
+}
+
+void Shader::setUniform(int loc, glm::ivec2 v) {
+    glUniform2iv(loc, 1, glm::value_ptr(v));
+}
