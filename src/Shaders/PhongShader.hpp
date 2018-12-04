@@ -1,7 +1,7 @@
 #pragma once
 #include "Shader.hpp"
-#include "Material.hpp"
-#include "Light.hpp"
+#include <Scene/Material.hpp>
+#include <Scene/Light.hpp>
 
 class PhongShader: public Shader {
 private:

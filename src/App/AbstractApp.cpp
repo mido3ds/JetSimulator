@@ -1,20 +1,30 @@
-#include "Application.hpp"
+#include "AbstractApp.hpp"
 #include <glad/glad.h>
 #include <iostream>
+#include <exception>
 
-Application::Application() {
+AbstractApp* staticAppPtr = nullptr;
+
+AbstractApp::AbstractApp() {
+    if (staticAppPtr) throw std::exception("cant create two AbstractApps");
+    staticAppPtr = this;
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         exit(EXIT_FAILURE);
     }
 }
 
-Application::~Application() {
+AbstractApp::~AbstractApp() {
     glfwDestroyWindow(window);
     glfwTerminate();
 }
 
-void Application::createWindow() {
+AbstractApp* AbstractApp::getApp() {
+    return staticAppPtr;
+}
+
+void AbstractApp::createWindow() {
     Config config = getConfig();
 
     updateTime = (double)1.0/config.updateRate;
@@ -48,7 +58,7 @@ void Application::createWindow() {
     }    
 }
 
-void Application::mainLoop() {
+void AbstractApp::mainLoop() {
     double currentFrame,
         lastFrame = glfwGetTime(), 
         acc = 0;
@@ -70,7 +80,7 @@ void Application::mainLoop() {
     }
 }
 
-void Application::run() {
+void AbstractApp::run() {
     createWindow();
 
     this->onCreate();
@@ -78,6 +88,16 @@ void Application::run() {
     this->onDestroy();
 }
 
-void Application::close() {
+bool AbstractApp::isKeyPressed(int key) {
+    return glfwGetKey(window, key);
+}
+
+glm::vec2 AbstractApp::getMousePos() {
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    return glm::vec2(x, y);
+}
+
+void AbstractApp::close() {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
 }

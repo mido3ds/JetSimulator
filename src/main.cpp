@@ -1,4 +1,4 @@
-#include "JetSimulator.hpp"
+#include <App/JetSimulator.hpp>
 
 int main() {
     JetSimulator().run();

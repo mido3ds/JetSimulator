@@ -1,8 +1,8 @@
 #pragma once
-#include "Application.hpp"
-#include "PhongShader.hpp"
+#include "AbstractApp.hpp"
+#include <Shaders/PhongShader.hpp>
 
-class JetSimulator: public Application {
+class JetSimulator: public AbstractApp {
 private:
     PhongShader* phongShader;
 public:

@@ -3,7 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/common/",
+                "${workspaceFolder}/src/",
                 "${workspaceFolder}/vendor/assimp/include/",
                 "${workspaceFolder}/vendor/glad/include/",
                 "${workspaceFolder}/vendor/glfw/include/",
