@@ -68,12 +68,12 @@ void PhongShader::setSpotight(const SpotLight& light, int lightNumber) {
     setUniform(getUniformLocation(structStr+"outerCone"), light.outerCone);
 }
 
-void PhongShader::setProjView(glm::const mat4& pv) {
+void PhongShader::setProjView(const glm::mat4& pv) {
     setUniform(uProjView, pv);
 }
 
 void PhongShader::setModel(const glm::mat4& model) {
-    setUniform(uModel, model)
+    setUniform(uModel, model);
 }
 
 void PhongShader::setViewPos(const glm::vec3& pos) {

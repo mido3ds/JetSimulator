@@ -4,6 +4,7 @@
 #include <assimp/scene.h>
 #include <vector>
 #include "Material.hpp"
+#include <Shaders/PhongShader.hpp>
 
 class Mesh {
 private:
@@ -26,7 +27,7 @@ public:
 
     void load();
     bool isLoaded();
-    void draw();
+    void draw(PhongShader& shader);
 
     const Material *material;
 };

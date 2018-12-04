@@ -44,8 +44,8 @@ Node* Node::getNodeByName(const std::string& name) {
     return nullptr;
 }
 
-void Node::draw() {
-    //TODO: bind material
-    //TODO: bind transformation
-    for (Mesh* mesh: meshes) mesh->draw();
+void Node::draw(PhongShader& shader) {
+    shader.setModel(transform);
+    for (Mesh* mesh: meshes) mesh->draw(shader);
+    for (Node* child:children) child->draw(shader);
 }

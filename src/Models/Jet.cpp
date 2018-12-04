@@ -6,6 +6,6 @@ void Jet::update(double dt) {
 
 }
 
-void Jet::draw() {
-
+void Jet::draw(PhongShader& shader) {
+    rootNode->draw(shader);
 }

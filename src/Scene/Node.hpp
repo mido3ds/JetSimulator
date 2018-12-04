@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Mesh.hpp"
+#include <Shaders/PhongShader.hpp>
 
 class Node {
 private:
@@ -17,7 +18,7 @@ public:
 
     glm::mat4 getTotalTransform() const;
     Node* getNodeByName(const std::string& name);
-    void draw();
+    void draw(PhongShader& shader);
 
     const std::string name;
     const Node *parent;

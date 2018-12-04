@@ -47,8 +47,8 @@ void Model::load() {
 
 void Model::update(double dT) {}
 
-void Model::draw() {
-    rootNode->draw();
+void Model::draw(PhongShader& shader) {
+    rootNode->draw(shader);
 }
 
 std::vector<Material*> Model::getMaterials() {

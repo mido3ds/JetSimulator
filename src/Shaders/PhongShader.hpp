@@ -16,6 +16,7 @@ public:
     void setPointLight(const PointLight& light, int lightNumber);
     void setSpotight(const SpotLight& light, int lightNumber);
     void setViewPos(const glm::vec3& pos);
+    
     void setProjView(const glm::mat4& pv);
     void setModel(const glm::mat4& model);
 };
