@@ -2,6 +2,7 @@
 #include "Shader.hpp"
 #include <Scene/Material.hpp>
 #include <Scene/Light.hpp>
+#include <glm/glm.hpp>
 
 class PhongShader: public Shader {
 private:
@@ -10,8 +11,11 @@ private:
 public:
     PhongShader();
     
-    void setMaterial(Material const* material);
-    void setDirLight(DirLight const* light);
-    void setPointLight(PointLight const* light, int lightNumber);
-    void setSpotight(SpotLight const* light, int lightNumber);
+    void setMaterial(const Material& material);
+    void setDirLight(const DirLight& light);
+    void setPointLight(const PointLight& light, int lightNumber);
+    void setSpotight(const SpotLight& light, int lightNumber);
+    void setViewPos(const glm::vec3& pos);
+    void setProjView(const glm::mat4& pv);
+    void setModel(const glm::mat4& model);
 };

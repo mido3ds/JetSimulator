@@ -24,46 +24,58 @@ PhongShader::PhongShader() {
     uMaterial_shininess = getUniformLocation("uMaterial.shininess");
 }
 
-void PhongShader::setMaterial(Material const* material) {
-    material->diffuse->bind();
-    material->specular->bind();
-    setUniform(uMaterial_shininess, material->shininess);
+void PhongShader::setMaterial(const Material& material) {
+    material.diffuse->bind();
+    material.specular->bind();
+    setUniform(uMaterial_shininess, material.shininess);
 }
 
-void PhongShader::setDirLight(DirLight const* light) {
-    setUniform(uDirLight_dir, light->dir);
-    setUniform(uDirLight_ambient, light->ambient);
-    setUniform(uDirLight_diffuse, light->diffuse);
-    setUniform(uDirLight_specular, light->specular);
+void PhongShader::setDirLight(const DirLight& light) {
+    setUniform(uDirLight_dir, light.dir);
+    setUniform(uDirLight_ambient, light.ambient);
+    setUniform(uDirLight_diffuse, light.diffuse);
+    setUniform(uDirLight_specular, light.specular);
 }
 
-void PhongShader::setPointLight(PointLight const* light, int lightNumber) {
+void PhongShader::setPointLight(const PointLight& light, int lightNumber) {
     string structStr = "uPointLight[";
     structStr += lightNumber;
     structStr += "].";
 
-    setUniform(getUniformLocation(structStr+"pos"), light->pos);
-    setUniform(getUniformLocation(structStr+"ambient"), light->ambient);
-    setUniform(getUniformLocation(structStr+"diffuse"), light->diffuse);
-    setUniform(getUniformLocation(structStr+"specular"), light->specular);
-    setUniform(getUniformLocation(structStr+"quadratic"), light->quadratic);
-    setUniform(getUniformLocation(structStr+"linear"), light->linear);
-    setUniform(getUniformLocation(structStr+"constant"), light->constant);
+    setUniform(getUniformLocation(structStr+"pos"), light.pos);
+    setUniform(getUniformLocation(structStr+"ambient"), light.ambient);
+    setUniform(getUniformLocation(structStr+"diffuse"), light.diffuse);
+    setUniform(getUniformLocation(structStr+"specular"), light.specular);
+    setUniform(getUniformLocation(structStr+"quadratic"), light.quadratic);
+    setUniform(getUniformLocation(structStr+"linear"), light.linear);
+    setUniform(getUniformLocation(structStr+"constant"), light.constant);
 }
 
-void PhongShader::setSpotight(SpotLight const* light, int lightNumber) {
+void PhongShader::setSpotight(const SpotLight& light, int lightNumber) {
     string structStr = "uSpotLight[";
     structStr += lightNumber;
     structStr += "].";
 
-    setUniform(getUniformLocation(structStr+"pos"), light->pos);
-    setUniform(getUniformLocation(structStr+"dir"), light->dir);
-    setUniform(getUniformLocation(structStr+"ambient"), light->ambient);
-    setUniform(getUniformLocation(structStr+"diffuse"), light->diffuse);
-    setUniform(getUniformLocation(structStr+"specular"), light->specular);
-    setUniform(getUniformLocation(structStr+"quadratic"), light->quadratic);
-    setUniform(getUniformLocation(structStr+"linear"), light->linear);
-    setUniform(getUniformLocation(structStr+"constant"), light->constant);
-    setUniform(getUniformLocation(structStr+"innerCone"), light->innerCone);
-    setUniform(getUniformLocation(structStr+"outerCone"), light->outerCone);
+    setUniform(getUniformLocation(structStr+"pos"), light.pos);
+    setUniform(getUniformLocation(structStr+"dir"), light.dir);
+    setUniform(getUniformLocation(structStr+"ambient"), light.ambient);
+    setUniform(getUniformLocation(structStr+"diffuse"), light.diffuse);
+    setUniform(getUniformLocation(structStr+"specular"), light.specular);
+    setUniform(getUniformLocation(structStr+"quadratic"), light.quadratic);
+    setUniform(getUniformLocation(structStr+"linear"), light.linear);
+    setUniform(getUniformLocation(structStr+"constant"), light.constant);
+    setUniform(getUniformLocation(structStr+"innerCone"), light.innerCone);
+    setUniform(getUniformLocation(structStr+"outerCone"), light.outerCone);
+}
+
+void PhongShader::setProjView(glm::const mat4& pv) {
+    setUniform(uProjView, pv);
+}
+
+void PhongShader::setModel(const glm::mat4& model) {
+    setUniform(uModel, model)
+}
+
+void PhongShader::setViewPos(const glm::vec3& pos) {
+    setUniform(uViewPos, pos);
 }
