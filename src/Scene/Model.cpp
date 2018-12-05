@@ -33,12 +33,14 @@ void Model::load() {
     // textures
     for (const auto& text: textMap) { 
         textures.push_back(text.second); 
+        text.second->load();
     }
 
     // meshes
     for (int i = 0; i < scene->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[i];
         meshes.push_back(Mesh::build(mesh, materials[mesh->mMaterialIndex]));
+        meshes[i]->load();
     }
 
     // nodes

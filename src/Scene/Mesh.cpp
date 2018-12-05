@@ -46,8 +46,6 @@ Mesh::~Mesh() {
         glBindVertexArray(0);
 
         glDeleteVertexArrays(1, &vao);
-        delete vbo;
-        vao = 0;
     }
 }
 

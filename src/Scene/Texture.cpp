@@ -8,7 +8,6 @@ Texture::Texture(const std::string& path, Type type) :path(path), type(type) {}
 Texture::~Texture() {
     if (isLoaded()) {
         glDeleteTextures(1, &texId);
-        texId = 0;
     }
 }
 
@@ -23,7 +22,7 @@ void Texture::load() {
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
     unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, nrChannels == 3? GL_RGB8:GL_RGBA8, width, height, 0, nrChannels == 3? GL_RGB:GL_RGBA, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
 }

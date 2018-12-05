@@ -1,6 +1,8 @@
 #include "Material.hpp"
 #include <cassert>
+#include <cstddef>
 using std::string;
+using std::size_t;
 
 #define DEFUALT_DIFF_PATH "assets/defaults/diffuse.bmp"
 #define DEFAULT_SPC_PATH "assets/defaults/specular.bmp"
@@ -9,7 +11,8 @@ using std::string;
 Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture*>& textMap, const string& path) {
     float shininess;
     aiString ai_diffPath, ai_specPath;
-    string diffPath(path + "/"), specPath(path + "/");
+    string dir = path.substr(0, path.find_last_of("/\\")+1);
+    string diffPath(dir), specPath(dir);
     aiReturn ret;
 
     ret = mat->GetTexture(aiTextureType_DIFFUSE, 0, &ai_diffPath);

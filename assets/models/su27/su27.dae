@@ -229,27 +229,27 @@
     </light>
   </library_lights>
   <library_images>
-    <image id="TEXTURE_jpg" name="TEXTURE_jpg">
-      <init_from>TEXTURE.jpg</init_from>
+    <image id="diffuse_png" name="diffuse_png">
+      <init_from>diffuse.png</init_from>
     </image>
   </library_images>
   <library_effects>
-    <effect id="TEXTURE_jpg-effect">
+    <effect id="diffuse_png-effect">
       <profile_COMMON>
-        <newparam sid="TEXTURE_jpg-surface">
+        <newparam sid="diffuse_png-surface">
           <surface type="2D">
-            <init_from>TEXTURE_jpg</init_from>
+            <init_from>diffuse_png</init_from>
           </surface>
         </newparam>
-        <newparam sid="TEXTURE_jpg-sampler">
+        <newparam sid="diffuse_png-sampler">
           <sampler2D>
-            <source>TEXTURE_jpg-surface</source>
+            <source>diffuse_png-surface</source>
           </sampler2D>
         </newparam>
         <technique sid="common">
           <phong>
             <diffuse>
-              <texture texture="TEXTURE_jpg-sampler" texcoord="TEXTURE_jpg"/>
+              <texture texture="diffuse_png-sampler" texcoord="diffuse_png"/>
             </diffuse>
             <specular>
               <color sid="specular">0 0 0 1</color>
@@ -260,8 +260,8 @@
     </effect>
   </library_effects>
   <library_materials>
-    <material id="TEXTURE_jpg-material" name="TEXTURE_jpg">
-      <instance_effect url="#TEXTURE_jpg-effect"/>
+    <material id="diffuse_png-material" name="diffuse_png">
+      <instance_effect url="#diffuse_png-effect"/>
     </material>
   </library_materials>
   <library_geometries>
@@ -299,7 +299,7 @@
         <vertices id="Cube-mesh-vertices">
           <input semantic="POSITION" source="#Cube-mesh-positions"/>
         </vertices>
-        <triangles material="TEXTURE_jpg-material" count="1476">
+        <triangles material="diffuse_png-material" count="1476">
           <input semantic="VERTEX" source="#Cube-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Cube-mesh-map-0" offset="2" set="0"/>
@@ -705,7 +705,7 @@
         <vertices id="Cube_001-mesh-vertices">
           <input semantic="POSITION" source="#Cube_001-mesh-positions"/>
         </vertices>
-        <triangles material="TEXTURE_jpg-material" count="264">
+        <triangles material="diffuse_png-material" count="264">
           <input semantic="VERTEX" source="#Cube_001-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube_001-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Cube_001-mesh-map-0" offset="2" set="0"/>
@@ -748,7 +748,7 @@
         <vertices id="Cube_002-mesh-vertices">
           <input semantic="POSITION" source="#Cube_002-mesh-positions"/>
         </vertices>
-        <triangles material="TEXTURE_jpg-material" count="144">
+        <triangles material="diffuse_png-material" count="144">
           <input semantic="VERTEX" source="#Cube_002-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube_002-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Cube_002-mesh-map-0" offset="2" set="0"/>
@@ -791,7 +791,7 @@
         <vertices id="Cube_004-mesh-vertices">
           <input semantic="POSITION" source="#Cube_004-mesh-positions"/>
         </vertices>
-        <triangles material="TEXTURE_jpg-material" count="72">
+        <triangles material="diffuse_png-material" count="72">
           <input semantic="VERTEX" source="#Cube_004-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube_004-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Cube_004-mesh-map-0" offset="2" set="0"/>
@@ -852,7 +852,7 @@
         <instance_geometry url="#Cube-mesh" name="Cube">
           <bind_material>
             <technique_common>
-              <instance_material symbol="TEXTURE_jpg-material" target="#TEXTURE_jpg-material">
+              <instance_material symbol="diffuse_png-material" target="#diffuse_png-material">
                 <bind_vertex_input semantic="UVTex" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
             </technique_common>
@@ -912,7 +912,7 @@
         <instance_geometry url="#Cube_001-mesh" name="Cube_001">
           <bind_material>
             <technique_common>
-              <instance_material symbol="TEXTURE_jpg-material" target="#TEXTURE_jpg-material">
+              <instance_material symbol="diffuse_png-material" target="#diffuse_png-material">
                 <bind_vertex_input semantic="UVTex" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
             </technique_common>
@@ -924,7 +924,7 @@
         <instance_geometry url="#Cube_002-mesh" name="Cube_002">
           <bind_material>
             <technique_common>
-              <instance_material symbol="TEXTURE_jpg-material" target="#TEXTURE_jpg-material">
+              <instance_material symbol="diffuse_png-material" target="#diffuse_png-material">
                 <bind_vertex_input semantic="UVTex" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
             </technique_common>
@@ -936,7 +936,7 @@
         <instance_geometry url="#Cube_004-mesh" name="Cube_004">
           <bind_material>
             <technique_common>
-              <instance_material symbol="TEXTURE_jpg-material" target="#TEXTURE_jpg-material">
+              <instance_material symbol="diffuse_png-material" target="#diffuse_png-material">
                 <bind_vertex_input semantic="UVTex" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
             </technique_common>
