@@ -9,6 +9,8 @@ App::Config JetSimulator::getConfig() {
     c.height = 600;
     c.isFullscreen = false;
     c.resizable = false;
+    c.cursorHidden = true;
+    c.cursorCentered = true;
     c.updateRate = 100;
 
     c.glMajorVersion = 3;
@@ -19,7 +21,7 @@ App::Config JetSimulator::getConfig() {
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
-    camera = new ModelTrackingCamera(jet, 20, glm::pi<float>()/2, getAspectRatio(), .1, 1000);
+    camera = new ModelTrackingCamera(jet, 5, glm::pi<float>()/2, getAspectRatio(), .1, 1000);
 
     phongShader->use();
     jet->load();
@@ -41,6 +43,7 @@ void JetSimulator::onDraw() {
     glClearColor(0, 0, 0, 1);
 
     phongShader->use();
+    phongShader->setDirLight(sun);
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
     jet->draw(*phongShader);

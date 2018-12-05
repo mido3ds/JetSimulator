@@ -4,8 +4,7 @@
 #include <glm/glm.hpp>
 #include <Scene/Model.hpp>
 
-#define YAW_SPEED 1
-#define PITCH_SPEED 1
+#define MOUSE_SENSITIVITY 0.01
 
 class ModelTrackingCamera: public Camera {
 private:

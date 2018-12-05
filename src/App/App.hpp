@@ -18,6 +18,8 @@ public:
         int width, height;
         bool isFullscreen;
         bool resizable;
+        bool cursorHidden;
+        bool cursorCentered;
 
         int glMajorVersion;
         int glMinorVersion;

@@ -48,6 +48,8 @@ void App::createWindow() {
         glfwTerminate(); 
         exit(EXIT_FAILURE);
     }
+    glfwSetInputMode(window, GLFW_CURSOR, config.cursorHidden? GLFW_CURSOR_DISABLED:GLFW_CURSOR_NORMAL);
+    if (config.cursorCentered) glfwSetCursorPos(window, config.width/2.0, config.height/2.0);
 
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -76,7 +78,7 @@ void App::mainLoop() {
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        lastFrame = glfwGetTime();
+        lastFrame = currentFrame;
     }
 }
 
