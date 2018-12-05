@@ -34,6 +34,9 @@ public:
 
     bool isKeyPressed(int key);
     glm::vec2 getMousePos();
+    int getWidth();
+    int getHeight();
+    float getAspectRatio();
 
     virtual Config getConfig()=0;
     virtual void onCreate()=0;

@@ -1,5 +1,6 @@
 #include "JetSimulator.hpp"
 #include <glad/glad.h>
+#include <glm/gtc/constants.hpp>
 
 App::Config JetSimulator::getConfig() {
     Config c;
@@ -17,17 +18,30 @@ App::Config JetSimulator::getConfig() {
 
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
+    jet = new Jet();
+    camera = new ModelTrackingCamera(jet, 20, glm::pi<float>()/2, getAspectRatio(), .1, 1000);
+
+    phongShader->use();
+    jet->load();
 }
 
 void JetSimulator::onDestroy() {
     delete phongShader;
+    delete camera;
+    delete jet;
 }
 
 void JetSimulator::onUpdate(double dt) {
-
+    jet->update(dt);
+    camera->update(dt);
 }
 
 void JetSimulator::onDraw() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glClearColor(0, 0, 0, 1);
+
+    phongShader->use();
+    phongShader->setViewPos(camera->position);
+    phongShader->setProjView(camera->projection * camera->view);
+    jet->draw(*phongShader);
 }

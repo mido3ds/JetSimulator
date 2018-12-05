@@ -6,8 +6,7 @@
 #include "Node.hpp"
 #include "Material.hpp"
 #include <Shaders/PhongShader.hpp>
-
-#define MODEL_NOT_LOADED "$notloaded$"
+#include <glm/glm.hpp>
 
 class Model {
 private:
@@ -31,4 +30,6 @@ public:
     std::vector<Texture*> getTextures();
     std::vector<Mesh*> getMeshes();
     Node* getRootNode();
+
+    glm::vec3 pos, front, up;
 };

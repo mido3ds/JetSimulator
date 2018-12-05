@@ -101,3 +101,21 @@ glm::vec2 App::getMousePos() {
 void App::close() {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+
+int App::getWidth() {
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    return width;
+}
+
+int App::getHeight() {
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    return height;
+}
+
+float App::getAspectRatio() {
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    return (float)width/height;
+}
