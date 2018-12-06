@@ -3,6 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 using namespace std;
 
+#include <iostream>
+
 Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
     assert(mesh->HasFaces() && mesh->HasNormals() && mesh->HasPositions());
 
@@ -65,10 +67,10 @@ void Mesh::load() {
     glBufferData(GL_ARRAY_BUFFER, normals->size() * sizeof(glm::vec3), normals->data(), GL_STATIC_DRAW);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
-
+  
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
     glBufferData(GL_ARRAY_BUFFER, textCoords->size() * sizeof(glm::vec2), textCoords->data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -93,6 +95,6 @@ void Mesh::draw(PhongShader& shader) {
     shader.setMaterial(*material);
 
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, elementCount * 3, GL_UNSIGNED_INT, (void*)0);
     glBindVertexArray(0);
 }

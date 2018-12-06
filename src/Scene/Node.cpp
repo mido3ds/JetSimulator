@@ -45,7 +45,7 @@ Node* Node::getNodeByName(const std::string& name) {
 }
 
 void Node::draw(PhongShader& shader) {
-    shader.setModel(transform);
+    shader.setModel(getTotalTransform());
     for (Mesh* mesh: meshes) mesh->draw(shader);
     for (Node* child:children) child->draw(shader);
 }
