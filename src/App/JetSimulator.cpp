@@ -28,7 +28,7 @@ void JetSimulator::onCreate() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_CW);
+    glCullFace(GL_CCW);
 }
 
 void JetSimulator::onDestroy() {
