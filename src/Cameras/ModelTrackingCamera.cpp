@@ -11,7 +11,7 @@ void ModelTrackingCamera::update(double dt) {
     // update yaw and pitch
     glm::vec2 mousePos = app->getMousePos();
     if (/*app->isKeyPressed(MOUSE_BUTTON_MIDDLE)*/true) {    
-        yaw += glm::wrapAngle(MOUSE_SENSITIVITY * (mousePos.x - lastMousePos.x));
+        yaw -= glm::wrapAngle(MOUSE_SENSITIVITY * (mousePos.x - lastMousePos.x));
         pitch += glm::wrapAngle(MOUSE_SENSITIVITY * (mousePos.y - lastMousePos.y));
     }
     lastMousePos = mousePos;

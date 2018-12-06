@@ -17,7 +17,7 @@ public:
 
     Model* target;
     float distance;
-    float yaw = 0, pitch = 0; 
+    float yaw = -26.6927, pitch = 31.9759; 
 
     virtual void update(double dt) override;
 };
