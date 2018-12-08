@@ -5,7 +5,7 @@
 class App {
 private:
     GLFWwindow* window;
-    double updateTime;
+    float updateTime;
 
     void createWindow();
     void mainLoop();
@@ -43,7 +43,7 @@ public:
     virtual Config getConfig()=0;
     virtual void onCreate()=0;
     virtual void onDestroy()=0;
-    virtual void onUpdate(double dt)=0;
+    virtual void onUpdate(float dt)=0;
     virtual void onDraw()=0;
 };
 

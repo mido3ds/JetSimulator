@@ -22,7 +22,7 @@ public:
     ~Model();
 
     void load();
-    virtual void update(double dT);
+    virtual void update(float dT);
     virtual void draw(PhongShader& shader);
 
     const std::string path;
@@ -31,5 +31,6 @@ public:
     std::vector<Mesh*> getMeshes();
     Node* getRootNode();
 
-    glm::vec3 pos, front, up;
+    glm::vec3 pos, front, up, right;
+    float pitch=0, yaw=0, roll=0;
 };

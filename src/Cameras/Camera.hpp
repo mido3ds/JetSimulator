@@ -11,5 +11,5 @@ public:
     glm::mat4 view;
     glm::vec3 position;
 
-    virtual void update(double dt);
+    virtual void update(float dt);
 };

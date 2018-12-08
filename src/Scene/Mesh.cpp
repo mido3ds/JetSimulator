@@ -3,8 +3,6 @@
 #include <glm/gtc/type_ptr.hpp>
 using namespace std;
 
-#include <iostream>
-
 Mesh* Mesh::build(aiMesh* mesh, const Material* material) {
     assert(mesh->HasFaces() && mesh->HasNormals() && mesh->HasPositions());
 

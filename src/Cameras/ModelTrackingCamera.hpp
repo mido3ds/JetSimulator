@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <Scene/Model.hpp>
 
-#define MOUSE_SENSITIVITY 0.01
+#define MOUSE_SENSITIVITY 0.008
 
 class ModelTrackingCamera: public Camera {
 private:
@@ -17,7 +17,7 @@ public:
 
     Model* target;
     float distance;
-    float yaw = -26.6927, pitch = 31.9759; 
+    float yaw = 0, pitch = 5.8f; 
 
-    virtual void update(double dt) override;
+    virtual void update(float dt) override;
 };

@@ -27,7 +27,7 @@ App* App::getApp() {
 void App::createWindow() {
     Config config = getConfig();
 
-    updateTime = (double)1.0/config.updateRate;
+    updateTime = (float)1.0/config.updateRate;
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, config.glMajorVersion);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, config.glMinorVersion);
@@ -61,7 +61,7 @@ void App::createWindow() {
 }
 
 void App::mainLoop() {
-    double currentFrame,
+    float currentFrame,
         lastFrame = glfwGetTime(), 
         acc = 0;
 

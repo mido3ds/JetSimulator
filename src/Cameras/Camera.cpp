@@ -7,4 +7,4 @@ Camera::Camera(glm::vec3 pos, glm::vec3 target, glm::vec3 up,
 
 Camera::Camera(float fovy, float aspect, float near, float far):projection(glm::perspective(fovy, aspect, near, far)) {}
 
-void Camera::update(double dt) {}
+void Camera::update(float dt) {}

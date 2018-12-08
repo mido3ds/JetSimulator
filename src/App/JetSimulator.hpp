@@ -20,6 +20,6 @@ public:
     virtual Config getConfig();
     virtual void onCreate();
     virtual void onDestroy();
-    virtual void onUpdate(double dt);
+    virtual void onUpdate(float dt);
     virtual void onDraw(); 
 };

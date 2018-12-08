@@ -6,7 +6,7 @@
 #include <assimp/postprocess.h> 
 #include <map>
 
-Model::Model(const std::string& path) :path(path), front(0, 0, 1), up(0, 1, 0) {}
+Model::Model(const std::string& path) :path(path), pos(0, 0, 0), right(1, 0, 0), front(0, 1, 0), up(0, 0, 1) {}
 
 Model::~Model() {
     for (Material* mat: materials) delete mat;
@@ -45,15 +45,12 @@ void Model::load() {
 
     // nodes
     rootNode = Node::build(scene, scene->mRootNode, meshes);
-
-    pos = glm::vec3(rootNode->transform[3]);
+    rootNode->transform = glm::mat4();
 }
 
-void Model::update(double dT) {}
+void Model::update(float dT) {}
 
-void Model::draw(PhongShader& shader) {
-    rootNode->draw(shader);
-}
+void Model::draw(PhongShader& shader) {}
 
 std::vector<Material*> Model::getMaterials() {
     return materials;
