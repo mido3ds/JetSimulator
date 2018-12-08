@@ -40,6 +40,7 @@ void App::createWindow() {
     glfwWindowHint(GLFW_BLUE_BITS, 8);
     glfwWindowHint(GLFW_ALPHA_BITS, 8);
     glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
+    glfwWindowHint(GLFW_SAMPLES, config.samples);
 
     GLFWmonitor *monitor = config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
     window = glfwCreateWindow(config.width, config.height, config.title, monitor, nullptr);

@@ -12,6 +12,7 @@ App::Config JetSimulator::getConfig() {
     c.cursorHidden = true;
     c.cursorCentered = true;
     c.updateRate = 100;
+    c.samples = 4;
 
     c.glMajorVersion = 3;
     c.glMinorVersion = 3;
@@ -29,6 +30,7 @@ void JetSimulator::onCreate() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_CCW);
+    glEnable(GL_MULTISAMPLE);
 }
 
 void JetSimulator::onDestroy() {

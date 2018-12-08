@@ -20,6 +20,7 @@ public:
         bool resizable;
         bool cursorHidden;
         bool cursorCentered;
+        int samples;
 
         int glMajorVersion;
         int glMinorVersion;
