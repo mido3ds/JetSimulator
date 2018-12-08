@@ -35,9 +35,11 @@ vec3 DirLight_calc(DirLight self, vec3 normal, vec3 viewToFragDir, float shinine
 vec3 PointLight_calc(PointLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 SpotLight_calc(SpotLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 // in
-in vec3 shFragPos;
-in vec3 /*normalized*/ shNormal;
-in vec2 shTexCoord;
+in VS_OUT {    
+    vec3 fragPos;
+    vec3 /*normalized*/ normal;
+    vec2 texCoord;
+} fs_in;
 // out
 out vec4 outFragCol;
 // uniform
@@ -50,17 +52,17 @@ uniform int uNumPointLights;
 uniform int uNumSpotLights;
 
 void main() {
-    vec3 viewToFragDir = normalize(uViewPos - shFragPos);
-    vec3 diffMap = texture(uMaterial.diffuse, shTexCoord).rgb;
-    vec3 specMap = texture(uMaterial.specular, shTexCoord).rgb;
+    vec3 viewToFragDir = normalize(uViewPos - fs_in.fragPos);
+    vec3 diffMap = texture(uMaterial.diffuse, fs_in.texCoord).rgb;
+    vec3 specMap = texture(uMaterial.specular, fs_in.texCoord).rgb;
     vec3 color = vec3(0);
 
-    color += DirLight_calc(uDirLight, shNormal, viewToFragDir, uMaterial.shininess, diffMap, specMap);
+    color += DirLight_calc(uDirLight, fs_in.normal, viewToFragDir, uMaterial.shininess, diffMap, specMap);
     for (int i = 0; i < uNumPointLights; i++) {
-        color += PointLight_calc(uPointLights[i], shNormal, viewToFragDir, uMaterial.shininess, shFragPos, diffMap, specMap);
+        color += PointLight_calc(uPointLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
     }
     for (int i = 0; i < uNumSpotLights; i++) {
-        color += SpotLight_calc(uSpotLights[i], shNormal, viewToFragDir, uMaterial.shininess, shFragPos, diffMap, specMap);
+        color += SpotLight_calc(uSpotLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
     }
 
     outFragCol = vec4(color, 1);
