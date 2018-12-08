@@ -1,10 +1,8 @@
 #pragma once
-#include <string>
 #include <glad/glad.h>
 
 class Texture {
 protected:
-    std::string path;
     GLuint texId = 0, type, unit;
 public:
     /**
@@ -17,10 +15,10 @@ public:
      * 
      * path: where it's located
      **/
-    Texture(GLint type, GLuint unit, const std::string& path);
-    ~Texture();
+    Texture(GLint type, GLuint unit);
+    virtual ~Texture();
 
-    virtual void load();
+    virtual void load()=0;
     bool isLoaded() const;
     void bind() const;
     void setParameter(GLenum pname, GLint param);
