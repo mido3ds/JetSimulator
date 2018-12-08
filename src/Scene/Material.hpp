@@ -1,5 +1,5 @@
 #pragma once
-#include "Texture.hpp"
+#include <Textures/Texture2D.hpp>
 #include <assimp/scene.h>
 #include <string>
 #include <map>
@@ -7,11 +7,11 @@
 class Material {
 private:
 public:
-    static Material* build(const aiMaterial* mat, std::map<std::string,Texture*>& textMap, const std::string& path);
-    Material(const Texture* diffuse, const Texture* specular, const float shininess);
-    Material(const Texture* diffuse, const Texture* specular);
+    static Material* build(const aiMaterial* mat, std::map<std::string,Texture2D*>& textMap, const std::string& path);
+    Material(const Texture2D* diffuse, const Texture2D* specular, const float shininess);
+    Material(const Texture2D* diffuse, const Texture2D* specular);
 
-    const Texture* diffuse;
-    const Texture* specular;
+    const Texture2D* diffuse;
+    const Texture2D* specular;
     const float shininess;
 };

@@ -19,8 +19,8 @@ PhongShader::PhongShader() {
     uDirLight_diffuse = getUniformLocation("uDirLight.diffuse");
     uDirLight_specular = getUniformLocation("uDirLight.specular");
 
-    setUniform(getUniformLocation("uMaterial.diffuse"), Texture::Type::Diffuse); 
-    setUniform(getUniformLocation("uMaterial.specular"), Texture::Type::Specular);
+    setUniform(getUniformLocation("uMaterial.diffuse"), Texture2D::Usage::Diffuse); 
+    setUniform(getUniformLocation("uMaterial.specular"), Texture2D::Usage::Specular);
     uMaterial_shininess = getUniformLocation("uMaterial.shininess");
 }
 

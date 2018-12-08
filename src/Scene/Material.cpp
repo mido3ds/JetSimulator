@@ -8,7 +8,7 @@ using std::size_t;
 #define DEFAULT_SPC_PATH "assets/defaults/specular.bmp"
 #define DEFAULT_SHININESS 16
 
-Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture*>& textMap, const string& path) {
+Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture2D*>& textMap, const string& path) {
     float shininess;
     aiString ai_diffPath, ai_specPath;
     string dir = path.substr(0, path.find_last_of("/\\")+1);
@@ -31,32 +31,32 @@ Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture*>&
     if (ret != aiReturn_SUCCESS) 
         shininess = DEFAULT_SHININESS;
 
-    Texture* diff;
+    Texture2D* diff;
     auto diffItr = textMap.find(diffPath);
     if (diffItr != textMap.end()) {
         diff = diffItr->second;
     } else {
-        diff = new Texture(diffPath, Texture::Diffuse);
+        diff = new Texture2D(diffPath, Texture2D::Diffuse);
         textMap[diffPath] = diff;
     }
 
-    Texture* spec;
+    Texture2D* spec;
     auto spcItr = textMap.find(specPath);
     if (spcItr != textMap.end()) {
         spec = spcItr->second;
     } else {
-        spec = new Texture(specPath, Texture::Specular);
+        spec = new Texture2D(specPath, Texture2D::Specular);
         textMap[specPath] = spec;
     }
 
     return new Material(diff, spec, shininess);
 }
 
-Material::Material(const Texture* diffuse, 
-        const Texture* specular, const float shininess) 
+Material::Material(const Texture2D* diffuse, 
+        const Texture2D* specular, const float shininess) 
         :diffuse(diffuse), specular(specular), shininess(shininess) {
     assert(shininess >= 0 && diffuse && specular);
 }
 
-Material::Material(const Texture* diffuse, const Texture* specular) 
+Material::Material(const Texture2D* diffuse, const Texture2D* specular) 
     :Material(diffuse, specular, DEFAULT_SHININESS) {}

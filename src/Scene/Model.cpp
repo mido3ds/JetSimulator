@@ -10,7 +10,7 @@ Model::Model(const std::string& path) :path(path), pos(0, 0, 0), right(1, 0, 0),
 
 Model::~Model() {
     for (Material* mat: materials) delete mat;
-    for (Texture* tex: textures) delete tex;
+    for (Texture2D* tex: textures) delete tex;
     for (Mesh* mesh: meshes) delete mesh;
     delete rootNode;
 }
@@ -25,7 +25,7 @@ void Model::load() {
     assert(scene && importer.GetErrorString());
 
     // materials
-    std::map<std::string, Texture*> textMap;
+    std::map<std::string, Texture2D*> textMap;
     for (int i = 0; i < scene->mNumMaterials; i++) {
         materials.push_back(Material::build(scene->mMaterials[i], textMap, path));
     }
@@ -34,6 +34,10 @@ void Model::load() {
     for (const auto& text: textMap) { 
         textures.push_back(text.second); 
         text.second->load();
+        text.second->setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+        text.second->setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+        text.second->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        text.second->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
     // meshes
@@ -56,7 +60,7 @@ std::vector<Material*> Model::getMaterials() {
     return materials;
 }
 
-std::vector<Texture*> Model::getTextures() {
+std::vector<Texture2D*> Model::getTextures() {
     return textures;
 }
 

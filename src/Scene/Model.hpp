@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include "Mesh.hpp"
-#include "Texture.hpp"
+#include <Textures/Texture2D.hpp>
 #include "Node.hpp"
 #include "Material.hpp"
 #include <Shaders/PhongShader.hpp>
@@ -14,7 +14,7 @@ private:
     Model& operator=(Model const&) =delete;
 protected:
     std::vector<Material*> materials;
-    std::vector<Texture*> textures;
+    std::vector<Texture2D*> textures;
     std::vector<Mesh*> meshes;
     Node* rootNode;
 public:
@@ -27,7 +27,7 @@ public:
 
     const std::string path;
     std::vector<Material*> getMaterials();
-    std::vector<Texture*> getTextures();
+    std::vector<Texture2D*> getTextures();
     std::vector<Mesh*> getMeshes();
     Node* getRootNode();
 
