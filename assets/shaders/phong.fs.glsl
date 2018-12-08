@@ -75,7 +75,7 @@ vec3 DirLight_calcSpecular(DirLight self, vec3 normal, vec3 viewToFragDir, float
     return self.specular * pow(
         max(
             dot(viewToFragDir,
-                reflect(self.dir, normal)),
+                normalize(viewToFragDir + self.dir)),
             0),
         shininess
     );
@@ -92,7 +92,7 @@ vec3 PointLight_calcSpecular(PointLight self, vec3 normal, vec3 viewToFragDir, f
     return self.specular * pow(
         max(
             dot(viewToFragDir,
-                reflect(lightToFragDir, normal)),
+                normalize(viewToFragDir + lightToFragDir)),
             0),
         shininess
     );
@@ -118,7 +118,7 @@ vec3 SpotLight_calcSpecular(SpotLight self, vec3 normal, vec3 viewToFragDir, flo
     return self.specular * pow(
         max(
             dot(viewToFragDir,
-                reflect(lightToFragDir, normal)),
+                normalize(viewToFragDir + lightToFragDir)),
             0),
         shininess
     );

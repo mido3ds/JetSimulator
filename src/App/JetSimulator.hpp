@@ -14,7 +14,7 @@ private:
         glm::vec3(0, -1, 0), // dir
         glm::vec3(0.1, 0.1, 0.1), // ambient
         glm::vec3(0.8, 0.8, 0.8), // diffuse
-        glm::vec3(1.0, 1.0, 1.0) // specular
+        glm::vec3(0.2f, 0.2f, 0.2f) // specular
     };
 public:
     virtual Config getConfig();
