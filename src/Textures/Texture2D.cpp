@@ -11,7 +11,7 @@ void Texture2D::load() {
     Image image(path);
     image.load();
 
-    glTexImage2D(type, 0, image.glInternalFormat, image.width, 
+    glTexImage2D(GL_TEXTURE_2D, 0, image.glInternalFormat, image.width, 
         image.height, 0, image.glFormat, GL_UNSIGNED_BYTE, image.data);
-    glGenerateMipmap(type);
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
