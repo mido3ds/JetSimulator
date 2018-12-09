@@ -23,20 +23,25 @@ void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
     camera = new ModelTrackingCamera(jet, 7, glm::pi<float>()/2, getAspectRatio(), .1, 1000);
+    skybox = new SkyBox();
 
     phongShader->use();
     jet->load();
 
+    skybox->load();
+
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_CCW);
-    glEnable(GL_MULTISAMPLE);
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
 }
 
 void JetSimulator::onDestroy() {
     delete phongShader;
     delete camera;
     delete jet;
+    delete skybox;
 }
 
 void JetSimulator::onUpdate(float dt) {
@@ -53,4 +58,6 @@ void JetSimulator::onDraw() {
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
     jet->draw(*phongShader);
+
+    skybox->draw(camera->projection, camera->view);
 }

@@ -33,12 +33,13 @@ void App::createWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, config.glMinorVersion);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, config.resizable? GLFW_TRUE:GLFW_FALSE);
-    glfwWindowHint(GLFW_SAMPLES, 0);    
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     glfwWindowHint(GLFW_RED_BITS, 8);
     glfwWindowHint(GLFW_GREEN_BITS, 8);
     glfwWindowHint(GLFW_BLUE_BITS, 8);
     glfwWindowHint(GLFW_ALPHA_BITS, 8);
+    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+    glfwWindowHint(GLFW_STENCIL_BITS, 8);
     glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
     glfwWindowHint(GLFW_SAMPLES, config.samples);
 
