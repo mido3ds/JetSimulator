@@ -12,5 +12,4 @@ private:
 public:
     Jet();
     virtual void update(float dt) override;
-    virtual void draw(PhongShader& shader) override;
 };

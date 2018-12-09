@@ -33,14 +33,14 @@ void Jet::update(float dt) {
 
     // translation
     if (app->isKeyPressed(KEY_UP)) {
-        pos += dt * 30 * front;
+        pos += dt * 300 * front;
     } else if (app->isKeyPressed(KEY_DOWN)) {
-        pos -= dt * 30 * front;
+        pos -= dt * 300 * front;
     } 
     if (app->isKeyPressed(KEY_RIGHT)) {
-        pos += dt * 30 * right;
+        pos += dt * 300 * right;
     } else if (app->isKeyPressed(KEY_LEFT)) {
-        pos -= dt * 30 * right;
+        pos -= dt * 300 * right;
     }
 
     // final transformation
@@ -51,8 +51,4 @@ void Jet::update(float dt) {
     glm::mat3 rYaw(glm::rotate(yaw, up));
     rootNode->transform = glm::translate(pos) * glm::mat4(rYaw * rPitch * rRoll);
     front = glm::vec3(rootNode->transform[1]);
-}
-
-void Jet::draw(PhongShader& shader) {
-    rootNode->draw(shader);
 }

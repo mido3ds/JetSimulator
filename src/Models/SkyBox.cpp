@@ -92,7 +92,7 @@ void SkyBox::draw(glm::mat4 proj, glm::mat4 view) {
     glDepthFunc(GL_LEQUAL);
 
     shader->use();
-    shader->setUniform(uProjView, proj * glm::mat4(glm::mat3(view)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0)));
+    shader->setUniform(uProjView, proj * glm::mat4(glm::mat3(view)) * glm::translate(glm::vec3(0,0,-0.2f)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0)));
 
     glBindVertexArray(vao);
     cubemap.bind();

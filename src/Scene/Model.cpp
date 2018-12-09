@@ -52,7 +52,9 @@ void Model::load() {
 
 void Model::update(float dT) {}
 
-void Model::draw(PhongShader& shader) {}
+void Model::draw(PhongShader& shader) {
+    rootNode->draw(shader);
+}
 
 std::vector<Material*> Model::getMaterials() {
     return materials;

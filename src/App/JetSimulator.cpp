@@ -23,7 +23,7 @@ void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
     land = new Model("assets/terrains/channeledLand/channeledLand.dae");
-    camera = new ModelTrackingCamera(jet, 7, glm::pi<float>()/2, getAspectRatio(), .1, 1000);
+    camera = new ModelTrackingCamera(jet, 7, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
     skybox = new SkyBox();
 
     phongShader->use();
@@ -31,7 +31,7 @@ void JetSimulator::onCreate() {
     land->load();
     skybox->load();
 
-    jet->pos.z = 30.0f;
+    jet->pos.z = 50.0f;
 
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
