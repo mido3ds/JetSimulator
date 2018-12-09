@@ -2,6 +2,9 @@
 #include <App/App.hpp>
 #include <glm/ext.hpp>
 
+#define max(a, b) (a>b?a:b)
+#define min(a, b) (a<b?a:b)
+
 Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
 
 void Jet::update(float dt) {
@@ -17,13 +20,16 @@ void Jet::update(float dt) {
         yaw -= ROTATE_SPEED * dt;
     }
     if (app->isKeyPressed(KEY_D)) {
-        roll -= ROTATE_SPEED * dt;
-    } else if (app->isKeyPressed(KEY_A)) {
         roll += ROTATE_SPEED * dt;
+    } else if (app->isKeyPressed(KEY_A)) {
+        roll -= ROTATE_SPEED * dt;
     }
     yaw = glm::wrapAngle(yaw);
     pitch = glm::wrapAngle(pitch);
     roll = glm::wrapAngle(roll);
+
+    if (yaw < glm::pi<float>()) yaw = min(yaw, 0.0713778f);
+    else yaw = max(yaw, 6.23377f);
 
     // translation
     if (app->isKeyPressed(KEY_UP)) {
@@ -38,14 +44,13 @@ void Jet::update(float dt) {
     }
 
     // final transformation
-    rootNode->transform = glm::translate(pos) * 
-            glm::yawPitchRoll(0.0f, pitch, yaw) * 
-            glm::rotate(roll, glm::vec3(0, 1, 0));
-
-    // update unit vectors
-    right = glm::vec3(rootNode->transform[0]);
+    glm::mat3 rRoll(glm::rotate(roll, glm::vec3(0, 1, 0)));
+    right = rRoll * glm::vec3(1, 0, 0);
+    glm::mat3 rPitch(glm::rotate(pitch, right));
+    up = rPitch * rRoll * glm::vec3(0, 0, 1);
+    glm::mat3 rYaw(glm::rotate(yaw, up));
+    rootNode->transform = glm::translate(pos) * glm::mat4(rYaw * rPitch * rRoll);
     front = glm::vec3(rootNode->transform[1]);
-    up = glm::vec3(rootNode->transform[2]);
 }
 
 void Jet::draw(PhongShader& shader) {
