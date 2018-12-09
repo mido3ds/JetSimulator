@@ -705,7 +705,7 @@ const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags)
             }
 
             // Ensure that the validation process won't be called twice
-            ApplyPostProcessing(pFlags & (~aiProcess_ValidateDataStructure));
+            //ApplyPostProcessing(pFlags & (~aiProcess_ValidateDataStructure));
         }
         // if failed, extract the error string
         else if( !pimpl->mScene) {

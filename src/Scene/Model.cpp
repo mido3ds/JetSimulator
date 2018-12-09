@@ -19,9 +19,7 @@ void Model::load() {
     // import
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, 
-        aiProcess_JoinIdenticalVertices || aiProcess_Triangulate || 
-        aiProcess_RemoveComponent || aiProcess_GenSmoothNormals || 
-        aiProcess_OptimizeMeshes ||  aiProcess_GenUVCoords);
+        aiProcessPreset_TargetRealtime_Fast);
     assert(scene && importer.GetErrorString());
 
     // materials

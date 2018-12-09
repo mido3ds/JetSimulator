@@ -10,6 +10,7 @@ class JetSimulator: public App {
 private:
     PhongShader* phongShader;
     Jet* jet;
+    Model* land;
     ModelTrackingCamera* camera;
     SkyBox* skybox;
     DirLight sun {

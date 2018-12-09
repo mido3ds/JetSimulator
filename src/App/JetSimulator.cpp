@@ -22,13 +22,16 @@ App::Config JetSimulator::getConfig() {
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
+    land = new Model("assets/terrains/channeledLand/channeledLand.dae");
     camera = new ModelTrackingCamera(jet, 7, glm::pi<float>()/2, getAspectRatio(), .1, 1000);
     skybox = new SkyBox();
 
     phongShader->use();
     jet->load();
-
+    land->load();
     skybox->load();
+
+    jet->pos.z = 30.0f;
 
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
@@ -41,6 +44,7 @@ void JetSimulator::onDestroy() {
     delete phongShader;
     delete camera;
     delete jet;
+    delete land;
     delete skybox;
 }
 
@@ -58,6 +62,7 @@ void JetSimulator::onDraw() {
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
     jet->draw(*phongShader);
+    land->draw(*phongShader);
 
     skybox->draw(camera->projection, camera->view);
 }
