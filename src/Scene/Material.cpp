@@ -15,19 +15,19 @@ Material* Material::build(const aiMaterial* mat, std::map<std::string,Texture2D*
     string diffPath(dir), specPath(dir);
     aiReturn ret;
 
-    ret = mat->GetTexture(aiTextureType_DIFFUSE, 0, &ai_diffPath);
+    ret = aiGetMaterialString_(mat, AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), &ai_diffPath);
     if (ret != aiReturn_SUCCESS)
         diffPath = DEFUALT_DIFF_PATH;
     else 
         diffPath += ai_diffPath.C_Str();
 
-    ret = mat->GetTexture(aiTextureType_SPECULAR, 0, &ai_specPath);
+    ret = aiGetMaterialString_(mat, AI_MATKEY_TEXTURE(aiTextureType_SPECULAR, 0), &ai_specPath);
     if (ret != aiReturn_SUCCESS)
         specPath = DEFAULT_SPC_PATH;
     else
         specPath += ai_specPath.C_Str();
 
-    ret = aiGetMaterialFloat(mat, AI_MATKEY_SHININESS_STRENGTH, (ai_real*)&shininess);
+    ret = aiGetMaterialFloatArray_(mat, AI_MATKEY_SHININESS_STRENGTH, (ai_real*)&shininess, NULL);
     if (ret != aiReturn_SUCCESS) 
         shininess = DEFAULT_SHININESS;
 

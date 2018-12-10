@@ -1,21 +1,32 @@
 #include "App.hpp"
 #include <glad/glad.h>
-#include <iostream>
-#include <exception>
+#include <Windows.h>
+#include <Wrappers/AssimpWrapper.hpp>
 
 App* staticAppPtr = nullptr;
 
+inline void fatal(char* string) {
+    MessageBox(NULL, TEXT(string), TEXT("Error"), MB_OK|MB_ICONERROR);
+    exit(EXIT_FAILURE);
+}
+
 App::App() {
-    if (staticAppPtr) throw std::exception("cant create two Apps");
+    if (staticAppPtr) {
+        fatal("Can only create one app");
+    }
     staticAppPtr = this;
 
     if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        exit(EXIT_FAILURE);
+        fatal("Failed to initialize GLFW");
+    }
+
+    if (!assimpInit()) {
+        fatal("Failed to initialize assimp");
     }
 }
 
 App::~App() {
+    assimpFree();
     glfwDestroyWindow(window);
     glfwTerminate();
 }
@@ -46,19 +57,17 @@ void App::createWindow() {
     GLFWmonitor *monitor = config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
     window = glfwCreateWindow(config.width, config.height, config.title, monitor, nullptr);
     if (!window) {
-        std::cerr << "Failed to create Window" << std::endl;
         glfwTerminate(); 
-        exit(EXIT_FAILURE);
+        fatal("Failed to create Window");
     }
     glfwSetInputMode(window, GLFW_CURSOR, config.cursorHidden? GLFW_CURSOR_DISABLED:GLFW_CURSOR_NORMAL);
     if (config.cursorCentered) glfwSetCursorPos(window, config.width/2.0, config.height/2.0);
 
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
         glfwDestroyWindow(window); 
         glfwTerminate(); 
-        exit(EXIT_FAILURE);
+        fatal("Failed to initialize GLAD");
     }    
 }
 

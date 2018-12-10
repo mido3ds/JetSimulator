@@ -29,11 +29,6 @@ option (GLFW_BUILD_TESTS OFF)
 add_subdirectory (vendor/glfw)
 
 #
-# assimp options
-#
-add_subdirectory (vendor/assimp)
-
-#
 # Set include paths
 #
 include_directories (src/
@@ -72,7 +67,6 @@ add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
                                 ${PROJECT_CONFIGS} ${VENDORS_SOURCES})
 target_link_libraries (${PROJECT_NAME}
                        glfw
-                       assimp
                        ${GLFW_LIBRARIES}
                        ${GLAD_LIBRARIES})
 set_target_properties (${PROJECT_NAME} PROPERTIES
