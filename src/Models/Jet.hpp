@@ -3,7 +3,7 @@
 #include <Shaders/PhongShader.hpp>
 #include <App/App.hpp>
 
-#define JET_MODEL_PATH "assets/models/su27/su27e.dae"
+#define JET_MODEL_PATH "assets/models/f14/f14GearUp.dae"
 #define ROTATE_SPEED -0.54906f
 #define YAW_MAX -2.54906f
 
