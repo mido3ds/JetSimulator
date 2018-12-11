@@ -1,12 +1,15 @@
 #include "ModelTrackingCamera.hpp"
 #include <glm/ext.hpp>
+#include <cassert>
 
 #define max(a, b) (a>b?a:b)
 #define min(a, b) (a<b?a:b)
 
-ModelTrackingCamera::ModelTrackingCamera(Model* target, float distance, float fovy, float aspect, float near, float far) 
-    :Camera(fovy, aspect, near, far), target(target), distance(distance), app(App::getApp()) {
+ModelTrackingCamera::ModelTrackingCamera(Model* target, float minDist, float maxDist, float fovy, float aspect, float near, float far) 
+    :Camera(fovy, aspect, near, far), target(target), 
+        distance((maxDist+minDist)/2.0f), minDist(minDist), maxDist(maxDist), app(App::getApp()) {
     lastMousePos = app->getMousePos();
+    assert(minDist <= maxDist);
 } 
 
 void ModelTrackingCamera::update(float dt) {
@@ -23,6 +26,10 @@ void ModelTrackingCamera::update(float dt) {
         else pitch = max(pitch, 5.036f);
     }
     lastMousePos = mousePos;
+
+    // update distance 
+    distance += -app->getScroll();
+    distance = glm::clamp(distance, minDist, maxDist);
 
     // update view
     position = glm::vec3(

@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <Wrappers/AssimpWrapper.hpp>
 
-App* staticAppPtr = nullptr;
+static App* staticAppPtr = nullptr;
 
 inline void fatal(char* string) {
     MessageBox(NULL, TEXT(string), TEXT("Error"), MB_OK|MB_ICONERROR);
@@ -35,6 +35,11 @@ App* App::getApp() {
     return staticAppPtr;
 }
 
+static float _yscroll = 0;
+static void _scrollCallback(GLFWwindow* window, double dx, double dy) {
+    _yscroll = dy;
+}
+
 void App::createWindow() {
     Config config = getConfig();
 
@@ -60,8 +65,12 @@ void App::createWindow() {
         glfwTerminate(); 
         fatal("Failed to create Window");
     }
+
     glfwSetInputMode(window, GLFW_CURSOR, config.cursorHidden? GLFW_CURSOR_DISABLED:GLFW_CURSOR_NORMAL);
     if (config.cursorCentered) glfwSetCursorPos(window, config.width/2.0, config.height/2.0);
+
+    
+    glfwSetScrollCallback(window, _scrollCallback);
 
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -77,6 +86,9 @@ void App::mainLoop() {
         acc = 0;
 
     while (!glfwWindowShouldClose(window)) {
+        this->yscroll = _yscroll;
+        _yscroll = 0;
+
         currentFrame = glfwGetTime();
         acc += currentFrame - lastFrame;
 
@@ -90,6 +102,8 @@ void App::mainLoop() {
         glfwPollEvents();
 
         lastFrame = currentFrame;
+
+        this->yscroll = 0;
     }
 }
 
@@ -131,4 +145,10 @@ float App::getAspectRatio() {
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     return (float)width/height;
+}
+
+float App::getScroll() {
+    float temp = this->yscroll;
+    this->yscroll = 0;
+    return temp;
 }

@@ -11,8 +11,9 @@ private:
     glm::vec3 normal;
     App * const app;
     glm::vec2 lastMousePos;
+    const float minDist, maxDist;
 public:
-    ModelTrackingCamera(Model* target, float distance, 
+    ModelTrackingCamera(Model* target, float minDist, float maxDist, 
                 float fovy, float aspect, float near, float far);
 
     Model* target;

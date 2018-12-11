@@ -23,7 +23,7 @@ void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
     land = new Model("assets/terrains/channeledLand/channeledLand.dae");
-    camera = new ModelTrackingCamera(jet, 7, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
+    camera = new ModelTrackingCamera(jet, 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
     skybox = new SkyBox();
 
     phongShader->use();

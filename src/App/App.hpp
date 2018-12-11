@@ -6,6 +6,7 @@ class App {
 private:
     GLFWwindow* window;
     float updateTime;
+    float yscroll=0;
 
     void createWindow();
     void mainLoop();
@@ -37,6 +38,7 @@ public:
 
     bool isKeyPressed(int key);
     glm::vec2 getMousePos();
+    float getScroll();
     int getWidth();
     int getHeight();
     float getAspectRatio();
