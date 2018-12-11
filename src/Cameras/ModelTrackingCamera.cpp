@@ -16,7 +16,7 @@ void ModelTrackingCamera::update(float dt) {
         yaw -= MOUSE_SENSITIVITY * (mousePos.x - lastMousePos.x);
         yaw = glm::wrapAngle(yaw);
 
-        pitch += MOUSE_SENSITIVITY * (mousePos.y - lastMousePos.y);
+        pitch -= MOUSE_SENSITIVITY * (mousePos.y - lastMousePos.y);
         pitch = glm::wrapAngle(pitch);
 
         if (pitch < glm::pi<float>()) pitch = min(pitch, 1.283f);
@@ -26,8 +26,8 @@ void ModelTrackingCamera::update(float dt) {
 
     // update view
     position = glm::vec3(
-        glm::rotate(pitch, target->right) * 
         glm::rotate(yaw, target->up) * 
+        glm::rotate(pitch, target->right) * 
         glm::vec4(- distance * target->front, 1)
     );
     position += target->pos;
