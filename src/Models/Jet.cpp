@@ -8,6 +8,8 @@
 Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
 
 void Jet::update(float dt) {
+    yaw = 0;
+
     // rotation
     if (app->isKeyPressed(KEY_W)) {
         pitch += ROTATE_SPEED * dt;
@@ -15,9 +17,9 @@ void Jet::update(float dt) {
         pitch -= ROTATE_SPEED * dt;
     }
     if (app->isKeyPressed(KEY_E)) {
-        yaw += ROTATE_SPEED * dt;
+        yaw += YAW_MAX;
     } else if (app->isKeyPressed(KEY_Q)) {
-        yaw -= ROTATE_SPEED * dt;
+        yaw -= YAW_MAX;
     }
     if (app->isKeyPressed(KEY_D)) {
         roll += ROTATE_SPEED * dt;
