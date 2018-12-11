@@ -8,30 +8,19 @@
 Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
 
 void Jet::update(float dt) {
-    yaw = 0;
+    float dYaw=0,dPitch=0, dRoll=0;
 
     // rotation
     if (app->isKeyPressed(KEY_W)) {
-        pitch += ROTATE_SPEED * dt;
+        dPitch = +ROTATE_SPEED * dt;
     } else if (app->isKeyPressed(KEY_S)) {
-        pitch -= ROTATE_SPEED * dt;
-    }
-    if (app->isKeyPressed(KEY_E)) {
-        yaw += YAW_MAX;
-    } else if (app->isKeyPressed(KEY_Q)) {
-        yaw -= YAW_MAX;
+        dPitch = -ROTATE_SPEED * dt;
     }
     if (app->isKeyPressed(KEY_D)) {
-        roll += ROTATE_SPEED * dt;
+        dRoll = +ROTATE_SPEED * dt;
     } else if (app->isKeyPressed(KEY_A)) {
-        roll -= ROTATE_SPEED * dt;
+        dRoll = -ROTATE_SPEED * dt;
     }
-    yaw = glm::wrapAngle(yaw);
-    pitch = glm::wrapAngle(pitch);
-    roll = glm::wrapAngle(roll);
-
-    if (yaw < glm::pi<float>()) yaw = min(yaw, 0.0713778f);
-    else yaw = max(yaw, 6.23377f);
 
     // translation
     if (app->isKeyPressed(KEY_UP)) {
@@ -45,12 +34,24 @@ void Jet::update(float dt) {
         pos -= dt * 300 * right;
     }
 
-    // final transformation
-    glm::mat3 rRoll(glm::rotate(roll, glm::vec3(0, 1, 0)));
-    right = rRoll * glm::vec3(1, 0, 0);
-    glm::mat3 rPitch(glm::rotate(pitch, right));
-    up = rPitch * rRoll * glm::vec3(0, 0, 1);
-    glm::mat3 rYaw(glm::rotate(yaw, up));
-    rootNode->transform = glm::translate(pos) * glm::mat4(rYaw * rPitch * rRoll);
-    front = glm::vec3(rootNode->transform[1]);
+    // transformation
+    glm::mat3 rRoll(glm::rotate(dRoll, front));
+    right = rRoll * right;
+    glm::mat3 rPitch(glm::rotate(dPitch, right));
+    up = rPitch * rRoll * up;
+    glm::mat3 rYaw(glm::rotate(dYaw, up));
+    right = rYaw * right;
+    front = glm::cross(up, right);
+    
+    rootNode->transform = glm::mat4(
+        right.x, right.y, right.z, 0.0f,
+        front.x, front.y, front.z, 0.0f,
+        up.x, up.y, up.z, 0.0f,
+        pos.x, pos.y, pos.z, 1.0f
+    );
+
+    // wrap angles
+    yaw = yaw+dYaw;
+    pitch = glm::wrapAngle(pitch+dPitch);
+    roll = glm::wrapAngle(roll+dRoll);
 }
