@@ -3,12 +3,13 @@
 #define NO_EXTERN
 #include "AssimpWrapper.hpp"
 
+static HINSTANCE lib;
+
 aiImportFile_ptr aiImportFile_;
 aiGetErrorString_ptr aiGetErrorString_;
 aiGetMaterialString_ptr aiGetMaterialString_;
 aiGetMaterialFloatArray_ptr aiGetMaterialFloatArray_;
 aiReleaseImport_ptr aiReleaseImport_;
-HINSTANCE lib;
 
 int assimpInit() {
     HINSTANCE lib = LoadLibrary(TEXT("assets/dlls/assimp-vc140-mt.dll"));

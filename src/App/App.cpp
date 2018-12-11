@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <Windows.h>
 #include <Wrappers/AssimpWrapper.hpp>
+#include <Wrappers/OpenalWrapper.hpp>
 
 static App* staticAppPtr = nullptr;
 
@@ -23,9 +24,14 @@ App::App() {
     if (!assimpInit()) {
         fatal("Failed to initialize assimp");
     }
+
+    if (!openalInit()) {
+        fatal("Failed to initialize openal");
+    }
 }
 
 App::~App() {
+    openalFree();
     assimpFree();
     glfwDestroyWindow(window);
     glfwTerminate();
