@@ -36,6 +36,7 @@ public:
 
     static App* getApp();
 
+	
     bool isKeyPressed(int key);
     glm::vec2 getMousePos();
     float getScroll();

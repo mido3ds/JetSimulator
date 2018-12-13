@@ -91,7 +91,8 @@ void App::mainLoop() {
         lastFrame = glfwGetTime(), 
         acc = 0;
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window) && !glfwGetKey(window,KEY_ESCAPE)) 
+	{
         this->yscroll = _yscroll;
         _yscroll = 0;
 
