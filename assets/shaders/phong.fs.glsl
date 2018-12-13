@@ -56,6 +56,14 @@ void main() {
     vec3 diffMap = texture(uMaterial.diffuse, fs_in.texCoord).rgb;
     vec3 specMap = texture(uMaterial.specular, fs_in.texCoord).rgb;
     vec3 color = vec3(0);
+    float fogDenisty=0.0005f;
+    vec3 fog_color = vec3(0.5f, 0.5f, 0.5f);
+    float distY=abs(fs_in.fragPos.y);
+    float distX=abs(fs_in.fragPos.x);
+    float fogFactorY = exp(-1*distY*fogDenisty);
+	float fogFactorX = exp(-1*distX*fogDenisty);
+    fogFactorY=clamp(fogFactorY,0.0,1.0);
+    fogFactorX=clamp(fogFactorX,0.0,1.0);
 
     color += DirLight_calc(uDirLight, fs_in.normal, viewToFragDir, uMaterial.shininess, diffMap, specMap);
     for (int i = 0; i < uNumPointLights; i++) {
@@ -64,7 +72,7 @@ void main() {
     for (int i = 0; i < uNumSpotLights; i++) {
         color += SpotLight_calc(uSpotLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
     }
-
+    color=mix(fog_color,color,fogFactorX*fogFactorY);
     outFragCol = vec4(color, 1);
 }
 
