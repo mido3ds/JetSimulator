@@ -8,11 +8,13 @@ class SkyBox {
 private:
     CubeMapTexture cubemap;
     Shader* shader;
-    GLuint vao, uProjView;
+    GLuint vao, uProjView /*,uUseFog*/ ;
+	//bool useFog;
 public:
     SkyBox();
     ~SkyBox();
 
     void load();
+	//void switchFog(bool state);
     void draw(glm::mat4 proj, glm::mat4 view);
 };

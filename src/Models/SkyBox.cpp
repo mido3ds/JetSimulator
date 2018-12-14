@@ -12,11 +12,19 @@ SkyBox::SkyBox()
         "back.png"
     ) {
     shader = new Shader();
+	//useFog = true;
+	//uUseFog = getUniformLocation("uUseFog");
 }
 
 SkyBox::~SkyBox() {
     delete shader;
 }
+
+/*void SkyBox::switchFog(bool state)
+{
+	setUniform(uUseFog, state);
+}
+*/
 
 GLfloat positions[] = {      
     -1.0f, -1.0f, -1.0f, 
