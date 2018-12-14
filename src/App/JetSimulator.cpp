@@ -52,11 +52,9 @@ void JetSimulator::onDestroy() {
 void JetSimulator::onUpdate(float dt) {
     jet->update(dt);
     camera->update(dt);
-	if (isKeyPressed(KEY_F))
-	{
-		useFog = !useFog;
-
-	}
+    if (isKeyPressed(KEY_1)) {
+	useFog = !useFog;
+    }
 }
 
 void JetSimulator::onDraw() {
