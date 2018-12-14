@@ -13,6 +13,7 @@ private:
     Model* land;
     ModelTrackingCamera* camera;
     SkyBox* skybox;
+	bool useFog;
     DirLight sun {
         glm::vec3(0, 0, -1), // dir
         glm::vec3(0.1, 0.1, 0.1), // ambient

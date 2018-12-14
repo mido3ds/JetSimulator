@@ -25,6 +25,7 @@ void JetSimulator::onCreate() {
     land = new Model("assets/terrains/channeledLand/channeledLand.dae");
     camera = new ModelTrackingCamera(jet, 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
     skybox = new SkyBox();
+	useFog = false; // initially
 
     phongShader->use();
     jet->load();
@@ -51,6 +52,11 @@ void JetSimulator::onDestroy() {
 void JetSimulator::onUpdate(float dt) {
     jet->update(dt);
     camera->update(dt);
+	if (isKeyPressed(KEY_F))
+	{
+		useFog = !useFog;
+
+	}
 }
 
 void JetSimulator::onDraw() {
@@ -61,6 +67,8 @@ void JetSimulator::onDraw() {
     phongShader->setDirLight(sun);
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
+	//skybox->switchFog(!useFog);
+	phongShader->switchFog(useFog);
     jet->draw(*phongShader);
     land->draw(*phongShader);
 
