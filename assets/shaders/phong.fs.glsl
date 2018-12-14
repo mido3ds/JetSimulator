@@ -34,6 +34,7 @@ struct SpotLight {
 vec3 DirLight_calc(DirLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 diffMap, vec3 specMap);
 vec3 PointLight_calc(PointLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 SpotLight_calc(SpotLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
+vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main);
 // in
 in VS_OUT {    
     vec3 fragPos;
@@ -50,21 +51,14 @@ uniform PointLight uPointLights[MAX_POINT_LIGHTS];
 uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];
 uniform int uNumPointLights;
 uniform int uNumSpotLights;
+uniform bool uUseFog;
 
 void main() {
     vec3 viewToFragDir = normalize(uViewPos - fs_in.fragPos);
     vec3 diffMap = texture(uMaterial.diffuse, fs_in.texCoord).rgb;
     vec3 specMap = texture(uMaterial.specular, fs_in.texCoord).rgb;
     vec3 color = vec3(0);
-    float fogDenisty=0.0005f;
-    vec3 fog_color = vec3(0.5f, 0.5f, 0.5f);
-    float distY=abs(fs_in.fragPos.y);
-    float distX=abs(fs_in.fragPos.x);
-    float fogFactorY = exp(-1*distY*fogDenisty);
-	float fogFactorX = exp(-1*distX*fogDenisty);
-    fogFactorY=clamp(fogFactorY,0.0,1.0);
-    fogFactorX=clamp(fogFactorX,0.0,1.0);
-
+    
     color += DirLight_calc(uDirLight, fs_in.normal, viewToFragDir, uMaterial.shininess, diffMap, specMap);
     for (int i = 0; i < uNumPointLights; i++) {
         color += PointLight_calc(uPointLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
@@ -72,10 +66,23 @@ void main() {
     for (int i = 0; i < uNumSpotLights; i++) {
         color += SpotLight_calc(uSpotLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
     }
-    color=mix(fog_color,color,fogFactorX*fogFactorY);
+    if(uUseFog)
+    {
+      color = Fog_calc(fs_in.fragPos,color,uDirLight);
+    }
     outFragCol = vec4(color, 1);
 }
-
+vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main){
+    float fogDenisty=0.001f;
+    vec3 fog_color = vec3(0.5f, 0.5f, 0.5f)*(main.ambient+main.diffuse);
+    float distY=abs(fragPos.y);
+    float distX=abs(fragPos.x);
+    float fogFactorY = exp(-1*distY*fogDenisty);
+	float fogFactorX = exp(-1*distX*fogDenisty);
+    fogFactorY=clamp(fogFactorY,0.0,1.0);
+    fogFactorX=clamp(fogFactorX,0.0,1.0);
+    return mix(fog_color,color,fogFactorX*fogFactorY);
+}
 vec3 DirLight_calcDiffuse(DirLight self, vec3 normal) {
     return self.diffuse * max(dot(normal, -self.dir),0);
 }
