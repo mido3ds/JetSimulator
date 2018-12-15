@@ -1,6 +1,6 @@
 #pragma once
 #include <Textures/Texture2D.hpp>
-#include <Wrappers/AssimpWrapper.hpp>
+#include <assimp/material.h>
 #include <string>
 #include <map>
 

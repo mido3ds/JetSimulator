@@ -2,7 +2,8 @@
 #include "Mesh.hpp"
 #include "Node.hpp"
 #include <assimp/postprocess.h>
-#include <Wrappers/AssimpWrapper.hpp> 
+#include <assimp/scene.h>
+#include <assimp/cimport.h>
 #include <map>
 
 Model::Model(const std::string& path) :path(path), pos(0, 0, 0), right(1, 0, 0), front(0, 1, 0), up(0, 0, 1) {}
@@ -16,9 +17,9 @@ Model::~Model() {
 
 void Model::load() {
     // import
-    const aiScene* scene = aiImportFile_(path.c_str(), 
+    const aiScene* scene = aiImportFile(path.c_str(), 
         aiProcessPreset_TargetRealtime_Fast);
-    assert(scene && aiGetErrorString_());
+    assert(scene && aiGetErrorString());
 
     // materials
     std::map<std::string, Texture2D*> textMap;
@@ -47,7 +48,7 @@ void Model::load() {
     rootNode = Node::build(scene, scene->mRootNode, meshes);
     rootNode->transform = glm::mat4();
 
-    aiReleaseImport_(scene);
+    aiReleaseImport(scene);
 }
 
 void Model::update(float dT) {}

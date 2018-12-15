@@ -49,12 +49,17 @@ void JetSimulator::onDestroy() {
     delete skybox;
 }
 
+void JetSimulator::onKeyPressed(int key, int modifierKey) {
+    if (key == KEY_1) {
+	    useFog = !useFog;
+    }
+}
+
+void JetSimulator::onKeyReleased(int key, int modifierKey) {}
+
 void JetSimulator::onUpdate(float dt) {
     jet->update(dt);
     camera->update(dt);
-    if (isKeyPressed(KEY_1)) {
-	useFog = !useFog;
-    }
 }
 
 void JetSimulator::onDraw() {

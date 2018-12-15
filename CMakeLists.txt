@@ -67,13 +67,23 @@ add_definitions (-DGLFW_INCLUDE_NONE
 add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
                                 ${PROJECT_CONFIGS} ${VENDORS_SOURCES})
 target_link_libraries (${PROJECT_NAME}
+                       ${CMAKE_CURRENT_SOURCE_DIR}/vendor/freetype/lib/freetype.lib
+                       ${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal/lib/OpenAl32.lib
+                       ${CMAKE_CURRENT_SOURCE_DIR}/vendor/assimp/lib/assimp-vc140-mt.lib
                        glfw
                        ${GLFW_LIBRARIES}
                        ${GLAD_LIBRARIES})
 set_target_properties (${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 
-
+#
+# copy dlls
+#
+file(COPY 
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/freetype/lib/freetype.dll 
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal/lib/OpenAl32.dll
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/assimp/lib/assimp-vc140-mt.dll
+    DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Debug)
 
 #
 # create makefile

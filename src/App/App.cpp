@@ -1,8 +1,6 @@
 #include "App.hpp"
 #include <glad/glad.h>
 #include <Windows.h>
-#include <Wrappers/AssimpWrapper.hpp>
-#include <Wrappers/OpenalWrapper.hpp>
 
 static App* staticAppPtr = nullptr;
 
@@ -20,19 +18,9 @@ App::App() {
     if (!glfwInit()) {
         fatal("Failed to initialize GLFW");
     }
-
-    if (!assimpInit()) {
-        fatal("Failed to initialize assimp");
-    }
-
-    if (!openalInit()) {
-        fatal("Failed to initialize openal");
-    }
 }
 
 App::~App() {
-    openalFree();
-    assimpFree();
     glfwDestroyWindow(window);
     glfwTerminate();
 }
@@ -44,6 +32,14 @@ App* App::getApp() {
 static float _yscroll = 0;
 static void _scrollCallback(GLFWwindow* window, double dx, double dy) {
     _yscroll = dy;
+}
+
+static void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        staticAppPtr->onKeyPressed(key, mods);
+    } else if (action == GLFW_RELEASE) {
+        staticAppPtr->onKeyReleased(key, mods);
+    }
 }
 
 void App::createWindow() {
@@ -77,6 +73,7 @@ void App::createWindow() {
 
     
     glfwSetScrollCallback(window, _scrollCallback);
+    glfwSetKeyCallback(window, _keyCallback);
 
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
