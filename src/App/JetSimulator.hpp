@@ -14,6 +14,7 @@ private:
     ModelTrackingCamera* camera;
     SkyBox* skybox;
 	bool useFog;
+	bool useVignette;
     DirLight sun {
         glm::vec3(0, 0, -1), // dir
         glm::vec3(0.1, 0.1, 0.1), // ambient

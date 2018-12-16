@@ -26,8 +26,10 @@ void JetSimulator::onCreate() {
     camera = new ModelTrackingCamera(jet, 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
     skybox = new SkyBox();
 	useFog = false; // initially
+	useVignette = false; // initially
 
     phongShader->use();
+	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
     jet->load();
     land->load();
     skybox->load();
@@ -50,9 +52,12 @@ void JetSimulator::onDestroy() {
 }
 
 void JetSimulator::onKeyPressed(int key, int modifierKey) {
-    if (key == KEY_1) {
-	    useFog = !useFog;
-    }
+	if (key == KEY_1) {
+		useFog = !useFog;
+	}
+	else if (key == KEY_2) {
+		useVignette = !useVignette;
+	}
 }
 
 void JetSimulator::onKeyReleased(int key, int modifierKey) {}
@@ -71,6 +76,7 @@ void JetSimulator::onDraw() {
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
 	phongShader->switchFog(useFog);
+	phongShader->switchVignette(useVignette);
     jet->draw(*phongShader);
     land->draw(*phongShader);
 
