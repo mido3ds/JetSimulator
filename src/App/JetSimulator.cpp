@@ -53,6 +53,10 @@ void JetSimulator::onKeyPressed(int key, int modifierKey) {
     if (key == KEY_1) {
 	    useFog = !useFog;
     }
+
+    if (key == MOUSE_BUTTON_LEFT) {
+        jet->fireMissile();
+    }
 }
 
 void JetSimulator::onKeyReleased(int key, int modifierKey) {}

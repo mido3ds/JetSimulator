@@ -19,9 +19,9 @@ protected:
     Node* rootNode;
 public:
     Model(const std::string& path);
-    ~Model();
+    virtual ~Model();
 
-    void load();
+    virtual void load();
     virtual void update(float dT);
     virtual void draw(PhongShader& shader);
 

@@ -49,3 +49,45 @@ void Node::draw(PhongShader& shader) {
     for (Mesh* mesh: meshes) mesh->draw(shader);
     for (Node* child:children) child->draw(shader);
 }
+
+std::vector<Node*> Node::getChildren() {
+    return children;
+}
+
+std::vector<Mesh*> Node::getMeshes() {
+    return meshes;
+}
+
+Node* Node::getParent() {
+    return parent;
+}
+
+bool Node::attached() {
+    return parent;
+}
+
+void Node::addToParent(Node* parent) {
+    assert(parent);
+
+    this->parent = parent;
+    parent->children.push_back(this);
+}
+
+void Node::removeFromParent() {
+    if (parent) {
+        parent->removeChild(this);
+        parent = nullptr;
+    }
+}
+
+void Node::removeChild(Node* ch) {
+    int i;
+    for (i = 0; i < children.size(); i++) {
+        if (children[i] == ch)
+            break;
+    }
+    if (i < children.size()) {
+        ch->transform = ch->getTotalTransform();
+        children.erase(children.begin() + i);
+    }
+}
