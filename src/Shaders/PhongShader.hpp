@@ -7,11 +7,12 @@
 class PhongShader: public Shader {
 private:
     GLuint uProjView, uModel, uViewPos, uDirLight_dir, uDirLight_ambient, uDirLight_diffuse,
-            uDirLight_specular, uNumPointLights, uNumSpotLights, uMaterial_shininess,uUseFog;
+            uDirLight_specular, uNumPointLights, uNumSpotLights, uMaterial_shininess, uUseFog, uUseVignette;
 public:
     PhongShader();
     
 	void switchFog(bool state);
+	void switchVignette(bool state);
     void setMaterial(const Material& material);
     void setDirLight(const DirLight& light);
     void setPointLight(const PointLight& light, int lightNumber);

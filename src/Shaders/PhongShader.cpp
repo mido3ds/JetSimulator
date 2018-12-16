@@ -20,6 +20,7 @@ PhongShader::PhongShader() {
     uDirLight_specular = getUniformLocation("uDirLight.specular");
 
 	uUseFog= getUniformLocation("uUseFog");
+	uUseVignette = getUniformLocation("uUseVignette");
 
     setUniform(getUniformLocation("uMaterial.diffuse"), Texture2D::Usage::Diffuse); 
     setUniform(getUniformLocation("uMaterial.specular"), Texture2D::Usage::Specular);
@@ -34,6 +35,10 @@ void PhongShader::setMaterial(const Material& material) {
 void PhongShader::switchFog(bool state)
 {
 	setUniform(uUseFog, state);
+}
+void PhongShader::switchVignette(bool state)
+{
+	setUniform(uUseVignette, state);
 }
 void PhongShader::setDirLight(const DirLight& light) {
     setUniform(uDirLight_dir, light.dir);

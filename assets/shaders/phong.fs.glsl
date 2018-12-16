@@ -2,6 +2,9 @@
 // defs
 #define MAX_POINT_LIGHTS 5
 #define MAX_SPOT_LIGHTS  5
+//constants
+const float outerRadius = 0.65, innerRadius = 0.4, intensity = 1;
+
 // struct
 struct Material {
     sampler2D diffuse;
@@ -35,6 +38,7 @@ vec3 DirLight_calc(DirLight self, vec3 normal, vec3 viewToFragDir, float shinine
 vec3 PointLight_calc(PointLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 SpotLight_calc(SpotLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main);
+vec4 Vignette_calc(vec4 color);
 // in
 in VS_OUT {    
     vec3 fragPos;
@@ -52,7 +56,8 @@ uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];
 uniform int uNumPointLights;
 uniform int uNumSpotLights;
 uniform bool uUseFog;
-
+uniform bool uUseVignette;
+uniform vec2 uResolution;
 void main() {
     vec3 viewToFragDir = normalize(uViewPos - fs_in.fragPos);
     vec3 diffMap = texture(uMaterial.diffuse, fs_in.texCoord).rgb;
@@ -68,10 +73,16 @@ void main() {
     }
     if(uUseFog)
     {
-      color = Fog_calc(fs_in.fragPos,color,uDirLight);
+		color = Fog_calc(fs_in.fragPos,color,uDirLight);
     }
-    outFragCol = vec4(color, 1);
+	outFragCol = vec4(color, 1);
+	if(uUseVignette)
+    {
+		outFragCol = Vignette_calc(outFragCol);
+    }
 }
+
+
 vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main){
     float fogDenisty=0.001f;
     vec3 fog_color = vec3(0.5f, 0.5f, 0.5f)*(main.ambient+main.diffuse);
@@ -158,4 +169,12 @@ vec3 SpotLight_calc(SpotLight self, vec3 normal, vec3 viewToFragDir, float shini
     } else {
         return self.ambient * diffMap;
     }
+}
+
+vec4 Vignette_calc(vec4 color) {
+	vec2 relativePos = gl_FragCoord.xy/uResolution - 0.5;
+	float len = length(relativePos);
+	float vignette = smoothstep(outerRadius, innerRadius, len); // smooth transation from outerRadius to innerRad
+	color.rgb = mix(color.rgb, color.rgb * vignette, intensity);
+	return color;
 }
