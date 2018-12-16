@@ -1,11 +1,30 @@
 #include "Jet.hpp"
 #include <App/App.hpp>
 #include <glm/ext.hpp>
+#include <string>
+#include <sstream>
 
 #define max(a, b) (a>b?a:b)
 #define min(a, b) (a<b?a:b)
 
 Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
+
+Jet::~Jet() {
+    for (int i = 0; i < missiles.size(); i++) {
+        delete missiles[i];
+    }
+}
+
+void Jet::load() {
+    Model::load();
+
+    for (int i = 0; i < NUM_MISSILES; i++) {
+        std::ostringstream os;
+        os << MISSILE_NAME << i;
+
+        missiles.push_back(new Missile(rootNode->getNodeByName(os.str()), MISSILE_SPD, MISSILE_TIME));
+    }
+}
 
 void Jet::update(float dt) {
     float dYaw=0,dPitch=0, dRoll=0;
@@ -24,14 +43,14 @@ void Jet::update(float dt) {
 
     // translation
     if (app->isKeyPressed(KEY_UP)) {
-        pos += dt * 300 * front;
+        pos += dt * speed * front;
     } else if (app->isKeyPressed(KEY_DOWN)) {
-        pos -= dt * 300 * front;
+        pos -= dt * speed * front;
     } 
     if (app->isKeyPressed(KEY_RIGHT)) {
-        pos += dt * 300 * right;
+        pos += dt * speed * right;
     } else if (app->isKeyPressed(KEY_LEFT)) {
-        pos -= dt * 300 * right;
+        pos -= dt * speed * right;
     }
 
     // transformation
@@ -54,4 +73,17 @@ void Jet::update(float dt) {
     yaw = yaw+dYaw;
     pitch = glm::wrapAngle(pitch+dPitch);
     roll = glm::wrapAngle(roll+dRoll);
+
+    for (auto& missile: missiles) missile->update(dt);
+}
+
+void Jet::draw(PhongShader& shader) {
+    Model::draw(shader);
+    for (auto& missile: missiles) missile->draw(&shader);
+}
+
+void Jet::fireMissile() {
+    if (missileToFire < missiles.size()) {
+        missiles[missileToFire++]->fire(speed);
+    }
 }

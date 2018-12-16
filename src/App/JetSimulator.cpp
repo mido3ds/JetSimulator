@@ -55,8 +55,11 @@ void JetSimulator::onKeyPressed(int key, int modifierKey) {
 	if (key == KEY_1) {
 		useFog = !useFog;
 	}
-	else if (key == KEY_2) {
+	if (key == KEY_2) {
 		useVignette = !useVignette;
+	}
+	if (key == MOUSE_BUTTON_LEFT) {
+		jet->fireMissile();
 	}
 }
 

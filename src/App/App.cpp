@@ -42,6 +42,10 @@ static void _keyCallback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
+static void _mouseCallback(GLFWwindow* window, int key, int action, int mods) {
+    _keyCallback(window, key, 0, action, mods);
+}
+
 void App::createWindow() {
     Config config = getConfig();
 
@@ -74,6 +78,7 @@ void App::createWindow() {
     
     glfwSetScrollCallback(window, _scrollCallback);
     glfwSetKeyCallback(window, _keyCallback);
+    glfwSetMouseButtonCallback(window, _mouseCallback);
 
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
