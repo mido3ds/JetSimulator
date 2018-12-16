@@ -86,8 +86,8 @@ void main() {
 vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main){
     float fogDenisty=0.001f;
     vec3 fog_color = vec3(0.5f, 0.5f, 0.5f)*(main.ambient+main.diffuse);
-    float distY=abs(fragPos.y);
-    float distX=abs(fragPos.x);
+    float distY=abs(uViewPos.y-fragPos.y);
+    float distX=abs(uViewPos.x-fragPos.x);
     float fogFactorY = exp(-1*distY*fogDenisty);
 	float fogFactorX = exp(-1*distX*fogDenisty);
     fogFactorY=clamp(fogFactorY,0.0,1.0);

@@ -10,11 +10,13 @@ uniform bool uUseFog;
 void main() {
     vec4 color=texture(uCubeMap, shTexCoord);
    if(uUseFog) {
-    float fogDenisty=0.01f;
+    float fogDenisty=0.005f;
     vec4 fog_color = vec4(0.5f, 0.5f, 0.5f,1);
     float distY=abs(gl_FragCoord.y);
-    float fogFactor = exp(-1*distY*fogDenisty);
-    color = mix(fog_color,color,fogFactor);
+    float distX=abs(gl_FragCoord.x);
+    float fogFactorY = exp(-1*distY*fogDenisty);
+    float fogFactorX = exp(-1*distX*fogDenisty);
+    color = mix(fog_color,color,fogFactorY*fogFactorX);
    }
     outFragColor = color;
 }
