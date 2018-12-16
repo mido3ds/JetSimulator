@@ -12,19 +12,15 @@ SkyBox::SkyBox()
         "back.png"
     ) {
     shader = new Shader();
-	//useFog = true;
-	//uUseFog = getUniformLocation("uUseFog");
 }
 
 SkyBox::~SkyBox() {
     delete shader;
 }
 
-/*void SkyBox::switchFog(bool state)
-{
-	setUniform(uUseFog, state);
+void SkyBox::switchFog(bool state) {
+    useFog = state;
 }
-*/
 
 GLfloat positions[] = {      
     -1.0f, -1.0f, -1.0f, 
@@ -76,6 +72,7 @@ void SkyBox::load() {
     shader->link();
     shader->use();
     uProjView = shader->getUniformLocation("uProjView");
+    uUseFog = shader->getUniformLocation("uUseFog");
     shader->setUniform(shader->getUniformLocation("uCubeMap"), 0);
 
     // data
@@ -101,6 +98,7 @@ void SkyBox::draw(glm::mat4 proj, glm::mat4 view) {
 
     shader->use();
     shader->setUniform(uProjView, proj * glm::mat4(glm::mat3(view)) * glm::translate(glm::vec3(0,0,-0.2f)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0)));
+    shader->setUniform(uUseFog, useFog);
 
     glBindVertexArray(vao);
     cubemap.bind();

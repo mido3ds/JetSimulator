@@ -70,10 +70,10 @@ void JetSimulator::onDraw() {
     phongShader->setDirLight(sun);
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
-	//skybox->switchFog(!useFog);
 	phongShader->switchFog(useFog);
     jet->draw(*phongShader);
     land->draw(*phongShader);
 
+	skybox->switchFog(useFog);
     skybox->draw(camera->projection, camera->view);
 }
