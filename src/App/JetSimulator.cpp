@@ -27,6 +27,8 @@ void JetSimulator::onCreate() {
     skybox = new SkyBox();
 	useFog = false; // initially
 	useVignette = false; // initially
+	useGrayscale = false; // initially
+	useSepia = false; // initially
 
     phongShader->use();
 	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
@@ -58,6 +60,12 @@ void JetSimulator::onKeyPressed(int key, int modifierKey) {
 	if (key == KEY_2) {
 		useVignette = !useVignette;
 	}
+	if (key == KEY_3) {
+		useGrayscale = !useGrayscale;
+	}
+	if (key == KEY_4) {
+		useSepia = !useSepia;
+	}
 	if (key == MOUSE_BUTTON_LEFT) {
 		jet->fireMissile();
 	}
@@ -79,10 +87,14 @@ void JetSimulator::onDraw() {
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
 	phongShader->switchFog(useFog);
+	phongShader->switchGrayscale(useGrayscale);
+	phongShader->switchSepia(useSepia);
 	phongShader->switchVignette(useVignette);
     jet->draw(*phongShader);
     land->draw(*phongShader);
 
 	skybox->switchFog(useFog);
+	skybox->switchGrayscale(useGrayscale);
+	skybox->switchSepia(useSepia);
     skybox->draw(camera->projection, camera->view);
 }

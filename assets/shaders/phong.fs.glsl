@@ -38,6 +38,8 @@ vec3 DirLight_calc(DirLight self, vec3 normal, vec3 viewToFragDir, float shinine
 vec3 PointLight_calc(PointLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 SpotLight_calc(SpotLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main);
+vec3 Grayscale_calc(vec3 color);
+vec3 Sepia_calc(vec3 color);
 vec4 Vignette_calc(vec4 color);
 // in
 in VS_OUT {    
@@ -57,6 +59,8 @@ uniform int uNumPointLights;
 uniform int uNumSpotLights;
 uniform bool uUseFog;
 uniform bool uUseVignette;
+uniform bool uUseGrayScale;
+uniform bool uUseSepia;
 uniform vec2 uResolution;
 void main() {
     vec3 viewToFragDir = normalize(uViewPos - fs_in.fragPos);
@@ -71,9 +75,17 @@ void main() {
     for (int i = 0; i < uNumSpotLights; i++) {
         color += SpotLight_calc(uSpotLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
     }
-    if(uUseFog)
+     if (uUseFog)
     {
 		color = Fog_calc(fs_in.fragPos,color,uDirLight);
+    }
+     if (uUseGrayScale)
+    {
+        color=Grayscale_calc(color);
+    }
+     if(uUseSepia)
+    {
+        color=Sepia_calc(color);
     }
 	outFragCol = vec4(color, 1);
 	if(uUseVignette)
@@ -82,9 +94,24 @@ void main() {
     }
 }
 
-
-vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main){
-    float fogDenisty=0.001f;
+vec3 Grayscale_calc(vec3 color)
+{
+    float gray_color = (color.r + color.g + color.b) / 3.0; // Take the average of the colors, there are better techniques but this is sufficient
+    color = vec3(gray_color, gray_color, gray_color);
+    return color;
+   
+}
+vec3 Sepia_calc(vec3 color)
+{
+    float sepia_red = color.r *0.393f + color.g *0.769f + color.b *0.189f ;
+    float sepia_green = color.r *0.349f + color.g *0.686f + color.b *0.168f ;
+    float sepia_blue = color.r *0.272f + color.g *0.534f + color.b *0.131f ;	
+    color = vec3(sepia_red , sepia_green , sepia_blue);
+    return color;
+}
+vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main)
+{
+    float fogDenisty=0.0005f;
     vec3 fog_color = vec3(0.5f, 0.5f, 0.5f)*(main.ambient+main.diffuse);
     float distY=abs(uViewPos.y-fragPos.y);
     float distX=abs(uViewPos.x-fragPos.x);
@@ -93,6 +120,14 @@ vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main){
     fogFactorY=clamp(fogFactorY,0.0,1.0);
     fogFactorX=clamp(fogFactorX,0.0,1.0);
     return mix(fog_color,color,fogFactorX*fogFactorY);
+}
+
+vec4 Vignette_calc(vec4 color) {
+	vec2 relativePos = gl_FragCoord.xy/uResolution - 0.5;
+	float len = length(relativePos);
+	float vignette = smoothstep(outerRadius, innerRadius, len); // smooth transation from outerRadius to innerRad
+	color.rgb = mix(color.rgb, color.rgb * vignette, intensity);
+	return color;
 }
 vec3 DirLight_calcDiffuse(DirLight self, vec3 normal) {
     return self.diffuse * max(dot(normal, -self.dir),0);
@@ -166,15 +201,9 @@ vec3 SpotLight_calc(SpotLight self, vec3 normal, vec3 viewToFragDir, float shini
         return intesity * SpotLight_calcAtten(self, lightToFragDist) * (self.ambient * diffMap + 
             SpotLight_calcDiffuse(self, normal, lightToFragDir) * diffMap +
             SpotLight_calcSpecular(self, normal, viewToFragDir, shininess, lightToFragDir) * specMap);
-    } else {
+    }
+     else 
+    {
         return self.ambient * diffMap;
     }
-}
-
-vec4 Vignette_calc(vec4 color) {
-	vec2 relativePos = gl_FragCoord.xy/uResolution - 0.5;
-	float len = length(relativePos);
-	float vignette = smoothstep(outerRadius, innerRadius, len); // smooth transation from outerRadius to innerRad
-	color.rgb = mix(color.rgb, color.rgb * vignette, intensity);
-	return color;
 }

@@ -20,6 +20,8 @@ PhongShader::PhongShader() {
     uDirLight_specular = getUniformLocation("uDirLight.specular");
 
 	uUseFog= getUniformLocation("uUseFog");
+	uUseGrayscale = getUniformLocation("uUseGrayScale");
+	uUseSepia = getUniformLocation("uUseSepia");
 	uUseVignette = getUniformLocation("uUseVignette");
 
     setUniform(getUniformLocation("uMaterial.diffuse"), Texture2D::Usage::Diffuse); 
@@ -35,6 +37,14 @@ void PhongShader::setMaterial(const Material& material) {
 void PhongShader::switchFog(bool state)
 {
 	setUniform(uUseFog, state);
+}
+void PhongShader::switchGrayscale(bool state)
+{
+	setUniform(uUseGrayscale, state);
+}
+void PhongShader::switchSepia(bool state)
+{
+	setUniform(uUseSepia, state);
 }
 void PhongShader::switchVignette(bool state)
 {
