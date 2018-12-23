@@ -94,7 +94,8 @@ void JetSimulator::onDraw() {
     land->draw(*phongShader);
 
 	skybox->switchFog(useFog);
+	skybox->switchVignette(useVignette);
 	skybox->switchGrayscale(useGrayscale);
 	skybox->switchSepia(useSepia);
-    skybox->draw(camera->projection, camera->view);
+    skybox->draw(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
 }

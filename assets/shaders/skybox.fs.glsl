@@ -3,7 +3,11 @@
 in vec3 shTexCoord;
 
 out vec4 outFragColor;
+//constants
+const float outerRadius = 0.65, innerRadius = 0.4, intensity = 1;
 
+uniform vec2 uResolution;
+uniform bool uUseVignette;
 uniform samplerCube uCubeMap;
 uniform bool uUseFog;
 uniform bool uUseGrayScale;
@@ -34,4 +38,11 @@ void main() {
    }
 
     outFragColor = color;
+	if(uUseVignette)
+	{
+		vec2 relativePos = gl_FragCoord.xy/uResolution - 0.5;
+		float len = length(relativePos);
+		float vignette = smoothstep(outerRadius, innerRadius, len); // smooth transation from outerRadius to innerRad
+		outFragColor.rgb = mix(outFragColor.rgb, outFragColor.rgb * vignette, intensity);
+	}
 }
