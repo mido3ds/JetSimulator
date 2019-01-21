@@ -4,6 +4,17 @@
 
 ![Screenshot](screenshot.png)
 
+# Roadmap
+[ ] move all effects to framebuffers, generalize post processing
+
+[ ] sounds
+
+[ ] wings movement
+
+[ ] motion blur
+
+[ ] particle effect
+
 # Build
 
 Runs only on windows, tested on win10.
