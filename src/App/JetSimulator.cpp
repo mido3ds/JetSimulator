@@ -21,27 +21,6 @@ App::Config JetSimulator::getConfig() {
     return c;
 }
 
-class ScreenShader : public Shader {
-public:
-    ScreenShader() :Shader() {
-        attach("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
-        attach("assets/shaders/screen.fs.glsl", GL_FRAGMENT_SHADER);
-        link();
-
-        use();
-        setUniform(getUniformLocation("uScreenTexture"), 0);
-    }
-};
-
-static ScreenShader* screen;
-static void createScreenShader() {
-    screen = new ScreenShader();
-}
-
-static void deleteScreenShader() {
-    delete screen;
-}
-
 /* load to gpu an array of positions and texCoords of a quad */
 class QuadBuffer {
 protected:
@@ -90,19 +69,13 @@ public:
     constexpr GLuint getID() const {return vao;}
 };
 
-static QuadBuffer* quad;
-static void createQuadBuffer() {
-    quad = new QuadBuffer();
-}
-
-static void deleteQuadBuffer() {
-    delete quad;
-}
-
 /* color texture and depth-stencil renderbuffer with given width and height */
 class Framebuffer {
 protected:
     GLuint fbo, colorTexture, rbo;
+
+    Framebuffer(Framebuffer const &) = delete;
+    Framebuffer & operator =(Framebuffer const &) = delete;
 public:
     Framebuffer(int width, int height) {
         // create color texture
@@ -156,34 +129,36 @@ public:
     constexpr GLuint getDepthStencilBufferID() {return rbo;}
 };
 
-static Framebuffer* secondry;
-static void initSecondryFrameBuffer(int width, int height) {
-    secondry = new Framebuffer(width, height);
-}
+class Renderer {
+protected:
+    Framebuffer screenFramebuffer;
+    QuadBuffer quad;
+    Shader screenShader;
+public:
+    Renderer(int width, int height) :screenFramebuffer(width, height) {
+        screenShader.attach("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
+        screenShader.attach("assets/shaders/screen.fs.glsl", GL_FRAGMENT_SHADER);
+        screenShader.link();
+        screenShader.use();
+        screenShader.setUniform(screenShader.getUniformLocation("uScreenTexture"), 0);
+    }
 
-static void useSecondryFrameBuffer() {
-    secondry->bind();
-}
+    void startFrame() {
+        screenFramebuffer.bind();
+    }
+    
+    void endFrame() {
+        glDisable(GL_DEPTH_TEST);
+            Framebuffer::bindDefault();
+            screenShader.use();
+            quad.bind();
+            glBindTexture(GL_TEXTURE_2D, screenFramebuffer.getColorBufferID());
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        glEnable(GL_DEPTH_TEST);
+    }
+};
 
-static void deleteSecondryFrameBuffer() {
-    delete secondry;
-}
-
-static void drawOnMainFrameBuffer() {
-    glDisable(GL_DEPTH_TEST);
-        Framebuffer::bindDefault();
-
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        screen->use();
-        quad->bind();
-        glBindTexture(GL_TEXTURE_2D, secondry->getColorBufferID());
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    glEnable(GL_DEPTH_TEST);
-}
-
+static Renderer* renderer;
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
@@ -203,9 +178,7 @@ void JetSimulator::onCreate() {
 
     jet->pos.z = 50.0f;
 
-    initSecondryFrameBuffer(getWidth(), getHeight());
-    createScreenShader();
-    createQuadBuffer();
+    renderer = new Renderer(getWidth(), getHeight());
 
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
@@ -215,10 +188,7 @@ void JetSimulator::onCreate() {
 }
 
 void JetSimulator::onDestroy() {
-    deleteQuadBuffer();
-    deleteScreenShader();
-    deleteSecondryFrameBuffer();
-
+    delete renderer;
     delete phongShader;
     delete camera;
     delete jet;
@@ -252,7 +222,7 @@ void JetSimulator::onUpdate(float dt) {
 }
 
 void JetSimulator::onDraw() {
-    useSecondryFrameBuffer();
+    renderer->startFrame();
 
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glClearColor(0, 0, 0, 1);
@@ -274,7 +244,7 @@ void JetSimulator::onDraw() {
 	skybox->switchSepia(useSepia);
     skybox->draw(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
 
-    drawOnMainFrameBuffer();
+    renderer->endFrame();
 }
 
 void JetSimulator::onOpenglDebug(
