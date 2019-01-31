@@ -8,16 +8,16 @@ out VS_OUT {
     vec3 fragPos;
     vec3 normal;
     vec2 texCoord;
-} vs_out;
+} to_fs;
 // uniform
 uniform mat4 uProjView;
 uniform mat4 uModel;
 
 void main() {
     vec4 modeledPos = uModel * vec4(inPos, 1);
-    vs_out.fragPos = modeledPos.xyz;
-    vs_out.normal = normalize(mat3(transpose(inverse(uModel))) * inNormal);
-    vs_out.texCoord = inTexCoord;
+    to_fs.fragPos = modeledPos.xyz;
+    to_fs.normal = normalize(mat3(transpose(inverse(uModel))) * inNormal);
+    to_fs.texCoord = inTexCoord;
 
     gl_Position = uProjView * modeledPos;
 }

@@ -46,7 +46,7 @@ in VS_OUT {
     vec3 fragPos;
     vec3 /*normalized*/ normal;
     vec2 texCoord;
-} fs_in;
+} from_vs;
 // out
 out vec4 outFragCol;
 // uniform
@@ -63,21 +63,21 @@ uniform bool uUseGrayScale;
 uniform bool uUseSepia;
 uniform vec2 uResolution;
 void main() {
-    vec3 viewToFragDir = normalize(uViewPos - fs_in.fragPos);
-    vec3 diffMap = texture(uMaterial.diffuse, fs_in.texCoord).rgb;
-    vec3 specMap = texture(uMaterial.specular, fs_in.texCoord).rgb;
+    vec3 viewToFragDir = normalize(uViewPos - from_vs.fragPos);
+    vec3 diffMap = texture(uMaterial.diffuse, from_vs.texCoord).rgb;
+    vec3 specMap = texture(uMaterial.specular, from_vs.texCoord).rgb;
     vec3 color = vec3(0);
     
-    color += DirLight_calc(uDirLight, fs_in.normal, viewToFragDir, uMaterial.shininess, diffMap, specMap);
+    color += DirLight_calc(uDirLight, from_vs.normal, viewToFragDir, uMaterial.shininess, diffMap, specMap);
     for (int i = 0; i < uNumPointLights; i++) {
-        color += PointLight_calc(uPointLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
+        color += PointLight_calc(uPointLights[i], from_vs.normal, viewToFragDir, uMaterial.shininess, from_vs.fragPos, diffMap, specMap);
     }
     for (int i = 0; i < uNumSpotLights; i++) {
-        color += SpotLight_calc(uSpotLights[i], fs_in.normal, viewToFragDir, uMaterial.shininess, fs_in.fragPos, diffMap, specMap);
+        color += SpotLight_calc(uSpotLights[i], from_vs.normal, viewToFragDir, uMaterial.shininess, from_vs.fragPos, diffMap, specMap);
     }
      if (uUseFog)
     {
-		color = Fog_calc(fs_in.fragPos,color,uDirLight);
+		color = Fog_calc(from_vs.fragPos,color,uDirLight);
     }
      if (uUseGrayScale)
     {
