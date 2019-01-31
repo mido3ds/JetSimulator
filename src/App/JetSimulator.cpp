@@ -43,7 +43,6 @@ public:
 
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
-            GLuint vbo;
             glGenBuffers(1, &vbo);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
                 glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
@@ -132,8 +131,8 @@ public:
 class Renderer {
 protected:
     Framebuffer screenFramebuffer;
-    QuadBuffer quad;
     Shader screenShader;
+    GLuint vao, vbo;
 public:
     Renderer(int width, int height) :screenFramebuffer(width, height) {
         screenShader.attach("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
@@ -141,6 +140,21 @@ public:
         screenShader.link();
         screenShader.use();
         screenShader.setUniform(screenShader.getUniformLocation("uScreenTexture"), 0);
+
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+            glGenBuffers(1, &vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                int dummyBuffer[6];
+                glBufferData(GL_ARRAY_BUFFER, sizeof(dummyBuffer), &dummyBuffer, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    ~Renderer() {
+        glBindVertexArray(0);
+        glDeleteBuffers(1, &vbo);
+        glDeleteVertexArrays(1, &vao);
     }
 
     void startFrame() {
@@ -151,7 +165,7 @@ public:
         glDisable(GL_DEPTH_TEST);
             Framebuffer::bindDefault();
             screenShader.use();
-            quad.bind();
+            glBindVertexArray(vao);
             glBindTexture(GL_TEXTURE_2D, screenFramebuffer.getColorBufferID());
             glDrawArrays(GL_TRIANGLES, 0, 6);
         glEnable(GL_DEPTH_TEST);
