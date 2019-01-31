@@ -21,11 +21,16 @@ private:
         glm::vec3(0.2f, 0.2f, 0.2f) // specular
     };
 public:
-    virtual Config getConfig();
-    virtual void onCreate();
-    virtual void onDestroy();
-    virtual void onUpdate(float dt);
-    virtual void onDraw(); 
-    virtual void onKeyPressed(int key, int modifierKey);
-    virtual void onKeyReleased(int key, int modifierKey);
+    virtual Config getConfig() override;
+    virtual void onCreate() override;
+    virtual void onDestroy() override;
+    virtual void onUpdate(float dt) override;
+    virtual void onDraw() override; 
+    virtual void onKeyPressed(int key, int modifierKey) override;
+    virtual void onKeyReleased(int key, int modifierKey) override;
+    virtual void onOpenglDebug(
+        GLenum source, GLenum type, GLuint id,
+        GLenum severity, std::string message
+    ) override;
+    virtual void onError(int code, std::string msg) override;
 };

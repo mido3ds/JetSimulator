@@ -1,5 +1,7 @@
 #pragma once
+#include <string>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 class App {
@@ -25,6 +27,7 @@ public:
 
         int glMajorVersion;
         int glMinorVersion;
+        bool glDebug;
         int updateRate; // update per second
     };
 
@@ -51,6 +54,11 @@ public:
     virtual void onDraw()=0;
     virtual void onKeyPressed(int key, int modifierKey)=0;
     virtual void onKeyReleased(int key, int modifierKey)=0;
+    virtual void onError(int code, std::string msg)=0;
+    virtual void onOpenglDebug(
+        GLenum source, GLenum type, GLuint id,
+        GLenum severity, std::string message
+    );
 };
 
 // keys

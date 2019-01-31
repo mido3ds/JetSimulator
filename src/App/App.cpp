@@ -1,6 +1,5 @@
-#include "App.hpp"
-#include <glad/glad.h>
 #include <Windows.h>
+#include "App.hpp"
 
 static App* staticAppPtr = nullptr;
 
@@ -46,6 +45,20 @@ static void _mouseCallback(GLFWwindow* window, int key, int action, int mods) {
     _keyCallback(window, key, 0, action, mods);
 }
 
+static void APIENTRY _glDebugCallback(GLenum source,
+            GLenum type,
+            GLuint id,
+            GLenum severity,
+            GLsizei length,
+            const GLchar* message,
+            void* userParam) {
+    staticAppPtr->onOpenglDebug(source, type, id, severity, std::string(message));
+}
+
+static void _glfwErrorCallback(int errorCode, const char* msg) {
+    staticAppPtr->onError(errorCode, std::string(msg));
+}
+
 void App::createWindow() {
     Config config = getConfig();
 
@@ -53,6 +66,7 @@ void App::createWindow() {
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, config.glMajorVersion);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, config.glMinorVersion);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, config.resizable? GLFW_TRUE:GLFW_FALSE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
@@ -64,8 +78,9 @@ void App::createWindow() {
     glfwWindowHint(GLFW_STENCIL_BITS, 8);
     glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
     glfwWindowHint(GLFW_SAMPLES, config.samples);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, config.glDebug? GLFW_TRUE:GLFW_FALSE);
 
-    GLFWmonitor *monitor = config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
+    GLFWmonitor* monitor = config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
     window = glfwCreateWindow(config.width, config.height, config.title, monitor, nullptr);
     if (!window) {
         glfwTerminate(); 
@@ -86,6 +101,12 @@ void App::createWindow() {
         glfwTerminate(); 
         fatal("Failed to initialize GLAD");
     }    
+
+    if (config.glDebug) {
+        glDebugMessageCallback((GLDEBUGPROC)_glDebugCallback, NULL);
+    }
+
+    glfwSetErrorCallback(_glfwErrorCallback);
 }
 
 void App::mainLoop() {
@@ -161,3 +182,8 @@ float App::getScroll() {
     this->yscroll = 0;
     return temp;
 }
+
+void App::onOpenglDebug(
+    GLenum source, GLenum type, GLuint id,
+    GLenum severity, std::string message
+ ) {}
