@@ -1,11 +1,11 @@
 #version 330 core
 
-in vec2 inTexCoords;
+in vec2 shTexCoords;
 
-out vec4 shFragColor;
+out vec4 outFragColor;
 
 uniform sampler2D uScreenTexture;
 
 void main() { 
-    shFragColor = texture(uScreenTexture, inTexCoords);
+    outFragColor = texture(uScreenTexture, shTexCoords);
 }

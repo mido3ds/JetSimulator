@@ -28,6 +28,9 @@ static void createScreenShader() {
     screen->attach("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
     screen->attach("assets/shaders/screen.fs.glsl", GL_FRAGMENT_SHADER);
     screen->link();
+
+    screen->use();
+    screen->setUniform(screen->getUniformLocation("uScreenTexture"), 0);
 }
 
 static void deleteScreenShader() {
@@ -115,12 +118,11 @@ static void deleteSecondryFrameBuffer() {
 }
 
 static void drawOnMainFrameBuffer() {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
-    glClear(GL_COLOR_BUFFER_BIT);
-
     glDisable(GL_DEPTH_TEST);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
+        glClear(GL_COLOR_BUFFER_BIT);
 
         screen->use();
         glBindVertexArray(quadVAO);
