@@ -43,14 +43,14 @@ static void deleteScreenShader() {
 }
 
 /* load to gpu an array of positions and texCoords of a quad */
-class QuadVertexArray {
+class QuadBuffer {
 protected:
     GLuint vao, vbo;
 
-    QuadVertexArray(QuadVertexArray const &) = delete;
-    QuadVertexArray & operator =(QuadVertexArray const &) = delete;
+    QuadBuffer(QuadBuffer const &) = delete;
+    QuadBuffer & operator =(QuadBuffer const &) = delete;
 public:
-    QuadVertexArray() {
+    QuadBuffer() {
         float quadVertices[] = { 
             // positions   // texCoords
             -1.0f,  1.0f,  0.0f, 1.0f,
@@ -76,7 +76,7 @@ public:
         glBindVertexArray(0);
     }
 
-    ~QuadVertexArray() {
+    ~QuadBuffer() {
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDeleteBuffers(1, &vbo);
@@ -90,9 +90,9 @@ public:
     constexpr GLuint getID() const {return vao;}
 };
 
-static QuadVertexArray* quad;
+static QuadBuffer* quad;
 static void createQuadBuffer() {
-    quad = new QuadVertexArray();
+    quad = new QuadBuffer();
 }
 
 static void deleteQuadBuffer() {
