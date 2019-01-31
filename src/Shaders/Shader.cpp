@@ -19,14 +19,7 @@ GLuint Shader::getID() {
     return programID; 
 }
 
-void Shader::attach(std::string const &filename, GLenum type) {
-    std::ifstream file(filename.c_str());
-    if (file.fail()) {
-        std::cerr << "UNABLE TO OPEN FILE: \"" << filename << "\"\n";
-        return;
-    }
-    std::string source = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
-
+void Shader::attach(const std::string& source, GLenum type) {
     GLuint shaderID = glCreateShader(type); 
 
     const char * sourceCharArray = source.c_str();
@@ -40,7 +33,7 @@ void Shader::attach(std::string const &filename, GLenum type) {
         glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
         char* logStr = new char[length];
         glGetShaderInfoLog(shaderID, length, nullptr, logStr);
-        std::cerr << "ERROR IN " << filename << std::endl;
+        std::cerr << "ERROR IN COMPILING SHADER" << std::endl;
         std::cerr << logStr << std::endl;
         delete[] logStr;
     }
@@ -48,6 +41,17 @@ void Shader::attach(std::string const &filename, GLenum type) {
 
     glAttachShader(programID, shaderID); 
     glDeleteShader(shaderID); 
+}
+
+void Shader::attachFile(const std::string& filename, GLenum type) {
+    std::ifstream file(filename.c_str());
+    if (file.fail()) {
+        std::cerr << "UNABLE TO OPEN FILE: \"" << filename << "\"\n";
+        return;
+    }
+    std::string source = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+
+    attach(source, type);
 }
 
 void Shader::link() {

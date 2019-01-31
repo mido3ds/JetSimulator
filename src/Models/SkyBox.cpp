@@ -74,8 +74,8 @@ using namespace std;
 
 void SkyBox::load() {
     // shader
-    shader->attach("assets/shaders/skybox.vs.glsl", GL_VERTEX_SHADER);
-    shader->attach("assets/shaders/skybox.fs.glsl", GL_FRAGMENT_SHADER);
+    shader->attachFile("assets/shaders/skybox.vs.glsl", GL_VERTEX_SHADER);
+    shader->attachFile("assets/shaders/skybox.fs.glsl", GL_FRAGMENT_SHADER);
     shader->link();
     shader->use();
     uProjView = shader->getUniformLocation("uProjView");

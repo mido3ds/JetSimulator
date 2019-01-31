@@ -74,18 +74,68 @@ public:
     constexpr GLuint getDepthStencilBufferID() {return rbo;}
 };
 
+#include <sstream>
+#define STR(n) #n
+class Effect {
+protected:
+    Shader shader;
+    GLuint vao, vbo;
+
+public:
+    Effect(const std::string& func) {
+        std::stringstream ss;
+        ss << "#version 330 core\n" 
+            << "in VS_OUT {vec2 texCoords;} from_vs;\n"
+            << "out vec4 outFragColor;\n"
+            << "uniform sampler2D uTexture;\n";
+        ss << '\n' << func << "\n\n";
+        ss << "void main() {outFragColor = apply(uTexture, from_vs.texCoords);}";
+
+        printf("%s\n", ss.str().c_str());
+
+        shader.attachFile("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
+        shader.attach(ss.str(), GL_FRAGMENT_SHADER);
+        shader.link();
+
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+            glGenBuffers(1, &vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                int dummyBuffer[6];
+                glBufferData(GL_ARRAY_BUFFER, sizeof(dummyBuffer), &dummyBuffer, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    ~Effect() {
+        glBindVertexArray(0);
+        glDeleteBuffers(1, &vbo);
+        glDeleteVertexArrays(1, &vao);
+    }
+
+    inline Shader* getShader() {return &shader;}
+
+    void apply(GLuint textureID) {
+        glDisable(GL_DEPTH_TEST);
+            shader.use();
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            glBindVertexArray(vao);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        glEnable(GL_DEPTH_TEST);
+    }
+};
+
 class Renderer {
 protected:
     Framebuffer screenFramebuffer;
     Shader screenShader;
     GLuint vao, vbo;
+
 public:
     Renderer(int width, int height) :screenFramebuffer(width, height) {
-        screenShader.attach("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
-        screenShader.attach("assets/shaders/screen.fs.glsl", GL_FRAGMENT_SHADER);
+        screenShader.attachFile("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
+        screenShader.attachFile("assets/shaders/screen.fs.glsl", GL_FRAGMENT_SHADER);
         screenShader.link();
-        screenShader.use();
-        screenShader.setUniform(screenShader.getUniformLocation("uScreenTexture"), 0);
 
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -116,9 +166,14 @@ public:
             glDrawArrays(GL_TRIANGLES, 0, 6);
         glEnable(GL_DEPTH_TEST);
     }
+
+    inline void applyEffect(Effect* eff) {
+        eff->apply(screenFramebuffer.getColorBufferID());
+    }
 };
 
 static Renderer* renderer;
+static Effect* inv;
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
@@ -145,10 +200,17 @@ void JetSimulator::onCreate() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
+
+    inv = new Effect(STR(
+        vec4 apply(sampler2D tex, vec2 coords) {
+            return vec4(vec3(1-texture(tex, coords)), 1);
+        }
+    ));
 }
 
 void JetSimulator::onDestroy() {
     delete renderer;
+    delete inv;
     delete phongShader;
     delete camera;
     delete jet;
@@ -203,6 +265,8 @@ void JetSimulator::onDraw() {
 	skybox->switchGrayscale(useGrayscale);
 	skybox->switchSepia(useSepia);
     skybox->draw(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
+
+    if (useFog) renderer->applyEffect(inv);
 
     renderer->endFrame();
 }

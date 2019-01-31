@@ -15,7 +15,8 @@ public:
 
     void use();
     GLuint getID(); 
-    void attach(std::string const &filename, GLenum type);
+    void attach(const std::string& source, GLenum type);
+    void attachFile(const std::string& filename, GLenum type);
     void link();
 
     GLuint getUniformLocation(std::string uniform);

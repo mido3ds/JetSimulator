@@ -2,8 +2,8 @@
 using std::string;
 
 PhongShader::PhongShader() {
-    attach("assets/shaders/phong.vs.glsl", GL_VERTEX_SHADER);
-    attach("assets/shaders/phong.fs.glsl", GL_FRAGMENT_SHADER);
+    attachFile("assets/shaders/phong.vs.glsl", GL_VERTEX_SHADER);
+    attachFile("assets/shaders/phong.fs.glsl", GL_FRAGMENT_SHADER);
     link();
 
     use();
