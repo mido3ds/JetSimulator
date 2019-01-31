@@ -21,53 +21,6 @@ App::Config JetSimulator::getConfig() {
     return c;
 }
 
-/* load to gpu an array of positions and texCoords of a quad */
-class QuadBuffer {
-protected:
-    GLuint vao, vbo;
-
-    QuadBuffer(QuadBuffer const &) = delete;
-    QuadBuffer & operator =(QuadBuffer const &) = delete;
-public:
-    QuadBuffer() {
-        float quadVertices[] = { 
-            // positions   // texCoords
-            -1.0f,  1.0f,  0.0f, 1.0f,
-            -1.0f, -1.0f,  0.0f, 0.0f,
-            1.0f, -1.0f,  1.0f, 0.0f,
-
-            -1.0f,  1.0f,  0.0f, 1.0f,
-            1.0f, -1.0f,  1.0f, 0.0f,
-            1.0f,  1.0f,  1.0f, 1.0f
-        };
-
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-            glGenBuffers(1, &vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-                glEnableVertexAttribArray(0);
-                glEnableVertexAttribArray(1);
-                glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-    }
-
-    ~QuadBuffer() {
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDeleteBuffers(1, &vbo);
-        glDeleteVertexArrays(1, &vao);
-    }
-
-    void bind() const {
-        glBindVertexArray(vao);
-    }
-
-    constexpr GLuint getID() const {return vao;}
-};
-
 /* color texture and depth-stencil renderbuffer with given width and height */
 class Framebuffer {
 protected:
@@ -101,13 +54,6 @@ public:
 
             // check
             assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-            GLint type;
-            glGetFramebufferAttachmentParameteriv(
-                GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &type);
-            assert(type == colorTexture);
-            glGetFramebufferAttachmentParameteriv(
-                GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &type);
-            assert(type == rbo);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);  
     }
