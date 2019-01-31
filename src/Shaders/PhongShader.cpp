@@ -34,22 +34,23 @@ void PhongShader::setMaterial(const Material& material) {
     material.specular->bind();
     setUniform(uMaterial_shininess, material.shininess);
 }
-void PhongShader::switchFog(bool state)
-{
+
+void PhongShader::switchFog(bool state) {
 	setUniform(uUseFog, state);
 }
-void PhongShader::switchGrayscale(bool state)
-{
+
+void PhongShader::switchGrayscale(bool state) {
 	setUniform(uUseGrayscale, state);
 }
-void PhongShader::switchSepia(bool state)
-{
+
+void PhongShader::switchSepia(bool state) {
 	setUniform(uUseSepia, state);
 }
-void PhongShader::switchVignette(bool state)
-{
+
+void PhongShader::switchVignette(bool state) {
 	setUniform(uUseVignette, state);
 }
+
 void PhongShader::setDirLight(const DirLight& light) {
     setUniform(uDirLight_dir, light.dir);
     setUniform(uDirLight_ambient, light.ambient);

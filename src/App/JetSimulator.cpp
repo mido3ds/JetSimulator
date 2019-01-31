@@ -21,51 +21,82 @@ App::Config JetSimulator::getConfig() {
     return c;
 }
 
-static Shader* screen;
+class ScreenShader : public Shader {
+public:
+    ScreenShader() :Shader() {
+        attach("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
+        attach("assets/shaders/screen.fs.glsl", GL_FRAGMENT_SHADER);
+        link();
+
+        use();
+        setUniform(getUniformLocation("uScreenTexture"), 0);
+    }
+};
+
+static ScreenShader* screen;
 static void createScreenShader() {
-    screen = new Shader();
-
-    screen->attach("assets/shaders/screen.vs.glsl", GL_VERTEX_SHADER);
-    screen->attach("assets/shaders/screen.fs.glsl", GL_FRAGMENT_SHADER);
-    screen->link();
-
-    screen->use();
-    screen->setUniform(screen->getUniformLocation("uScreenTexture"), 0);
+    screen = new ScreenShader();
 }
 
 static void deleteScreenShader() {
     delete screen;
 }
 
-static GLuint quadVAO, quadVBO;
-static void createQuadBuffer() {
-    float quadVertices[] = { 
-        // positions   // texCoords
-        -1.0f,  1.0f,  0.0f, 1.0f,
-        -1.0f, -1.0f,  0.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
+/* load to gpu an array of positions and texCoords of a quad */
+class QuadVertexArray {
+protected:
+    GLuint vao, vbo;
 
-        -1.0f,  1.0f,  0.0f, 1.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f
-    };
+    QuadVertexArray(QuadVertexArray const &) = delete;
+    QuadVertexArray & operator =(QuadVertexArray const &) = delete;
+public:
+    QuadVertexArray() {
+        float quadVertices[] = { 
+            // positions   // texCoords
+            -1.0f,  1.0f,  0.0f, 1.0f,
+            -1.0f, -1.0f,  0.0f, 0.0f,
+            1.0f, -1.0f,  1.0f, 0.0f,
 
-    glGenVertexArrays(1, &quadVAO);
-    glBindVertexArray(quadVAO);
-        glGenBuffers(1, &quadVBO);
-        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(0);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+            -1.0f,  1.0f,  0.0f, 1.0f,
+            1.0f, -1.0f,  1.0f, 0.0f,
+            1.0f,  1.0f,  1.0f, 1.0f
+        };
+
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+            GLuint vbo;
+            glGenBuffers(1, &vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+                glEnableVertexAttribArray(0);
+                glEnableVertexAttribArray(1);
+                glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    ~QuadVertexArray() {
+        glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+        glDeleteBuffers(1, &vbo);
+        glDeleteVertexArrays(1, &vao);
+    }
+
+    void bind() const {
+        glBindVertexArray(vao);
+    }
+
+    constexpr GLuint getID() const {return vao;}
+};
+
+static QuadVertexArray* quad;
+static void createQuadBuffer() {
+    quad = new QuadVertexArray();
 }
 
 static void deleteQuadBuffer() {
-    glBindVertexArray(0);
-    glDeleteVertexArrays(1, &quadVAO);
+    delete quad;
 }
 
 static GLuint fbo, rbo, colorTexture;
@@ -125,7 +156,7 @@ static void drawOnMainFrameBuffer() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         screen->use();
-        glBindVertexArray(quadVAO);
+        quad->bind();
         glBindTexture(GL_TEXTURE_2D, colorTexture);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
