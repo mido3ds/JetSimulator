@@ -99,65 +99,86 @@ static void deleteQuadBuffer() {
     delete quad;
 }
 
-static GLuint fbo, rbo, colorTexture;
+/* color texture and depth-stencil renderbuffer with given width and height */
+class Framebuffer {
+protected:
+    GLuint fbo, colorTexture, rbo;
+public:
+    Framebuffer(int width, int height) {
+        // create color texture
+        glGenTextures(1, &colorTexture);
+        glBindTexture(GL_TEXTURE_2D, colorTexture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        // create depth-stencil renderbuffer
+        glGenRenderbuffers(1, &rbo);
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo); 
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);  
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+        // create framebuffer
+        glGenFramebuffers(1, &fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);  
+
+            // attach them
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0); 
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+            // check
+            assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+            GLint type;
+            glGetFramebufferAttachmentParameteriv(
+                GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &type);
+            assert(type == colorTexture);
+            glGetFramebufferAttachmentParameteriv(
+                GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &type);
+            assert(type == rbo);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+    }
+
+    ~Framebuffer() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+
+        glDeleteTextures(1, &colorTexture);
+        glDeleteRenderbuffers(1, &rbo);
+        glDeleteFramebuffers(1, &fbo);  
+    }
+
+    void bind() const {glBindFramebuffer(GL_FRAMEBUFFER, fbo);}
+    static void bindDefault() {glBindFramebuffer(GL_FRAMEBUFFER, NULL);}
+
+    constexpr GLuint getID() const {return fbo;}
+    constexpr GLuint getColorBufferID() const {return colorTexture;}
+    constexpr GLuint getDepthStencilBufferID() {return rbo;}
+};
+
+static Framebuffer* secondry;
 static void initSecondryFrameBuffer(int width, int height) {
-    // create color texture
-    glGenTextures(1, &colorTexture);
-    glBindTexture(GL_TEXTURE_2D, colorTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    // create depth-stencil renderbuffer
-    glGenRenderbuffers(1, &rbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo); 
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);  
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-    // create framebuffer
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);  
-
-        // attach them
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0); 
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-        // check
-        assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-        GLint type;
-        glGetFramebufferAttachmentParameteriv(
-            GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &type);
-        assert(type == colorTexture);
-        glGetFramebufferAttachmentParameteriv(
-            GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &type);
-        assert(type == rbo);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+    secondry = new Framebuffer(width, height);
 }
 
 static void useSecondryFrameBuffer() {
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);  
+    secondry->bind();
 }
 
 static void deleteSecondryFrameBuffer() {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
-
-    glDeleteTextures(1, &colorTexture);
-    glDeleteRenderbuffers(1, &rbo);
-    glDeleteFramebuffers(1, &fbo);  
+    delete secondry;
 }
 
 static void drawOnMainFrameBuffer() {
     glDisable(GL_DEPTH_TEST);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        Framebuffer::bindDefault();
 
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
         glClear(GL_COLOR_BUFFER_BIT);
 
         screen->use();
         quad->bind();
-        glBindTexture(GL_TEXTURE_2D, colorTexture);
+        glBindTexture(GL_TEXTURE_2D, secondry->getColorBufferID());
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glEnable(GL_DEPTH_TEST);
