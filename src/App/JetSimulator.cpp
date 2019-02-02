@@ -183,10 +183,10 @@ void JetSimulator::onCreate() {
     land = new Model("assets/terrains/channeledLand/channeledLand.dae");
     camera = new ModelTrackingCamera(jet, 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
     skybox = new SkyBox();
-	useFog = false; // initially
-	useVignette = false; // initially
-	useGrayscale = false; // initially
-	useSepia = false; // initially
+	useFog = false; 
+	useVignette = false; 
+	useGrayscale = false; 
+	useSepia = false; 
 
     phongShader->use();
 	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
@@ -298,9 +298,6 @@ void JetSimulator::onDraw() {
     land->draw(*phongShader);
 
 	skybox->switchFog(useFog);
-	skybox->switchVignette(false);
-	skybox->switchGrayscale(false);
-	skybox->switchSepia(false);
     skybox->draw(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
 
     if (useGrayscale) renderer->applyEffect(grayscaleEffect);

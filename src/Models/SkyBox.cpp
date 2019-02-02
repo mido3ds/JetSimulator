@@ -17,18 +17,11 @@ SkyBox::SkyBox()
 SkyBox::~SkyBox() {
     delete shader;
 }
-void SkyBox::switchVignette(bool state) {
-	useVignette = state;
-}
+
 void SkyBox::switchFog(bool state) {
     useFog = state;
 }
-void SkyBox::switchGrayscale(bool state) {
-	useGrayscale = state;
-}
-void SkyBox::switchSepia(bool state) {
-	useSepia = state;
-}
+
 GLfloat positions[] = {      
     -1.0f, -1.0f, -1.0f, 
     -1.0f, -1.0f, 1.0f, 
@@ -80,9 +73,6 @@ void SkyBox::load() {
     shader->use();
     uProjView = shader->getUniformLocation("uProjView");
     uUseFog = shader->getUniformLocation("uUseFog");
-	uUseVignette = shader->getUniformLocation("uUseVignette");
-	uUseGrayscale = shader->getUniformLocation("uUseGrayScale");
-	uUseSepia = shader->getUniformLocation("uUseSepia");
     shader->setUniform(shader->getUniformLocation("uCubeMap"), 0);
 
     // data
@@ -108,11 +98,7 @@ void SkyBox::draw(glm::mat4 proj, glm::mat4 view, glm::vec2 vec) {
 
     shader->use();
     shader->setUniform(uProjView, proj * glm::mat4(glm::mat3(view)) * glm::translate(glm::vec3(0,0,-0.2f)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0)));
-	shader->setUniform(shader->getUniformLocation("uResolution"), vec);
 	shader->setUniform(uUseFog, useFog);
-	shader->setUniform(uUseVignette, useVignette);
-	shader->setUniform(uUseGrayscale, useGrayscale);
-	shader->setUniform(uUseSepia, useSepia);
 
     glBindVertexArray(vao);
     cubemap.bind();

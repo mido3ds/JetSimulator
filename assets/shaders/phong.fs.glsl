@@ -2,8 +2,6 @@
 // defs
 #define MAX_POINT_LIGHTS 5
 #define MAX_SPOT_LIGHTS  5
-// constants
-const float OUTER_RADIUS = 0.65, INNER_RADIUS = 0.4, INTENSITY = 1;
 // struct
 struct Material {
     sampler2D diffuse;
@@ -37,9 +35,6 @@ vec3 DirLight_calc(DirLight self, vec3 normal, vec3 viewToFragDir, float shinine
 vec3 PointLight_calc(PointLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 SpotLight_calc(SpotLight self, vec3 normal, vec3 viewToFragDir, float shininess, vec3 fragPos, vec3 diffMap, vec3 specMap);
 vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main);
-vec3 Grayscale_calc(vec3 color);
-vec3 Sepia_calc(vec3 color);
-vec3 Vignette_calc(vec3 color);
 // in
 in VS_OUT {    
     vec3 fragPos;
@@ -57,10 +52,6 @@ uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];
 uniform int uNumPointLights;
 uniform int uNumSpotLights;
 uniform bool uUseFog;
-uniform bool uUseVignette;
-uniform bool uUseGrayScale;
-uniform bool uUseSepia;
-uniform vec2 uResolution;
 
 void main() {
     vec3 viewToFragDir = normalize(uViewPos - from_vs.fragPos);
@@ -77,26 +68,8 @@ void main() {
     }
 
     if (uUseFog) color = Fog_calc(from_vs.fragPos, color, uDirLight);
-    if (uUseGrayScale) color = Grayscale_calc(color);
-    if(uUseSepia) color = Sepia_calc(color);
-	if(uUseVignette) color = Vignette_calc(color);
 
 	outFragCol = vec4(color, 1);
-}
-
-vec3 Grayscale_calc(vec3 color) {
-    float gray_color = (color.r + color.g + color.b) / 3.0; // Take the average of the colors, there are better techniques but this is sufficient
-    color = vec3(gray_color, gray_color, gray_color);
-    return color;
-   
-}
-
-vec3 Sepia_calc(vec3 color) {
-    float sepia_red = color.r *0.393f + color.g *0.769f + color.b *0.189f ;
-    float sepia_green = color.r *0.349f + color.g *0.686f + color.b *0.168f ;
-    float sepia_blue = color.r *0.272f + color.g *0.534f + color.b *0.131f ;	
-    color = vec3(sepia_red , sepia_green , sepia_blue);
-    return color;
 }
 
 vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main) {
@@ -109,14 +82,6 @@ vec3 Fog_calc(vec3 fragPos,vec3 color,DirLight main) {
     fogFactorY=clamp(fogFactorY,0.0,1.0);
     fogFactorX=clamp(fogFactorX,0.0,1.0);
     return mix(fog_color,color,fogFactorX*fogFactorY);
-}
-
-vec3 Vignette_calc(vec3 color) {
-	vec2 relativePos = gl_FragCoord.xy/uResolution - 0.5;
-	float len = length(relativePos);
-	float vignette = smoothstep(OUTER_RADIUS, INNER_RADIUS, len); // smooth transation from OUTER_RADIUS to innerRad
-	color = mix(color, color * vignette, INTENSITY);
-	return color;
 }
 
 vec3 DirLight_calcDiffuse(DirLight self, vec3 normal) {
