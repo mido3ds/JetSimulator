@@ -189,7 +189,6 @@ void JetSimulator::onCreate() {
 	useSepia = false; 
 
     phongShader->use();
-	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
     jet->load();
     land->load();
     skybox->load();
@@ -229,20 +228,26 @@ void JetSimulator::onCreate() {
     ));
 
     vignetteEffect = new Effect(STR(
-        const float OUTER_RADIUS = 0.65;
-        const float INNER_RADIUS = 0.4;
-        const float INTENSITY = 1;
-        const vec2 uResolution = vec2(800, 600);
+        uniform float uOuterRadius;
+        uniform float uInnerRadius;
+        uniform float uIntensity;
+        uniform vec2 uResolution;
 
         vec4 apply(sampler2D tex, vec2 coords) {
             vec3 color = vec3(texture(tex, coords));
 
             float len = length(gl_FragCoord.xy/uResolution - 0.5);
-            float vignette = smoothstep(OUTER_RADIUS, INNER_RADIUS, len); 
+            float vignette = smoothstep(uOuterRadius, uInnerRadius, len); 
 
-            return vec4(mix(color, color * vignette, INTENSITY), 1);
+            return vec4(mix(color, color * vignette, uIntensity), 1);
         }
     ));
+    Shader* sh = vignetteEffect->getShader();
+    sh->use();
+    sh->setUniform(sh->getUniformLocation("uOuterRadius"), 0.65f);
+    sh->setUniform(sh->getUniformLocation("uInnerRadius"), 0.4f);
+    sh->setUniform(sh->getUniformLocation("uIntensity"), 1.0f);
+    sh->setUniform(sh->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
 }
 
 void JetSimulator::onDestroy() {
