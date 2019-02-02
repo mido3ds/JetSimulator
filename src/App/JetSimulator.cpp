@@ -125,6 +125,51 @@ public:
     }
 };
 
+class VignetteEffect : public Effect {
+public:
+    VignetteEffect(float innerRadius, float outerRadius, 
+        float intensity, int width, int height) :Effect(STR(
+        uniform float uOuterRadius;
+        uniform float uInnerRadius;
+        uniform float uIntensity;
+        uniform vec2 uResolution;
+
+        vec4 apply(sampler2D tex, vec2 coords) {
+            vec3 color = vec3(texture(tex, coords));
+
+            float len = length(gl_FragCoord.xy/uResolution - 0.5);
+            float vignette = smoothstep(uOuterRadius, uInnerRadius, len); 
+
+            return vec4(mix(color, color * vignette, uIntensity), 1);
+        }
+    )) {
+        setInnerRadius(innerRadius);
+        setOuterRadius(outerRadius);
+        setIntensity(intensity);
+        setResolution(width, height);
+    }
+
+    void setInnerRadius(float innerRadius) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uInnerRadius"), innerRadius);
+    }
+
+    void setOuterRadius(float outerRadius) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uOuterRadius"), outerRadius);
+    }
+
+    void setIntensity(float intensity) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uIntensity"), intensity);
+    }
+
+    void setResolution(int width, int height) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uResolution"), glm::vec2(width, height));
+    }
+};
+
 class Renderer {
 protected:
     Framebuffer screenFramebuffer;
@@ -176,7 +221,7 @@ static Renderer* renderer;
 static Effect* inverseEffect;
 static Effect* grayscaleEffect;
 static Effect* sepiaEffect;
-static Effect* vignetteEffect;
+static VignetteEffect* vignetteEffect;
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
@@ -227,27 +272,8 @@ void JetSimulator::onCreate() {
         }
     ));
 
-    vignetteEffect = new Effect(STR(
-        uniform float uOuterRadius;
-        uniform float uInnerRadius;
-        uniform float uIntensity;
-        uniform vec2 uResolution;
-
-        vec4 apply(sampler2D tex, vec2 coords) {
-            vec3 color = vec3(texture(tex, coords));
-
-            float len = length(gl_FragCoord.xy/uResolution - 0.5);
-            float vignette = smoothstep(uOuterRadius, uInnerRadius, len); 
-
-            return vec4(mix(color, color * vignette, uIntensity), 1);
-        }
-    ));
-    Shader* sh = vignetteEffect->getShader();
-    sh->use();
-    sh->setUniform(sh->getUniformLocation("uOuterRadius"), 0.65f);
-    sh->setUniform(sh->getUniformLocation("uInnerRadius"), 0.4f);
-    sh->setUniform(sh->getUniformLocation("uIntensity"), 1.0f);
-    sh->setUniform(sh->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
+    vignetteEffect = new VignetteEffect(0.4f, 0.65f, 1.0f, getWidth(), getHeight());
+    
 }
 
 void JetSimulator::onDestroy() {
