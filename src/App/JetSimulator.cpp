@@ -173,7 +173,10 @@ public:
 };
 
 static Renderer* renderer;
-static Effect* inv;
+static Effect* inverseEffect;
+static Effect* grayscaleEffect;
+static Effect* sepiaEffect;
+static Effect* vignetteEffect;
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
@@ -201,16 +204,53 @@ void JetSimulator::onCreate() {
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
 
-    inv = new Effect(STR(
+    inverseEffect = new Effect(STR(
         vec4 apply(sampler2D tex, vec2 coords) {
             return vec4(vec3(1-texture(tex, coords)), 1);
+        }
+    ));
+
+    grayscaleEffect = new Effect(STR(
+        vec4 apply(sampler2D tex, vec2 coords) {
+            vec4 color = texture(tex, coords);
+            float average = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+            return vec4(average, average, average, 1.0);
+        }
+    ));
+
+    sepiaEffect = new Effect(STR(
+        vec4 apply(sampler2D tex, vec2 coords) {
+            vec4 color = texture(tex, coords);
+            float sepia_red = color.r *0.393f + color.g *0.769f + color.b *0.189f ;
+            float sepia_green = color.r *0.349f + color.g *0.686f + color.b *0.168f ;
+            float sepia_blue = color.r *0.272f + color.g *0.534f + color.b *0.131f ;	
+            return vec4(sepia_red, sepia_green, sepia_blue, 1);
+        }
+    ));
+
+    vignetteEffect = new Effect(STR(
+        const float OUTER_RADIUS = 0.65;
+        const float INNER_RADIUS = 0.4;
+        const float INTENSITY = 1;
+        const vec2 uResolution = vec2(800, 600);
+
+        vec4 apply(sampler2D tex, vec2 coords) {
+            vec3 color = vec3(texture(tex, coords));
+
+            float len = length(gl_FragCoord.xy/uResolution - 0.5);
+            float vignette = smoothstep(OUTER_RADIUS, INNER_RADIUS, len); 
+
+            return vec4(mix(color, color * vignette, INTENSITY), 1);
         }
     ));
 }
 
 void JetSimulator::onDestroy() {
     delete renderer;
-    delete inv;
+    delete inverseEffect;
+    delete grayscaleEffect;
+    delete sepiaEffect;
+    delete vignetteEffect;
     delete phongShader;
     delete camera;
     delete jet;
@@ -254,19 +294,18 @@ void JetSimulator::onDraw() {
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
 	phongShader->switchFog(useFog);
-	phongShader->switchGrayscale(useGrayscale);
-	phongShader->switchSepia(useSepia);
-	phongShader->switchVignette(useVignette);
     jet->draw(*phongShader);
     land->draw(*phongShader);
 
 	skybox->switchFog(useFog);
-	skybox->switchVignette(useVignette);
-	skybox->switchGrayscale(useGrayscale);
-	skybox->switchSepia(useSepia);
+	skybox->switchVignette(false);
+	skybox->switchGrayscale(false);
+	skybox->switchSepia(false);
     skybox->draw(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
 
-    if (useFog) renderer->applyEffect(inv);
+    if (useGrayscale) renderer->applyEffect(grayscaleEffect);
+    if (useSepia) renderer->applyEffect(sepiaEffect);
+    if (useVignette) renderer->applyEffect(vignetteEffect);
 
     renderer->endFrame();
 }
