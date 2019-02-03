@@ -20,14 +20,14 @@ public:
     void link();
 
     GLuint getUniformLocation(std::string uniform);
-    void setUniform(int loc, int v);
-    void setUniform(int loc, float v);
-    void setUniform(int loc, glm::mat4 mat);
-    void setUniform(int loc, glm::mat3 mat);
-    void setUniform(int loc, glm::vec4 v);
-    void setUniform(int loc, glm::vec3 v);
-    void setUniform(int loc, glm::vec2 v);
-    void setUniform(int loc, glm::ivec4 v);
-    void setUniform(int loc, glm::ivec3 v);
-    void setUniform(int loc, glm::ivec2 v);
+    void setUniform(int loc, const int& v);
+    void setUniform(int loc, const float& v);
+    void setUniform(int loc, const glm::mat4& mat);
+    void setUniform(int loc, const glm::mat3& mat);
+    void setUniform(int loc, const glm::vec4& v);
+    void setUniform(int loc, const glm::vec3& v);
+    void setUniform(int loc, const glm::vec2& v);
+    void setUniform(int loc, const glm::ivec4& v);
+    void setUniform(int loc, const glm::ivec3& v);
+    void setUniform(int loc, const glm::ivec2& v);
 };

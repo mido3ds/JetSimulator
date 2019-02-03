@@ -170,6 +170,80 @@ public:
     }
 };
 
+class KernelEffect : public Effect {
+public:
+    KernelEffect(glm::mat3 kernel, float offset=1.0f/300.0f) :Effect(STR(
+        uniform float uOffset;  
+        uniform mat3 uKernel;
+
+        vec4 apply(sampler2D tex, vec2 coords) {
+            vec2 offsets[9] = vec2[](
+                vec2(-uOffset,  uOffset), // top-left
+                vec2( 0.0f,    uOffset), // top-center
+                vec2( uOffset,  uOffset), // top-right
+                vec2(-uOffset,  0.0f),   // center-left
+                vec2( 0.0f,    0.0f),   // center-center
+                vec2( uOffset,  0.0f),   // center-right
+                vec2(-uOffset, -uOffset), // bottom-left
+                vec2( 0.0f,   -uOffset), // bottom-center
+                vec2( uOffset, -uOffset)  // bottom-right    
+            );
+
+            vec3 col = vec3(0.0);
+            for(int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    col += vec3(texture(tex, coords.st + offsets[i+j])) * uKernel[i][j];
+            
+            return vec4(col, 1.0);
+        }
+    )) {
+        setOffset(offset);
+        setKernel(kernel);
+    }
+
+    void setOffset(const float& offset) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uOffset"), offset);
+    }
+
+    void setKernel(const glm::mat3& kernel) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uKernel"), kernel);
+    }
+};
+
+class BlurEffect : public KernelEffect {
+public: BlurEffect() :KernelEffect(glm::mat3(1, 2, 1, 2, 4, 2, 1, 2, 1)/16) {} 
+};
+
+class BottomSobelEffect : public KernelEffect {
+public: BottomSobelEffect() :KernelEffect(glm::mat3(-1, -2, -1, 0, 0, 0, 1, 2, 1)) {}
+};
+
+class EmbossEffect : public KernelEffect {
+public: EmbossEffect() :KernelEffect(glm::mat3(-2, -1, 0, -1, 1, 1, 0, 1, 2)) {}
+};
+
+class LeftSobelEffect : public KernelEffect {
+public: LeftSobelEffect() :KernelEffect(glm::mat3(1, 0, -1, 2, 0, -2, 1, 0, -1)) {}
+};
+
+class OutlineEffect : public KernelEffect {
+public: OutlineEffect() :KernelEffect(glm::mat3(-1, -1, -1, -1, 8, -1, -1, -1, -1)) {}
+};
+
+class RightSobelEffect : public KernelEffect {
+public: RightSobelEffect() :KernelEffect(glm::mat3(-1, 0, 1, -2, 0, -2, -1, 0, 1)) {}
+};
+
+class SharpenEffect : public KernelEffect {
+public: SharpenEffect() :KernelEffect(glm::mat3(0, -1, 0, -1, 5, -1, 0, -1, 0)) {}
+};
+
+class TopSobelEffect : public KernelEffect {
+public: TopSobelEffect() :KernelEffect(glm::mat3(1, 2, 1, 0, 0, 0, -1, -2, -1)) {}
+};
+
 class Renderer {
 protected:
     Framebuffer screenFramebuffer;
@@ -222,6 +296,8 @@ static Effect* inverseEffect;
 static Effect* grayscaleEffect;
 static Effect* sepiaEffect;
 static VignetteEffect* vignetteEffect;
+static Effect* blurEffect;
+static bool useBlur;
 void JetSimulator::onCreate() {
     phongShader = new PhongShader();
     jet = new Jet();
@@ -232,6 +308,7 @@ void JetSimulator::onCreate() {
 	useVignette = false; 
 	useGrayscale = false; 
 	useSepia = false; 
+    useBlur = false;
 
     phongShader->use();
     jet->load();
@@ -274,6 +351,7 @@ void JetSimulator::onCreate() {
 
     vignetteEffect = new VignetteEffect(0.4f, 0.65f, 1.0f, getWidth(), getHeight());
     
+    blurEffect = new BlurEffect();
 }
 
 void JetSimulator::onDestroy() {
@@ -282,6 +360,7 @@ void JetSimulator::onDestroy() {
     delete grayscaleEffect;
     delete sepiaEffect;
     delete vignetteEffect;
+    delete blurEffect;
     delete phongShader;
     delete camera;
     delete jet;
@@ -302,6 +381,9 @@ void JetSimulator::onKeyPressed(int key, int modifierKey) {
 	if (key == KEY_4) {
 		useSepia = !useSepia;
 	}
+    if (key == KEY_5) {
+        useBlur = !useBlur;
+    }
 	if (key == MOUSE_BUTTON_LEFT) {
 		jet->fireMissile();
 	}
@@ -334,6 +416,7 @@ void JetSimulator::onDraw() {
     if (useGrayscale) renderer->applyEffect(grayscaleEffect);
     if (useSepia) renderer->applyEffect(sepiaEffect);
     if (useVignette) renderer->applyEffect(vignetteEffect);
+    if (useBlur) renderer->applyEffect(blurEffect);
 
     renderer->endFrame();
 }
