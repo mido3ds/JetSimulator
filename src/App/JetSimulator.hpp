@@ -5,6 +5,8 @@
 #include <Models/Jet.hpp>
 #include <Scene/Light.hpp>
 #include <Models/SkyBox.hpp>
+#include <Renderer/Renderer.h>
+#include <Renderer/Effect.h>
 
 class JetSimulator: public App {
 private:
@@ -13,7 +15,15 @@ private:
     Model* land;
     ModelTrackingCamera* camera;
     SkyBox* skybox;
-	bool useFog, useSepia, useGrayscale, useVignette;
+    
+    Renderer* renderer;
+
+    Effect *inverseEffect, *grayscaleEffect, 
+        *sepiaEffect, *vignetteEffect, *blurEffect;
+	bool useFog = false, useSepia = false,
+        useGrayscale = false, useVignette = false, 
+        useBlur = false;
+
     DirLight sun {
         glm::vec3(0, 0, -1), // dir
         glm::vec3(0.1, 0.1, 0.1), // ambient

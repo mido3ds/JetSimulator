@@ -5,7 +5,9 @@
 ![Screenshot](screenshot.png)
 
 # Roadmap
-[ ] move all effects to framebuffers, generalize post processing
+[X] move all effects to framebuffers, generalize post processing
+
+[ ] implement fog as Effect, remove from shaders
 
 [ ] sounds
 
