@@ -70,9 +70,14 @@ void JetSimulator::onCreate() {
     vignetteEffect = new VignetteEffect(0.4f, 0.65f, 1.0f, getWidth(), getHeight());
     
     blurEffect = new BlurEffect();
+
+    fadeoutTran = new FadeOutTransition(.5, {1,1,1});
+    fadeinTran = new FadeInTransition(2);
 }
 
 void JetSimulator::onDestroy() {
+    delete fadeoutTran;
+    delete fadeinTran;
     delete renderer;
     delete inverseEffect;
     delete grayscaleEffect;
@@ -102,6 +107,12 @@ void JetSimulator::onKeyPressed(int key, int modifierKey) {
     if (key == KEY_5) {
         useBlur = !useBlur;
     }
+    if (key == KEY_6) {
+        renderer->setTransition(fadeoutTran);
+    }
+    if (key == KEY_7) {
+        renderer->setTransition(fadeinTran);
+    }
 	if (key == MOUSE_BUTTON_LEFT) {
 		jet->fireMissile();
 	}
@@ -112,6 +123,7 @@ void JetSimulator::onKeyReleased(int key, int modifierKey) {}
 void JetSimulator::onUpdate(float dt) {
     jet->update(dt);
     camera->update(dt);
+    renderer->update(dt);
 }
 
 void JetSimulator::onDraw() {

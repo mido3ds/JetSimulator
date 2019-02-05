@@ -3,6 +3,7 @@
 #include <Shaders/Shader.hpp>
 #include <glm/ext.hpp>
 #include "Framebuffer.h"
+
 #define STR(n) #n
 
 class Effect {
@@ -169,4 +170,78 @@ public: SharpenEffect() :KernelEffect(glm::mat3(0, -1, 0, -1, 5, -1, 0, -1, 0)) 
 
 class TopSobelEffect : public KernelEffect {
 public: TopSobelEffect() :KernelEffect(glm::mat3(1, 2, 1, 0, 0, 0, -1, -2, -1)) {}
+};
+
+class Transition : public Effect {
+protected:
+    float totalTime;
+    float elapsedTime;
+    GLuint uTotalTimeLoc, uElapsedTimeLoc;
+
+public:
+    Transition(const std::string& func, float totalTime) 
+        :Effect("uniform float uTotalTime, uElapsedTime;\n" + func) {
+        shader.use();
+        uTotalTimeLoc = shader.getUniformLocation("uTotalTime");
+        uElapsedTimeLoc = shader.getUniformLocation("uElapsedTime");
+        reset();
+        setTotalTime(totalTime);
+    }
+
+    void update(float dt) {
+        if (!finished()) elapsedTime += dt;
+        shader.use();
+        shader.setUniform(uElapsedTimeLoc, elapsedTime);
+    }
+
+    bool finished() {return elapsedTime >= totalTime;}
+
+    void reset() {
+        elapsedTime = 0;
+        shader.use();
+        shader.setUniform(uElapsedTimeLoc, 0);
+    }
+
+    void setTotalTime(float totalTime) {
+        assert(totalTime > 0);
+        this->totalTime = totalTime;
+        shader.use();
+        shader.setUniform(uTotalTimeLoc, totalTime);
+    }
+};
+
+class FadeOutTransition : public Transition {
+public:
+    FadeOutTransition(float totalTime, const glm::vec3& color=glm::vec3(0)) 
+        :Transition(STR(
+            uniform vec3 uColor;
+            vec4 apply(sampler2D tex, vec2 coords) {
+                return vec4(mix(vec3(texture(tex, coords)), uColor, uElapsedTime/uTotalTime), 1);
+            }
+        ), totalTime) {
+        setColor(color);
+    }
+
+    void setColor(const glm::vec3& color) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uColor"), color);
+    }
+};
+
+class FadeInTransition : public Transition {
+public:
+    FadeInTransition(float totalTime, const glm::vec3& color=glm::vec3(0)) 
+        :Transition(STR(
+            uniform vec3 uColor;
+            vec4 apply(sampler2D tex, vec2 coords) {
+                return vec4(mix(uColor, vec3(texture(tex, coords)), uElapsedTime/uTotalTime), 1);
+            }
+        ), totalTime) {
+        setColor(color);
+    }
+
+    void setColor(const glm::vec3& color) {
+        shader.use();
+        shader.setUniform(shader.getUniformLocation("uColor"), color);
+    }
 };

@@ -15,6 +15,8 @@ private:
     Model* land;
     ModelTrackingCamera* camera;
     SkyBox* skybox;
+    FadeOutTransition* fadeoutTran;
+    FadeInTransition* fadeinTran;
     
     Renderer* renderer;
 

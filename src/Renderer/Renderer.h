@@ -7,6 +7,7 @@ protected:
     Framebuffer screenFramebuffer;
     Shader screenShader;
     GLuint vao, vbo;
+    Transition* transition = nullptr;
 
 public:
     Renderer(int width, int height) :screenFramebuffer(width, height) {
@@ -35,6 +36,8 @@ public:
     }
     
     void endFrame() {
+        if (transition) applyEffect(transition);
+
         glDisable(GL_DEPTH_TEST);
             Framebuffer::bindDefault();
             screenShader.use();
@@ -44,7 +47,20 @@ public:
         glEnable(GL_DEPTH_TEST);
     }
 
-    inline void applyEffect(Effect* eff) {
+    void applyEffect(Effect* eff) {
         eff->apply(screenFramebuffer.getColorBufferID());
+    }
+
+    void setTransition(Transition* tr) {
+        assert(tr);
+        transition = tr;
+        tr->reset();
+    }
+
+    void update(float dt) {
+        if (transition) {
+            transition->update(dt);
+            if (transition->finished()) transition = nullptr;
+        }
     }
 };
