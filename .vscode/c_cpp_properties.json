@@ -11,13 +11,15 @@
                 "~/.conan/data/stb/20190512/conan/stable/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include",
                 "~/.conan/data/glm/0.9.8.5/bincrafters/stable/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include",
                 "~/.conan/data/glad/0.1.29/bincrafters/stable/package/b965229e5cf578de7c9ce4aa8d7c7ccce5a5d71f/include",
-                "~/.conan/data/openal/1.19.0/bincrafters/stable/package/c11116884528df1ba975497cfb51ec76618e3577/include",
-                "~/.conan/data/openal/1.19.0/bincrafters/stable/package/c11116884528df1ba975497cfb51ec76618e3577/include/AL",
+                "~/.conan/data/sfml/2.5.1/bincrafters/stable/package/450a1464d8e321aaf2e463f3a2cbdd52af02bf56/include",
                 "~/.conan/data/libpng/1.6.34/bincrafters/stable/package/4f75e4b120320a9fb6ac0012242d9ac95d18b6f6/include",
                 "~/.conan/data/bzip2/1.0.6/conan/stable/package/a5875aed3fc7ae8dd0488f7e5e99acbc480d721d/include",
                 "~/.conan/data/IrrXML/1.2/conan/stable/package/56e0cf6d16ee57367a0661ab743f4e43b29223f8/include",
+                "~/.conan/data/flac/1.3.2/bincrafters/stable/package/f543456c1caabe11e7287dbf220c339d96ca7749/include",
+                "~/.conan/data/vorbis/1.3.6/bincrafters/stable/package/08be371161ce02373155daf22f8fa5959548a7d1/include",
+                "~/.conan/data/zlib/1.2.11/conan/stable/package/1d877a3df840030e6a8abb74c5ffb9088d08b47a/include",
                 "~/.conan/data/libalsa/1.1.5/conan/stable/package/7cf43daaf95399d6202b2fd6fab7eab428e8d639/include",
-                "~/.conan/data/zlib/1.2.11/conan/stable/package/1d877a3df840030e6a8abb74c5ffb9088d08b47a/include"
+                "~/.conan/data/ogg/1.3.3/bincrafters/stable/package/1d877a3df840030e6a8abb74c5ffb9088d08b47a/include"
             ],
             "defines": [
                 "_DEBUG",
