@@ -1,11 +1,11 @@
 #include "App.hpp"
 #include <glad/glad.h>
-#include <Windows.h>
+#include <iostream>
 
 static App* staticAppPtr = nullptr;
 
 inline void fatal(char* string) {
-    MessageBox(NULL, TEXT(string), TEXT("Error"), MB_OK|MB_ICONERROR);
+    std::cerr << string << "\n";
     exit(EXIT_FAILURE);
 }
 

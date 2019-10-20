@@ -1,0 +1,15 @@
+[requires]
+glfw/3.3@bincrafters/stable
+freetype/2.9.0@bincrafters/stable
+Assimp/4.1.0@jacmoe/stable 
+stb/20190512@conan/stable 
+glm/0.9.8.5@bincrafters/stable 
+glad/0.1.29@bincrafters/stable 
+openal/1.19.0@bincrafters/stable
+
+[options]
+Assimp:shared=False
+
+[generators]
+txt
+cmake

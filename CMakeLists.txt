@@ -20,29 +20,14 @@ else()
 endif()
 
 #
-# GLFW options
-#
-option (GLFW_INSTALL OFF)
-option (GLFW_BUILD_DOCS OFF)
-option (GLFW_BUILD_EXAMPLES OFF)
-option (GLFW_BUILD_TESTS OFF)
-add_subdirectory (vendor/glfw)
-
-#
 # Set include paths
 #
-include_directories (src/
-                     vendor/glad/include/
-                     vendor/glfw/include/
-                     vendor/glm/
-                     vendor/stb/
-                     vendor/assimp/include/
-                     vendor/openal/include/)
+include_directories (src/)
 
 #
 # Add files
 #
-file (GLOB         VENDORS_SOURCES vendor/glad/src/glad.c)
+# file (GLOB         VENDORS_SOURCES vendor/glad/src/glad.c)
 file (GLOB_RECURSE PROJECT_HEADERS src/*.hpp
                                    src/*.h)
 file (GLOB_RECURSE PROJECT_SOURCES src/*.cpp
@@ -66,24 +51,19 @@ add_definitions (-DGLFW_INCLUDE_NONE
                  -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
 add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
                                 ${PROJECT_CONFIGS} ${VENDORS_SOURCES})
-target_link_libraries (${PROJECT_NAME}
-                       ${CMAKE_CURRENT_SOURCE_DIR}/vendor/freetype/lib/freetype.lib
-                       ${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal/lib/OpenAl32.lib
-                       ${CMAKE_CURRENT_SOURCE_DIR}/vendor/assimp/lib/assimp-vc140-mt.lib
-                       glfw
-                       ${GLFW_LIBRARIES}
-                       ${GLAD_LIBRARIES})
 set_target_properties (${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 
+# 
+# setup conan
 #
-# copy dlls
-#
-file(COPY 
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/freetype/lib/freetype.dll 
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/openal/lib/OpenAl32.dll
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/assimp/lib/assimp-vc140-mt.dll
-    DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Debug)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+
+string(REPLACE ";" " -L" CONAN_LIB_DIRS "${CONAN_LIB_DIRS}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L${CONAN_LIB_DIRS}")
 
 #
 # create makefile
@@ -95,17 +75,17 @@ file (WRITE Makefile "# auto-generated makefile
 all: cmake build run
 
 cmake:
-\tcmake -G\"Visual Studio 14 2015 Win64\" -H. -B\"${CMAKE_BINARY_DIR}\" || echo \">>>> cmake initialization failed! <<<<<\"
+\tcmake -S. -B\"${CMAKE_BINARY_DIR}\" || echo \">>>> cmake initialization failed! <<<<<\"
 
 build:
 \tcmake --build \"${CMAKE_BINARY_DIR}\" || echo \">>>> build failed! <<<<<\"
 
 run:
-\t\"${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Debug/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\"
+\t\"${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Debug/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\" || \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\"
 
 clean:
 \tcmake --build \"${CMAKE_BINARY_DIR}\" --target clean || echo \">>>> clean failed! <<<<<\"
 
 cleanAll:
-\t	del Makefile && rd /s /q build && rd /s /q CMakeFiles || rm -rf build CMakeFiles Makefile
+\t      del Makefile && rd /s /q build && rd /s /q CMakeFiles || rm -rf build CMakeFiles Makefile
 ")

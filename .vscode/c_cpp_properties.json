@@ -3,12 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/src/",
-                "${workspaceFolder}/vendor/assimp/include/",
-                "${workspaceFolder}/vendor/glad/include/",
-                "${workspaceFolder}/vendor/glfw/include/",
-                "${workspaceFolder}/vendor/glm/",
-                "${workspaceFolder}/vendor/stb/"
+                "${workspaceFolder}/src/"
             ],
             "defines": [
                 "_DEBUG",
