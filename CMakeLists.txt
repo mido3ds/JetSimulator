@@ -55,7 +55,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L${CONAN_LIB_DIRS}")
 #
 add_definitions (-DGLFW_INCLUDE_NONE
                  -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
-
+# TODO: remove makefile auto creation
 #
 # create makefile
 #
@@ -66,7 +66,7 @@ file (WRITE Makefile "# auto-generated makefile
 all: cmake build run
 
 cmake:
-\tcmake -S. -B\"${CMAKE_BINARY_DIR}\"
+\tcmake . -B\"${CMAKE_BINARY_DIR}\"
 
 build:
 \tcmake --build \"${CMAKE_BINARY_DIR}\"
