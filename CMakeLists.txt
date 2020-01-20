@@ -48,35 +48,9 @@ target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
 string(REPLACE ";" " -L" CONAN_LIB_DIRS "${CONAN_LIB_DIRS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L${CONAN_LIB_DIRS}")
 
-# TODO: automate adding libraries directories to .vscode/c_cpp_properties.json
 
 # 
 # GLFW options
 #
 add_definitions (-DGLFW_INCLUDE_NONE
                  -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
-# TODO: remove makefile auto creation
-#
-# create makefile
-#
-file (WRITE Makefile "# auto-generated makefile
-
-.PHONY: all cmake build run
-
-all: cmake build run
-
-cmake:
-\tcmake . -B\"${CMAKE_BINARY_DIR}\"
-
-build:
-\tcmake --build \"${CMAKE_BINARY_DIR}\"
-
-run:
-\t\"${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\"
-
-clean:
-\tcmake --build \"${CMAKE_BINARY_DIR}\" --target clean
-
-cleanAll:
-\trm -rf build CMakeFiles Makefile
-")
