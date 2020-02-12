@@ -1,5 +1,5 @@
-#include "Jet.hpp"
-#include <App/App.hpp>
+#include "Models/Jet.hpp"
+#include "App/App.hpp"
 #include <glm/ext.hpp>
 #include <string>
 #include <sstream>

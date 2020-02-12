@@ -1,11 +1,17 @@
-# JetSimulator 
+# JetSimulator [WIP]
 
-3d flight simulator, started as a college project.
+3d flight simulator.
 
 ![Screenshot](screenshot.png)
 
 # Build
 
-Install the latest version of Cmake and Conan, then run `$ init.sh` for one time.
+1. Install the latest version of Cmake and Conan.
+1. `$ configure && cd build`
+1. `$ make jetsimulator`
 
-To build run `$ make`
+# Run
+`$ ./build/jetsimulator`, just make sure you have the assets directory in you current path
+
+# Test
+in `build` dir, run `$ make test && ./test` 

@@ -62,6 +62,7 @@
         "set": "cpp",
         "sstream": "cpp",
         "stack": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "random": "cpp"
     }
 }

@@ -1,4 +1,4 @@
-#include "Mesh.hpp"
+#include "Scene/Mesh.hpp"
 #include <cassert>
 #include <glm/gtc/type_ptr.hpp>
 using namespace std;

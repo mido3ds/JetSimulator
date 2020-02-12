@@ -1,4 +1,4 @@
-#include "Node.hpp"
+#include "Scene/Node.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
 Node* Node::build(const aiScene* scene, const aiNode* node, Node* parent, std::vector<Mesh*>& allMeshes) {

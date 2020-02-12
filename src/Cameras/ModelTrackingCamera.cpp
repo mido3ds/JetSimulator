@@ -1,4 +1,4 @@
-#include "ModelTrackingCamera.hpp"
+#include "Cameras/ModelTrackingCamera.hpp"
 #include <glm/ext.hpp>
 #include <cassert>
 

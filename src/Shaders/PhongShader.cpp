@@ -1,4 +1,4 @@
-#include "PhongShader.hpp"
+#include "Shaders/PhongShader.hpp"
 using std::string;
 
 PhongShader::PhongShader() {

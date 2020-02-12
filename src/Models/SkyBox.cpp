@@ -1,4 +1,4 @@
-#include "SkyBox.hpp" 
+#include "Models/SkyBox.hpp" 
 #include <glm/ext.hpp>
 
 SkyBox::SkyBox() 
