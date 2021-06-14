@@ -1,4 +1,4 @@
-#include "Texture.hpp"
+#include <Textures/Texture.hpp>
 #include <glad/glad.h>
 
 Texture::Texture(GLint type, GLuint unit) 

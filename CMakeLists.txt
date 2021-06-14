@@ -22,19 +22,22 @@ endif()
 #
 # Add files
 #
-file(GLOB_RECURSE PROJECT_HEADERS src/*.hpp
-                                  src/*.h)
+file(GLOB_RECURSE PROJECT_HEADERS include/*.hpp
+                                  include/*.h)
 file(GLOB_RECURSE PROJECT_SOURCES src/*.cpp
                                   src/*.cxx
                                   src/*.cc
                                   src/*.c
+                                  vendor/*.cpp
+                                  vendor/*.cxx
+                                  vendor/*.cc
                                   vendor/*.c)
 
 #
 # Main Target
 #
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
-target_include_directories(${PROJECT_NAME} PRIVATE src/ vendor/glad/include/ vendor/glm/include/)
+target_include_directories(${PROJECT_NAME} PRIVATE include/ vendor/glad/include/ vendor/glm/include/)
 
 # TODO: automate adding libraries directories to .vscode/c_cpp_properties.json
 

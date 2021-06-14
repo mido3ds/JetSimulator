@@ -1,6 +1,6 @@
-#include "Model.hpp"
-#include "Mesh.hpp"
-#include "Node.hpp"
+#include <Scene/Model.hpp>
+#include <Scene/Mesh.hpp>
+#include <Scene/Node.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <assimp/cimport.h>

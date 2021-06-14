@@ -1,5 +1,5 @@
-#include "CubeMapTexture.hpp"
-#include "Image.hpp"
+#include <Textures/CubeMapTexture.hpp>
+#include <Textures/Image.hpp>"
 
 CubeMapTexture::CubeMapTexture(const std::string& dir, 
         const std::string& right,

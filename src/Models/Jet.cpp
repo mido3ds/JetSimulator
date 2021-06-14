@@ -1,4 +1,4 @@
-#include "Jet.hpp"
+#include <Models/Jet.hpp>
 #include <App/App.hpp>
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/gtx/transform.hpp>

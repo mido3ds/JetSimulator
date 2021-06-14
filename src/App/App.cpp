@@ -1,4 +1,4 @@
-#include "App.hpp"
+#include <App/App.hpp>
 #include <glad/glad.h>
 #include <iostream>
 

@@ -1,5 +1,5 @@
-#include "Texture2D.hpp"
-#include "Image.hpp"
+#include <Textures/Texture2D.hpp>
+#include <Textures/Image.hpp>
 
 Texture2D::Texture2D(const std::string& path, Usage usage) 
     :Texture(GL_TEXTURE_2D, usage), path(path) {}

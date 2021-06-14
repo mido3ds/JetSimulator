@@ -1,4 +1,4 @@
-#include "Material.hpp"
+#include <Scene/Material.hpp>
 #include <cassert>
 #include <cstddef>
 using std::string;
