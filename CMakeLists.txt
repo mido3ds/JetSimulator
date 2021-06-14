@@ -22,13 +22,14 @@ endif()
 #
 # Add files
 #
-include_directories (src/)
+include_directories (src/ vendor/glad/include/ vendor/glm/include/)
 file (GLOB_RECURSE PROJECT_HEADERS src/*.hpp
                                    src/*.h)
 file (GLOB_RECURSE PROJECT_SOURCES src/*.cpp
                                    src/*.cxx
                                    src/*.cc
-                                   src/*.c)
+                                   src/*.c
+                                   vendor/glad/src/*.c)
 
 #
 # Set executable and target link libraries
@@ -37,24 +38,41 @@ add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
 set_target_properties (${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 
-#
-# setup conan
-#
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-
-target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
-
-string(REPLACE ";" " -L" CONAN_LIB_DIRS "${CONAN_LIB_DIRS}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L${CONAN_LIB_DIRS}")
-
 # TODO: automate adding libraries directories to .vscode/c_cpp_properties.json
 
 # 
-# GLFW options
+# GLFW
 #
+find_package(glfw3 3.2 REQUIRED)
+target_link_libraries(${PROJECT_NAME} glfw)
+target_include_directories(${PROJECT_NAME} PRIVATE ${GLFW_INCLUDE_DIRS})
 add_definitions (-DGLFW_INCLUDE_NONE
-                 -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
+-DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
+
+#
+# DL LIBS
+#
+target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
+
+#
+# Freetype
+#
+find_package(Freetype REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${FREETYPE_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
+
+#
+# Assimp
+#
+find_package(Assimp REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${ASSIMP_INCLUDE_DIRS})
+
+#
+# stb
+#
+target_link_libraries(${PROJECT_NAME} stb)
+target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/stb/)
 
 #
 # create makefile

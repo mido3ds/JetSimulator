@@ -1,5 +1,6 @@
 #include "ModelTrackingCamera.hpp"
-#include <glm/ext.hpp>
+#include <glm/gtx/fast_trigonometry.hpp>
+#include <glm/gtx/transform.hpp>
 #include <cassert>
 
 #define max(a, b) (a>b?a:b)

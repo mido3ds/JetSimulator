@@ -1,5 +1,5 @@
 #include "SkyBox.hpp" 
-#include <glm/ext.hpp>
+#include <glm/gtx/transform.hpp>
 
 SkyBox::SkyBox() 
     :cubemap(
