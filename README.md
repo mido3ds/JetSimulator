@@ -2,7 +2,7 @@
 
 3d flight simulator, started as a college project.
 
-![Screenshot](screenshot.png)
+![Screenshot](./docs/screenshots/tomcat-outside.png)
 
 # Dependencies
 | Dependency       | Version     |
