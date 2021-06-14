@@ -31,4 +31,15 @@ $ sudo apt update && sudo apt install -y \
 
 # Build
 
+```sh
+$ mkdir -p build &&
+    cd build &&
+    cmake .. &&
+    cd .. &&
+    make build
+```
 
+# Run
+```sh
+$ make run
+```
