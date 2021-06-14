@@ -1,15 +1,15 @@
 #
 # Specify minimum CMake version and project name
 #
-cmake_minimum_required (VERSION 3.0)
-project (JetSimulator)
+cmake_minimum_required(VERSION 3.0)
+project(JetSimulator)
 
 #
 # CMake setup
 #
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set (CMAKE_VERBOSE_MAKEFILE 0) # 1 should be used for debugging
-set (CMAKE_SUPPRESS_REGENERATION TRUE) # Suppresses ZERO_CHECK
+set(CMAKE_VERBOSE_MAKEFILE 0) # 1 should be used for debugging
+set(CMAKE_SUPPRESS_REGENERATION TRUE) # Suppresses ZERO_CHECK
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else()
@@ -22,21 +22,19 @@ endif()
 #
 # Add files
 #
-include_directories (src/ vendor/glad/include/ vendor/glm/include/)
-file (GLOB_RECURSE PROJECT_HEADERS src/*.hpp
-                                   src/*.h)
-file (GLOB_RECURSE PROJECT_SOURCES src/*.cpp
-                                   src/*.cxx
-                                   src/*.cc
-                                   src/*.c
-                                   vendor/glad/src/*.c)
+file(GLOB_RECURSE PROJECT_HEADERS src/*.hpp
+                                  src/*.h)
+file(GLOB_RECURSE PROJECT_SOURCES src/*.cpp
+                                  src/*.cxx
+                                  src/*.cc
+                                  src/*.c
+                                  vendor/*.c)
 
 #
-# Set executable and target link libraries
+# Main Target
 #
-add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
-set_target_properties (${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
+target_include_directories(${PROJECT_NAME} PRIVATE src/ vendor/glad/include/ vendor/glm/include/)
 
 # TODO: automate adding libraries directories to .vscode/c_cpp_properties.json
 
@@ -46,8 +44,7 @@ set_target_properties (${PROJECT_NAME} PROPERTIES
 find_package(glfw3 3.2 REQUIRED)
 target_link_libraries(${PROJECT_NAME} glfw)
 target_include_directories(${PROJECT_NAME} PRIVATE ${GLFW_INCLUDE_DIRS})
-add_definitions (-DGLFW_INCLUDE_NONE
--DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
+add_definitions (-DGLFW_INCLUDE_NONE -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
 
 #
 # DL LIBS
@@ -75,26 +72,7 @@ target_link_libraries(${PROJECT_NAME} stb)
 target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/stb/)
 
 #
-# create makefile
+# Link Assets
 #
-file (WRITE Makefile "# auto-generated makefile
-
-.PHONY: all cmake build run
-
-all: cmake build run
-
-cmake:
-\tcmake -S. -B\"${CMAKE_BINARY_DIR}\"
-
-build:
-\tcmake --build \"${CMAKE_BINARY_DIR}\"
-
-run:
-\t\"${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\"
-
-clean:
-\tcmake --build \"${CMAKE_BINARY_DIR}\" --target clean
-
-cleanAll:
-\trm -rf build CMakeFiles Makefile
-")
+ADD_CUSTOM_TARGET(link_assets ALL
+                  COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/assets ./assets)

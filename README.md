@@ -35,11 +35,11 @@ $ sudo apt update && sudo apt install -y \
 $ mkdir -p build &&
     cd build &&
     cmake .. &&
-    cd .. &&
-    make build
+    make -j$(nproc --all)
 ```
 
 # Run
+In build:
 ```sh
-$ make run
+$ ./JetSimulator
 ```
