@@ -30,7 +30,7 @@ public:
     std::vector<Mesh*> getMeshes();
     Node* getParent();
     void addToParent(Node* parent);
-    void removeFromParent();
-    void removeChild(Node* ch);
+    void disattachFromParent();
+    void disattachChild(Node* ch);
     bool attached();
 };

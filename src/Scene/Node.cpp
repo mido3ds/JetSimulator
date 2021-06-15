@@ -73,14 +73,14 @@ void Node::addToParent(Node* parent) {
     parent->children.push_back(this);
 }
 
-void Node::removeFromParent() {
+void Node::disattachFromParent() {
     if (parent) {
-        parent->removeChild(this);
+        parent->disattachChild(this);
         parent = nullptr;
     }
 }
 
-void Node::removeChild(Node* ch) {
+void Node::disattachChild(Node* ch) {
     int i;
     for (i = 0; i < children.size(); i++) {
         if (children[i] == ch)
