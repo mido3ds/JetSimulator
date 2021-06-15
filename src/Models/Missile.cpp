@@ -14,7 +14,7 @@ Missile::~Missile() {
 
 void Missile::fire(float throwSpeed) {
     if (attached()) {
-        node->removeFromParent();
+        node->disattachFromParent();
         speed += throwSpeed*20;
     }
 }
