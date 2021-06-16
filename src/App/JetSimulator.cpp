@@ -20,11 +20,11 @@ App::Config JetSimulator::getConfig() {
 }
 
 void JetSimulator::onCreate() {
-    phongShader = new PhongShader();
-    jet = new Jet();
-    land = new Model("assets/terrains/channeledLand/channeledLand.dae");
-    camera = new ModelTrackingCamera(jet, 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
-    skybox = new SkyBox();
+    phongShader = make_unique<PhongShader>();
+    jet = make_unique<Jet>();
+    land = make_unique<Model>("assets/terrains/channeledLand/channeledLand.dae");
+    camera = make_unique<ModelTrackingCamera>(jet.get(), 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
+    skybox = make_unique<SkyBox>();
 	useFog = false; // initially
 	useVignette = false; // initially
 	useGrayscale = false; // initially
@@ -45,13 +45,7 @@ void JetSimulator::onCreate() {
     glCullFace(GL_BACK);
 }
 
-void JetSimulator::onDestroy() {
-    delete phongShader;
-    delete camera;
-    delete jet;
-    delete land;
-    delete skybox;
-}
+void JetSimulator::onDestroy() { }
 
 void JetSimulator::onKeyPressed(int key, int modifierKey) {
 	if (key == KEY_1) {
@@ -90,12 +84,12 @@ void JetSimulator::onDraw() {
 	phongShader->switchGrayscale(useGrayscale);
 	phongShader->switchSepia(useSepia);
 	phongShader->switchVignette(useVignette);
-    jet->draw(*phongShader);
-    land->draw(*phongShader);
+    jet->render(phongShader);
+    land->render(phongShader);
 
 	skybox->switchFog(useFog);
 	skybox->switchVignette(useVignette);
 	skybox->switchGrayscale(useGrayscale);
 	skybox->switchSepia(useSepia);
-    skybox->draw(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
+    skybox->render(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
 }

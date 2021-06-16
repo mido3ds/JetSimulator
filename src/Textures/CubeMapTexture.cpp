@@ -1,13 +1,13 @@
 #include <Textures/CubeMapTexture.hpp>
 #include <Textures/Image.hpp>"
 
-CubeMapTexture::CubeMapTexture(const std::string& dir, 
-        const std::string& right,
-        const std::string& left,
-        const std::string& top,
-        const std::string& bottom,
-        const std::string& back,
-        const std::string& front) 
+CubeMapTexture::CubeMapTexture(const string& dir, 
+        const string& right,
+        const string& left,
+        const string& top,
+        const string& bottom,
+        const string& back,
+        const string& front) 
     :Texture(GL_TEXTURE_CUBE_MAP, 0) {
     paths.push_back(dir+left);
     paths.push_back(dir+right);

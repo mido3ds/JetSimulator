@@ -11,12 +11,9 @@ SkyBox::SkyBox()
         "front.png",
         "back.png"
     ) {
-    shader = new Shader();
+    shader = make_unique<Shader>();
 }
 
-SkyBox::~SkyBox() {
-    delete shader;
-}
 void SkyBox::switchVignette(bool state) {
 	useVignette = state;
 }
@@ -103,7 +100,7 @@ void SkyBox::load() {
     cubemap.load();
 }
 
-void SkyBox::draw(glm::mat4 proj, glm::mat4 view, glm::vec2 vec) {
+void SkyBox::render(glm::mat4 proj, glm::mat4 view, glm::vec2 vec) {
     glDepthFunc(GL_LEQUAL);
 
     shader->use();

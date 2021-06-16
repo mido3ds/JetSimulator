@@ -1,5 +1,4 @@
 #include <Shaders/PhongShader.hpp>
-using std::string;
 
 PhongShader::PhongShader() {
     attach("assets/shaders/phong.vs.glsl", GL_VERTEX_SHADER);
@@ -29,10 +28,10 @@ PhongShader::PhongShader() {
     uMaterial_shininess = getUniformLocation("uMaterial.shininess");
 }
 
-void PhongShader::setMaterial(const Material& material) {
-    material.diffuse->bind();
-    material.specular->bind();
-    setUniform(uMaterial_shininess, material.shininess);
+void PhongShader::setMaterial(shared_ptr<const Material>& material) {
+    material->diffuse->bind();
+    material->specular->bind();
+    setUniform(uMaterial_shininess, material->shininess);
 }
 void PhongShader::switchFog(bool state)
 {

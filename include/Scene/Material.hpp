@@ -3,15 +3,27 @@
 #include <assimp/material.h>
 #include <string>
 #include <map>
+#include <memory>
+#include <cassert>
+
+using namespace std;
+
+#define DEFAULT_SHININESS 16
 
 class Material {
-private:
 public:
-    static Material* build(const aiMaterial* mat, std::map<std::string,Texture2D*>& textMap, const std::string& path);
-    Material(const Texture2D* diffuse, const Texture2D* specular, const float shininess);
-    Material(const Texture2D* diffuse, const Texture2D* specular);
+    static shared_ptr<Material> build(aiMaterial const* mat, 
+        map<string,shared_ptr<Texture2D>>& textMap, 
+        const string& path);
 
-    const Texture2D* diffuse;
-    const Texture2D* specular;
+    inline Material(shared_ptr<const Texture2D> diffuse, 
+        shared_ptr<const Texture2D> specular, 
+        const float shininess = DEFAULT_SHININESS)
+        :diffuse(diffuse), specular(specular), shininess(shininess) {
+        assert(shininess >= 0 && diffuse && specular);
+    }
+
+    shared_ptr<const Texture2D> diffuse;
+    shared_ptr<const Texture2D> specular;
     const float shininess;
 };

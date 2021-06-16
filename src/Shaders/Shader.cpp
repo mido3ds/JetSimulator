@@ -19,13 +19,13 @@ GLuint Shader::getID() {
     return programID; 
 }
 
-void Shader::attach(std::string const &filename, GLenum type) {
-    std::ifstream file(filename.c_str());
+void Shader::attach(string const &filename, GLenum type) {
+    ifstream file(filename.c_str());
     if (file.fail()) {
-        std::cerr << "UNABLE TO OPEN FILE: \"" << filename << "\"\n";
+        cerr << "UNABLE TO OPEN FILE: \"" << filename << "\"\n";
         return;
     }
-    std::string source = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+    string source = string(istreambuf_iterator<char>(file), istreambuf_iterator<char>());
 
     GLuint shaderID = glCreateShader(type); 
 
@@ -40,8 +40,8 @@ void Shader::attach(std::string const &filename, GLenum type) {
         glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
         char* logStr = new char[length];
         glGetShaderInfoLog(shaderID, length, nullptr, logStr);
-        std::cerr << "ERROR IN " << filename << std::endl;
-        std::cerr << logStr << std::endl;
+        cerr << "ERROR IN " << filename << endl;
+        cerr << logStr << endl;
         delete[] logStr;
     }
     assert(status);
@@ -60,14 +60,14 @@ void Shader::link() {
         glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &length);
         char* logStr = new char[length];
         glGetProgramInfoLog(programID, length, nullptr, logStr);
-        std::cerr << "LINKING ERROR" << std::endl;
-        std::cerr << logStr << std::endl;
+        cerr << "LINKING ERROR" << endl;
+        cerr << logStr << endl;
         delete[] logStr;
     }
     assert(status);
 }
 
-GLuint Shader::getUniformLocation(std::string uniform) {
+GLuint Shader::getUniformLocation(string uniform) {
     return glGetUniformLocation(programID, uniform.c_str());
 }
 

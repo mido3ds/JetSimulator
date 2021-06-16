@@ -5,29 +5,32 @@
 #include <vector>
 #include "Material.hpp"
 #include <Shaders/PhongShader.hpp>
+#include <memory>
+
+using namespace std;
 
 class Mesh {
 private:
     GLuint vao = 0, vbo[3] = {0,0,0}, ebo = 0, elementCount = 0;
 
-    std::vector<glm::vec3> *positions = nullptr, *normals = nullptr;
-    std::vector<glm::vec2> *textCoords = nullptr;
-    std::vector<glm::ivec3> *indices = nullptr;
+    vector<glm::vec3> positions, normals;
+    vector<glm::vec2> textCoords;
+    vector<glm::ivec3> indices;
 
     Mesh & operator =(Mesh const &) = delete;
 public:
-    static Mesh* build(aiMesh* mesh, const Material* material);
+    static shared_ptr<Mesh> build(aiMesh* mesh, shared_ptr<const Material> material);
 
-    Mesh(std::vector<glm::vec3> *positions, 
-        std::vector<glm::vec3> *normals, 
-        std::vector<glm::vec2> *textCoords,
-        std::vector<glm::ivec3> *indices,
-        const Material *material);
+    Mesh(vector<glm::vec3> positions, 
+        vector<glm::vec3> normals, 
+        vector<glm::vec2> textCoords,
+        vector<glm::ivec3> indices,
+        shared_ptr<const Material> material);
     ~Mesh();
 
     void load();
     bool isLoaded();
-    void draw(PhongShader& shader);
+    void render(unique_ptr<PhongShader>& shader);
 
-    const Material *material;
+    shared_ptr<const Material> material;
 };

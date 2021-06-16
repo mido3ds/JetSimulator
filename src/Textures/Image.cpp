@@ -2,7 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-Image::Image(const std::string& path) :path(path) {}
+Image::Image(const string& path) :path(path) {}
 
 Image::~Image() {
     stbi_image_free(data);

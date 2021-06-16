@@ -3,6 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
+using namespace std;
+
 class Shader {
 private:
     GLuint programID;
@@ -15,10 +17,10 @@ public:
 
     void use();
     GLuint getID(); 
-    void attach(std::string const &filename, GLenum type);
+    void attach(string const &filename, GLenum type);
     void link();
 
-    GLuint getUniformLocation(std::string uniform);
+    GLuint getUniformLocation(string uniform);
     void setUniform(int loc, int v);
     void setUniform(int loc, float v);
     void setUniform(int loc, glm::mat4 mat);

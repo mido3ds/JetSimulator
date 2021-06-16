@@ -7,29 +7,28 @@
 #include "Material.hpp"
 #include <Shaders/PhongShader.hpp>
 #include <glm/glm.hpp>
+#include <memory>
+
+using namespace std;
 
 class Model {
 private:
     Model(Model const&) =delete;
     Model& operator=(Model const&) =delete;
 protected:
-    std::vector<Material*> materials;
-    std::vector<Texture2D*> textures;
-    std::vector<Mesh*> meshes;
-    Node* rootNode;
+    vector<shared_ptr<Material>> materials;
+    vector<shared_ptr<Texture2D>> textures;
+    vector<shared_ptr<Mesh>> meshes;
+    shared_ptr<Node> rootNode;
 public:
-    Model(const std::string& path);
-    virtual ~Model();
+    Model(const string& path);
 
     virtual void load();
     virtual void update(float dT);
-    virtual void draw(PhongShader& shader);
 
-    const std::string path;
-    std::vector<Material*> getMaterials();
-    std::vector<Texture2D*> getTextures();
-    std::vector<Mesh*> getMeshes();
-    Node* getRootNode();
+    virtual void render(unique_ptr<PhongShader>& shader);
+
+    const string path;
 
     glm::vec3 pos, front, up, right;
     float pitch=0, yaw=0, roll=0;

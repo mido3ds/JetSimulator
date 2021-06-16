@@ -5,32 +5,32 @@
 #include <string>
 #include "Mesh.hpp"
 #include <Shaders/PhongShader.hpp>
+#include <memory>
+
+using namespace std;
 
 class Node {
 private:
-    static Node* build(const aiScene* scene, const aiNode* node, Node* parent, std::vector<Mesh*>& allMeshes);
-    Node* parent;
-    std::vector<Node*> children;
-    std::vector<Mesh*> meshes;
+    weak_ptr<Node> parent;
+    vector<shared_ptr<Node>> children;
+    vector<shared_ptr<Mesh>> meshes;
 public:
-    static Node* build(const aiScene* scene, const aiNode* node, std::vector<Mesh*>& allMeshes);
+    static shared_ptr<Node> build(aiScene const* scene, 
+        aiNode const* node, 
+        const vector<shared_ptr<Mesh>>& allMeshes, 
+        weak_ptr<Node> parent=weak_ptr<Node>());
 
-    Node(const std::string& name, const glm::mat4& transform, Node *parent, 
-        const std::vector<Node*>& children, const std::vector<Mesh*>& meshes);
-    ~Node();
+    Node(const string& name, const glm::mat4& transform, weak_ptr<Node> parent, 
+        const vector<shared_ptr<Node>>& children, const vector<shared_ptr<Mesh>>& meshes);
 
     glm::mat4 getTotalTransform() const;
-    Node* getNodeByName(const std::string& name);
-    void draw(PhongShader& shader);
+    Node* getNodeByName(const string& name); // TODO: return shared_ptr
+    void render(unique_ptr<PhongShader>& shader);
 
-    const std::string name;
+    const string name;
     glm::mat4 transform;
 
-    std::vector<Node*> getChildren();
-    std::vector<Mesh*> getMeshes();
-    Node* getParent();
-    void addToParent(Node* parent);
-    void disattachFromParent();
-    void disattachChild(Node* ch);
+    shared_ptr<Node> disattachFromParent();
+    shared_ptr<Node> disattachChild(Node* ch);
     bool attached();
 };

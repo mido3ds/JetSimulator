@@ -2,14 +2,16 @@
 #include <glad/glad.h>
 #include <string>
 
+using namespace std;
+
 class Image {
 public:
-    const std::string path;
+    const string path;
     unsigned char* data = nullptr;
     int width, height, channels;
     GLuint glInternalFormat, glFormat;
 
-    Image(const std::string& path);
+    Image(const string& path);
     ~Image();
     
     void load();

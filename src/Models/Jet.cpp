@@ -10,20 +10,15 @@
 
 Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
 
-Jet::~Jet() {
-    for (int i = 0; i < missiles.size(); i++) {
-        delete missiles[i];
-    }
-}
-
 void Jet::load() {
     Model::load();
 
+    // TODO: append missile when fired
     for (int i = 0; i < NUM_MISSILES; i++) {
-        std::ostringstream os;
+        ostringstream os;
         os << MISSILE_NAME << i;
 
-        missiles.push_back(new Missile(rootNode->getNodeByName(os.str()), MISSILE_SPD, MISSILE_TIME));
+        missiles.push_back(Missile(rootNode->getNodeByName(os.str()), MISSILE_SPD, MISSILE_TIME));
     }
 }
 
@@ -75,16 +70,16 @@ void Jet::update(float dt) {
     pitch = glm::wrapAngle(pitch+dPitch);
     roll = glm::wrapAngle(roll+dRoll);
 
-    for (auto& missile: missiles) missile->update(dt);
+    for (auto& missile: missiles) missile.update(dt);
 }
 
-void Jet::draw(PhongShader& shader) {
-    Model::draw(shader);
-    for (auto& missile: missiles) missile->draw(&shader);
+void Jet::render(unique_ptr<PhongShader>& shader) {
+    Model::render(shader);
+    for (auto& missile: missiles) missile.render(shader);
 }
 
 void Jet::fireMissile() {
     if (missileToFire < missiles.size()) {
-        missiles[missileToFire++]->fire(speed);
+        missiles[missileToFire++].fire(speed);
     }
 }

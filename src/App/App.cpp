@@ -2,10 +2,12 @@
 #include <glad/glad.h>
 #include <iostream>
 
+using namespace std;
+
 static App* staticAppPtr = nullptr;
 
 inline void fatal(char* string) {
-    std::cerr << string << "\n";
+    cerr << string << "\n";
     exit(EXIT_FAILURE);
 }
 

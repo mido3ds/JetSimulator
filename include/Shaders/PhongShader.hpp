@@ -3,6 +3,7 @@
 #include <Scene/Material.hpp>
 #include <Scene/Light.hpp>
 #include <glm/glm.hpp>
+#include <memory>
 
 class PhongShader: public Shader {
 private:
@@ -16,7 +17,7 @@ public:
 	void switchGrayscale(bool state);
 	void switchSepia(bool state);
 	void switchVignette(bool state);
-    void setMaterial(const Material& material);
+    void setMaterial(shared_ptr<const Material>& material);
     void setDirLight(const DirLight& light);
     void setPointLight(const PointLight& light, int lightNumber);
     void setSpotight(const SpotLight& light, int lightNumber);

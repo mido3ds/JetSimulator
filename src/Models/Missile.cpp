@@ -7,14 +7,10 @@ Missile::Missile(Node* node, float speed, float maxTime)
     assert(node && maxTime > 0 && speed > 0);
 }
 
-Missile::~Missile() {
-	if (!attached())
-		delete node;
-}
-
 void Missile::fire(float throwSpeed) {
     if (attached()) {
-        node->disattachFromParent();
+        auto n = node->disattachFromParent();
+        workaround_node.swap(n);
         speed += throwSpeed*20;
     }
 }
@@ -34,13 +30,11 @@ void Missile::update(float dt) {
         node->transform[3] = glm::vec4(pos, 1.0f);
 
         maxTime -= dt;
-
-		//std::cout << pos << "\n";
     }
 }
 
-void Missile::draw(PhongShader* shader) {
+void Missile::render(unique_ptr<PhongShader>& shader) {
     if (!attached() && !exploded()) {
-        node->draw(*shader);
+        node->render(shader);
     }
 }
