@@ -3,21 +3,23 @@
 #include <glm/glm.hpp>
 #include <Shaders/PhongShader.hpp>
 #include <memory>
+#include <cassert>
 
 using namespace std;
 
 class Missile {
 private: 
-    Node* node;
+    shared_ptr<Node> node;
     float speed;
     float maxTime;
-    
-    shared_ptr<Node> workaround_node; // TODO: remove this hack
 public:
-    Missile(Node* node, float speed, float maxTime);
+    inline Missile(shared_ptr<Node> node, float speed, float maxTime, float throwSpeed)
+        :node(node), speed(speed*20), maxTime(maxTime) {
+        speed += throwSpeed*20;
+        assert(node && maxTime > 0 && speed > 0);
+    }
 
-    void fire(float throwSpeed);
-    bool attached();
+    // TODO: remove this, and only use memory deletion
     bool exploded();
 
     void update(float dt);

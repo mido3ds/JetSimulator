@@ -26,7 +26,6 @@ private:
 public:
     Jet();
 
-    virtual void load() override;
     virtual void update(float dt) override;
     virtual void render(unique_ptr<PhongShader>& shader) override;
     void fireMissile();

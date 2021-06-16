@@ -32,12 +32,12 @@ glm::mat4 Node::getTotalTransform() const {
     }
 }
 
-Node* Node::getNodeByName(const string& name) {
-    if (this->name == name) return this;
+shared_ptr<Node> Node::getNodeByName(const string& name, shared_ptr<Node> thisptr) {
+    if (this->name == name) return thisptr;
     for (auto& node: children) {
-        if (node->getNodeByName(name)) return node.get();
+        if (node->getNodeByName(name, node)) return node;
     }
-    return nullptr;
+    return {nullptr};
 }
 
 void Node::render(unique_ptr<PhongShader>& shader) {

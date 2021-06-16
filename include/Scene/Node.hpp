@@ -24,7 +24,7 @@ public:
         const vector<shared_ptr<Node>>& children, const vector<shared_ptr<Mesh>>& meshes);
 
     glm::mat4 getTotalTransform() const;
-    Node* getNodeByName(const string& name); // TODO: return shared_ptr
+    shared_ptr<Node> getNodeByName(const string& name, shared_ptr<Node> thisptr); // TODO: remove thisptr ugly hack
     void render(unique_ptr<PhongShader>& shader);
 
     const string name;

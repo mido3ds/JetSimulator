@@ -10,18 +10,6 @@
 
 Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
 
-void Jet::load() {
-    Model::load();
-
-    // TODO: append missile when fired
-    for (int i = 0; i < NUM_MISSILES; i++) {
-        ostringstream os;
-        os << MISSILE_NAME << i;
-
-        missiles.push_back(Missile(rootNode->getNodeByName(os.str()), MISSILE_SPD, MISSILE_TIME));
-    }
-}
-
 void Jet::update(float dt) {
     float dYaw=0,dPitch=0, dRoll=0;
 
@@ -79,7 +67,20 @@ void Jet::render(unique_ptr<PhongShader>& shader) {
 }
 
 void Jet::fireMissile() {
-    if (missileToFire < missiles.size()) {
-        missiles[missileToFire++].fire(speed);
+    if (missiles.size() < NUM_MISSILES) {
+        int newMissileNum = missiles.size();
+
+        ostringstream os;
+        os << MISSILE_NAME << newMissileNum;
+        auto node = rootNode->getNodeByName(os.str(), rootNode)->disattachFromParent();
+
+        missiles.push_back(
+            Missile(
+                node,
+                MISSILE_SPD,
+                MISSILE_TIME,
+                speed
+            )
+        );
     }
 }
