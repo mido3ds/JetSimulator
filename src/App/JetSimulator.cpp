@@ -70,7 +70,7 @@ void JetSimulator::onUpdate(float dt) {
     camera->update(dt);
 }
 
-void JetSimulator::onDraw() {
+void JetSimulator::onRender() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glClearColor(0, 0, 0, 1);
 
@@ -82,6 +82,5 @@ void JetSimulator::onDraw() {
     jet->render(phongShader);
     land->render(phongShader);
 
-	skybox->setEffects(effects);
-    skybox->render(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
+    skybox->render(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()), effects);
 }

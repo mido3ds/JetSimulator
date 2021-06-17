@@ -31,7 +31,7 @@ public:
     virtual void onCreate();
     virtual void onDestroy();
     virtual void onUpdate(float dt);
-    virtual void onDraw(); 
+    virtual void onRender(); 
     virtual void onKeyPressed(int key, int modifierKey);
     virtual void onKeyReleased(int key, int modifierKey);
 };

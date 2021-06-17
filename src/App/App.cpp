@@ -106,7 +106,7 @@ void App::mainLoop() {
             this->onUpdate(updateTime);
             acc -= updateTime;
         }
-        this->onDraw();
+        this->onRender();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

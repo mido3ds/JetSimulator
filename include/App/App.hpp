@@ -48,7 +48,7 @@ public:
     virtual void onCreate()=0;
     virtual void onDestroy()=0;
     virtual void onUpdate(float dt)=0;
-    virtual void onDraw()=0;
+    virtual void onRender()=0;
     virtual void onKeyPressed(int key, int modifierKey)=0;
     virtual void onKeyReleased(int key, int modifierKey)=0;
 };

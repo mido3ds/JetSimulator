@@ -13,11 +13,9 @@ private:
     CubeMapTexture cubemap;
     unique_ptr<Shader> shader;
     GLuint vao, uProjView, uUseFog ,uUseGrayscale , uUseSepia, uUseVignette;
-	Effects effects;
 public:
     SkyBox();
 
     void load();
-    void setEffects(Effects effects);
-    void render(glm::mat4 proj, glm::mat4 view, glm::vec2 vec);
+    void render(glm::mat4 proj, glm::mat4 view, glm::vec2 vec, Effects effects);
 };

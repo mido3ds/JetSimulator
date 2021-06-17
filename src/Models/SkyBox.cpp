@@ -14,10 +14,6 @@ SkyBox::SkyBox()
     shader = make_unique<Shader>();
 }
 
-void SkyBox::setEffects(Effects effects) {
-    this->effects = effects;
-}
-
 GLfloat positions[] = {      
     -1.0f, -1.0f, -1.0f, 
     -1.0f, -1.0f, 1.0f, 
@@ -92,7 +88,7 @@ void SkyBox::load() {
     cubemap.load();
 }
 
-void SkyBox::render(glm::mat4 proj, glm::mat4 view, glm::vec2 vec) {
+void SkyBox::render(glm::mat4 proj, glm::mat4 view, glm::vec2 vec, Effects effects) {
     glDepthFunc(GL_LEQUAL);
 
     shader->use();
