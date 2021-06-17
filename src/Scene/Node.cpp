@@ -42,8 +42,14 @@ shared_ptr<Node> Node::getNodeByName(const string& name, shared_ptr<Node> thispt
 
 void Node::render(unique_ptr<PhongShader>& shader) {
     shader->setModel(getTotalTransform());
-    for (auto& mesh: meshes) mesh->render(shader);
-    for (auto& child:children) child->render(shader);
+
+    for (auto& mesh: meshes) {
+        mesh->render(shader);
+    }
+
+    for (auto& child:children) { 
+        child->render(shader);
+    }
 }
 
 bool Node::attached() {

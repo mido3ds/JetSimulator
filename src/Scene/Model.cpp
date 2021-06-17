@@ -16,13 +16,13 @@ void Model::load() {
 
     // materials
     map<string, shared_ptr<Texture2D>> textMap;
+    vector<shared_ptr<Material>> materials;
     for (int i = 0; i < scene->mNumMaterials; i++) {
         materials.push_back(Material::build(scene->mMaterials[i], textMap, path));
     }
 
     // textures
     for (const auto& text: textMap) { 
-        textures.push_back(text.second); 
         text.second->load();
         text.second->setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
         text.second->setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -31,14 +31,15 @@ void Model::load() {
     }
 
     // meshes
+    vector<shared_ptr<Mesh>> meshes;
     for (int i = 0; i < scene->mNumMeshes; i++) {
-        aiMesh* mesh = scene->mMeshes[i];
+        auto mesh = scene->mMeshes[i];
         meshes.push_back(Mesh::build(mesh, materials[mesh->mMaterialIndex]));
         meshes[i]->load();
     }
 
     // nodes
-    rootNode = Node::build(scene, scene->mRootNode, meshes);
+    rootNode = Node::build(scene, scene->mRootNode, move(meshes));
     rootNode->transform = glm::mat4();
 
     aiReleaseImport(scene);

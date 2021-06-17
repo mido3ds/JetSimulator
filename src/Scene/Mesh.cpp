@@ -25,7 +25,7 @@ shared_ptr<Mesh> Mesh::build(aiMesh* mesh, shared_ptr<const Material> material) 
             mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2]);
     }
 
-    return make_shared<Mesh>(positions, normals, textCoords, indices, material);
+    return make_shared<Mesh>(positions, normals, textCoords, indices, move(material));
 }
 
 Mesh::Mesh(vector<glm::vec3> positions, 

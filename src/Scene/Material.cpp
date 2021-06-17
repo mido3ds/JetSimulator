@@ -12,20 +12,23 @@ shared_ptr<Material> Material::build(aiMaterial const* mat, map<string,shared_pt
     aiReturn ret;
 
     ret = aiGetMaterialString(mat, AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), &ai_diffPath);
-    if (ret != aiReturn_SUCCESS)
+    if (ret != aiReturn_SUCCESS) {
         diffPath = DEFUALT_DIFF_PATH;
-    else 
+    } else  {
         diffPath += ai_diffPath.C_Str();
+    }
 
     ret = aiGetMaterialString(mat, AI_MATKEY_TEXTURE(aiTextureType_SPECULAR, 0), &ai_specPath);
-    if (ret != aiReturn_SUCCESS)
+    if (ret != aiReturn_SUCCESS) {
         specPath = DEFAULT_SPC_PATH;
-    else
+    } else {
         specPath += ai_specPath.C_Str();
+    }
 
     ret = aiGetMaterialFloat(mat, AI_MATKEY_SHININESS_STRENGTH, (ai_real*)&shininess);
-    if (ret != aiReturn_SUCCESS) 
+    if (ret != aiReturn_SUCCESS) {
         shininess = DEFAULT_SHININESS;
+    }
 
     shared_ptr<Texture2D> diff;
     auto diffItr = textMap.find(diffPath);
@@ -43,5 +46,5 @@ shared_ptr<Material> Material::build(aiMaterial const* mat, map<string,shared_pt
         spec = textMap[specPath] = make_shared<Texture2D>(specPath, Texture2D::Specular);
     }
 
-    return make_shared<Material>(diff, spec, shininess);
+    return make_shared<Material>(move(diff), move(spec), shininess);
 }

@@ -1,12 +1,12 @@
 #pragma once
-#include <vector>
-#include <string>
-#include "Mesh.hpp"
+#include <Scene/Mesh.hpp>
+#include <Scene/Node.hpp>
+#include <Scene/Material.hpp>
 #include <Textures/Texture2D.hpp>
-#include "Node.hpp"
-#include "Material.hpp"
 #include <Shaders/PhongShader.hpp>
 #include <glm/glm.hpp>
+#include <vector>
+#include <string>
 #include <memory>
 
 using namespace std;
@@ -16,9 +16,6 @@ private:
     Model(Model const&) =delete;
     Model& operator=(Model const&) =delete;
 protected:
-    vector<shared_ptr<Material>> materials;
-    vector<shared_ptr<Texture2D>> textures;
-    vector<shared_ptr<Mesh>> meshes;
     shared_ptr<Node> rootNode;
 public:
     Model(const string& path);
