@@ -11,7 +11,7 @@
 Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
 
 void Jet::update(float dt) {
-    float dYaw=0,dPitch=0, dRoll=0;
+    float dYaw=0, dPitch=0, dRoll=0;
 
     // rotation
     if (app->isKeyPressed(KEY_W)) {
@@ -49,8 +49,8 @@ void Jet::update(float dt) {
     rootNode->transform = glm::mat4(
         right.x, right.y, right.z, 0.0f,
         front.x, front.y, front.z, 0.0f,
-        up.x, up.y, up.z, 0.0f,
-        pos.x, pos.y, pos.z, 1.0f
+        up.x,    up.y,    up.z,    0.0f,
+        pos.x,   pos.y,   pos.z,   1.0f
     );
 
     // wrap angles
@@ -58,7 +58,9 @@ void Jet::update(float dt) {
     pitch = glm::wrapAngle(pitch+dPitch);
     roll = glm::wrapAngle(roll+dRoll);
 
-    for (auto& missile: missiles) missile.update(dt);
+    for (auto& missile: missiles) {
+        missile.update(dt);
+    }
 }
 
 void Jet::render(unique_ptr<PhongShader>& shader) {

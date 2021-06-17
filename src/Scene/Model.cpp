@@ -40,12 +40,19 @@ void Model::load() {
 
     // nodes
     rootNode = Node::build(scene, scene->mRootNode, move(meshes));
-    rootNode->transform = glm::mat4();
+    rootNode->transform = glm::identity<glm::mat4>();
 
     aiReleaseImport(scene);
 }
 
-void Model::update(float dT) {}
+void Model::update(float dT) {
+    rootNode->transform = glm::mat4(
+        right.x, right.y, right.z, 0.0f,
+        front.x, front.y, front.z, 0.0f,
+        up.x,    up.y,    up.z,    0.0f,
+        pos.x,   pos.y,   pos.z,   1.0f
+    );
+}
 
 void Model::render(unique_ptr<PhongShader>& shader) {
     rootNode->render(shader);
