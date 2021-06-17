@@ -25,10 +25,7 @@ void JetSimulator::onCreate() {
     land = make_unique<Model>("assets/terrains/channeledLand/channeledLand.dae");
     camera = make_unique<ModelTrackingCamera>(jet.get(), 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
     skybox = make_unique<SkyBox>();
-	useFog = false; // initially
-	useVignette = false; // initially
-	useGrayscale = false; // initially
-	useSepia = false; // initially
+    effects = {false}; // initially
 
     phongShader->use();
 	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
@@ -47,18 +44,19 @@ void JetSimulator::onCreate() {
 
 void JetSimulator::onDestroy() { }
 
+// TODO: should be able to move mouse while hitting one of those buttons
 void JetSimulator::onKeyPressed(int key, int modifierKey) {
 	if (key == KEY_1) {
-		useFog = !useFog;
+		effects.fog = !effects.fog;
 	}
 	if (key == KEY_2) {
-		useVignette = !useVignette;
+		effects.vignette = !effects.vignette;
 	}
 	if (key == KEY_3) {
-		useGrayscale = !useGrayscale;
+		effects.grayscale = !effects.grayscale;
 	}
 	if (key == KEY_4) {
-		useSepia = !useSepia;
+		effects.sepia = !effects.sepia;
 	}
 	if (key == MOUSE_BUTTON_LEFT) {
 		jet->fireMissile();
@@ -80,16 +78,10 @@ void JetSimulator::onDraw() {
     phongShader->setDirLight(sun);
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
-	phongShader->switchFog(useFog);
-	phongShader->switchGrayscale(useGrayscale);
-	phongShader->switchSepia(useSepia);
-	phongShader->switchVignette(useVignette);
+	phongShader->setEffects(effects);
     jet->render(phongShader);
     land->render(phongShader);
 
-	skybox->switchFog(useFog);
-	skybox->switchVignette(useVignette);
-	skybox->switchGrayscale(useGrayscale);
-	skybox->switchSepia(useSepia);
+	skybox->setEffects(effects);
     skybox->render(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()));
 }

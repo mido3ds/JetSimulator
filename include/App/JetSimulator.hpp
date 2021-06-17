@@ -4,6 +4,7 @@
 #include <Cameras/ModelTrackingCamera.hpp>
 #include <Models/Jet.hpp>
 #include <Scene/Light.hpp>
+#include <Shaders/Effects.hpp>
 #include <Models/SkyBox.hpp>
 #include <memory>
 
@@ -17,7 +18,7 @@ private:
     unique_ptr<ModelTrackingCamera> camera;
     unique_ptr<SkyBox> skybox;
 
-	bool useFog, useSepia, useGrayscale, useVignette;
+    Effects effects;
 
     const DirLight sun {
         dir: glm::vec3(0, 0, -1),

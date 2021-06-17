@@ -14,18 +14,10 @@ SkyBox::SkyBox()
     shader = make_unique<Shader>();
 }
 
-void SkyBox::switchVignette(bool state) {
-	useVignette = state;
+void SkyBox::setEffects(Effects effects) {
+    this->effects = effects;
 }
-void SkyBox::switchFog(bool state) {
-    useFog = state;
-}
-void SkyBox::switchGrayscale(bool state) {
-	useGrayscale = state;
-}
-void SkyBox::switchSepia(bool state) {
-	useSepia = state;
-}
+
 GLfloat positions[] = {      
     -1.0f, -1.0f, -1.0f, 
     -1.0f, -1.0f, 1.0f, 
@@ -106,10 +98,10 @@ void SkyBox::render(glm::mat4 proj, glm::mat4 view, glm::vec2 vec) {
     shader->use();
     shader->setUniform(uProjView, proj * glm::mat4(glm::mat3(view)) * glm::translate(glm::vec3(0,0,-0.2f)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0)));
 	shader->setUniform(shader->getUniformLocation("uResolution"), vec);
-	shader->setUniform(uUseFog, useFog);
-	shader->setUniform(uUseVignette, useVignette);
-	shader->setUniform(uUseGrayscale, useGrayscale);
-	shader->setUniform(uUseSepia, useSepia);
+	shader->setUniform(uUseFog, effects.fog);
+	shader->setUniform(uUseVignette, effects.vignette);
+	shader->setUniform(uUseGrayscale, effects.grayscale);
+	shader->setUniform(uUseSepia, effects.sepia);
 
     glBindVertexArray(vao);
     cubemap.bind();

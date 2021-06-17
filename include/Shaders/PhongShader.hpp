@@ -2,6 +2,7 @@
 #include "Shader.hpp"
 #include <Scene/Material.hpp>
 #include <Scene/Light.hpp>
+#include <Shaders/Effects.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 
@@ -13,10 +14,7 @@ private:
 public:
     PhongShader();
     
-	void switchFog(bool state);
-	void switchGrayscale(bool state);
-	void switchSepia(bool state);
-	void switchVignette(bool state);
+    void setEffects(Effects effects);
     void setMaterial(shared_ptr<const Material>& material);
     void setDirLight(const DirLight& light);
     void setPointLight(const PointLight& light, int lightNumber);

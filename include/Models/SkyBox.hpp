@@ -1,6 +1,7 @@
 #pragma once
 #include <Textures/CubeMapTexture.hpp>
 #include <Shaders/Shader.hpp>
+#include <Shaders/Effects.hpp>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <memory>
@@ -12,14 +13,11 @@ private:
     CubeMapTexture cubemap;
     unique_ptr<Shader> shader;
     GLuint vao, uProjView, uUseFog ,uUseGrayscale , uUseSepia, uUseVignette;
-	bool useFog , useGrayscale , useSepia, useVignette;
+	Effects effects;
 public:
     SkyBox();
 
     void load();
-	void switchFog(bool state);
-	void switchVignette(bool state);
-	void switchGrayscale(bool state);
-	void switchSepia(bool state);
+    void setEffects(Effects effects);
     void render(glm::mat4 proj, glm::mat4 view, glm::vec2 vec);
 };
