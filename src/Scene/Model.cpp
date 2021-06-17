@@ -5,6 +5,7 @@
 #include <assimp/scene.h>
 #include <assimp/cimport.h>
 #include <map>
+#include <deque>
 
 Model::Model(const string& path) :path(path), pos(0, 0, 0), right(1, 0, 0), front(0, 1, 0), up(0, 0, 1) {}
 
@@ -56,4 +57,22 @@ void Model::update(float dT) {
 
 void Model::render(unique_ptr<PhongShader>& shader) {
     rootNode->render(shader);
+}
+
+shared_ptr<Node> Model::findNodeByName(const string& name) const {
+    auto nodes = deque<shared_ptr<Node>>({rootNode});
+
+    while (nodes.size() > 0) {
+        auto node = nodes[0];
+        nodes.pop_front();
+
+        if (node->name == name) {
+            return node;
+        }
+
+        auto children = node->getChildren();
+        nodes.insert(nodes.end(), children.begin(), children.end());
+    }
+
+    return {nullptr};
 }

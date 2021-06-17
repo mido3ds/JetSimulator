@@ -32,14 +32,6 @@ glm::mat4 Node::getTotalTransform() const {
     }
 }
 
-shared_ptr<Node> Node::getNodeByName(const string& name, shared_ptr<Node> thisptr) {
-    if (this->name == name) return thisptr;
-    for (auto& node: children) {
-        if (node->getNodeByName(name, node)) return node;
-    }
-    return {nullptr};
-}
-
 void Node::render(unique_ptr<PhongShader>& shader) {
     shader->setModel(getTotalTransform());
 
@@ -56,12 +48,12 @@ bool Node::attached() {
     return !parent.expired();
 }
 
-shared_ptr<Node> Node::disattachFromParent() {
+void Node::disattachFromParent() {
     auto p = parent.lock();
-    return p->disattachChild(this);
+    p->disattachChild(this);
 }
 
-shared_ptr<Node> Node::disattachChild(Node* ch) {
+void Node::disattachChild(Node* ch) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i].get() == ch) {
             ch->transform = ch->getTotalTransform();
@@ -69,9 +61,8 @@ shared_ptr<Node> Node::disattachChild(Node* ch) {
             chsh->parent.reset();
             children.erase(children.begin() + i);
 
-            return chsh;
+            return;
         }
     }
     assert(false && "must exist");
-    return {};
 }

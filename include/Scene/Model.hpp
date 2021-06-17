@@ -17,6 +17,8 @@ private:
     Model& operator=(Model const&) =delete;
 protected:
     shared_ptr<Node> rootNode;
+
+    shared_ptr<Node> findNodeByName(const string& name) const;
 public:
     Model(const string& path);
 

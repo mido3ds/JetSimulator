@@ -10,12 +10,11 @@ using namespace std;
 class Missile {
 private: 
     shared_ptr<Node> node;
-    float speed;
     float maxTime;
 public:
-    inline Missile(shared_ptr<Node> node, float speed, float maxTime, float throwSpeed)
-        :node(node), speed(speed*20), maxTime(maxTime) {
-        speed += throwSpeed*20;
+    float speed;
+    inline Missile(shared_ptr<Node> node, float maxTime, float speed)
+        :node(node), speed(speed), maxTime(maxTime) {
         assert(node && maxTime > 0 && speed > 0);
     }
 

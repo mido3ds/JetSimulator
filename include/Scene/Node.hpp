@@ -24,13 +24,16 @@ public:
         const vector<shared_ptr<Node>>& children, const vector<shared_ptr<Mesh>>& meshes);
 
     glm::mat4 getTotalTransform() const;
-    shared_ptr<Node> getNodeByName(const string& name, shared_ptr<Node> thisptr); // TODO: remove thisptr ugly hack
     void render(unique_ptr<PhongShader>& shader);
 
     const string name;
     glm::mat4 transform;
 
-    shared_ptr<Node> disattachFromParent();
-    shared_ptr<Node> disattachChild(Node* ch);
+    void disattachFromParent();
+    void disattachChild(Node* ch);
     bool attached();
+
+    inline vector<shared_ptr<Node>> getChildren() const {
+        return children;
+    }
 };

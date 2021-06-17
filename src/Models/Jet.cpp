@@ -70,18 +70,18 @@ void Jet::render(unique_ptr<PhongShader>& shader) {
 
 void Jet::fireMissile() {
     if (missiles.size() < NUM_MISSILES) {
-        int newMissileNum = missiles.size();
+        auto missileName = string(MISSILE_NAME) + to_string(missiles.size());
 
-        ostringstream os;
-        os << MISSILE_NAME << newMissileNum;
-        auto node = rootNode->getNodeByName(os.str(), rootNode)->disattachFromParent();
+        auto node = findNodeByName(missileName);
+        assert(node.get() && "missile not found!");
+        node->disattachFromParent();
 
         missiles.push_back(
             Missile(
                 node,
-                MISSILE_SPD,
                 MISSILE_TIME,
-                speed
+                // TODO: this is just a hack, missile speed problem is not solved yet
+                (MISSILE_SPD + speed) * 20
             )
         );
     }

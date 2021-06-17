@@ -6,6 +6,7 @@ bool Missile::exploded() {
     return maxTime <= 0;
 }
 
+// TODO: should accelerate
 void Missile::update(float dt) {
     if (!exploded()) {
         glm::vec3 pos(node->transform[3]), front(node->transform[0]);
