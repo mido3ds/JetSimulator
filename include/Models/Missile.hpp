@@ -15,7 +15,7 @@ public:
     float speed;
     inline Missile(unique_ptr<Node> node, float maxTime, float speed)
         :node(move(node)), speed(speed), maxTime(maxTime) {
-        assert(node && maxTime > 0 && speed > 0);
+        assert(this->node && maxTime > 0 && speed > 0);
     }
 
     // TODO: remove this, and only use memory deletion

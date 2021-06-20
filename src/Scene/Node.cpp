@@ -3,17 +3,21 @@
 
 unique_ptr<Node> Node::build(const aiScene& scene, const aiNode& node, const vector<shared_ptr<Mesh>>& allMeshes, optional<reference_wrapper<Node>> parent) {
     glm::mat4 transform = glm::transpose(glm::make_mat4(&node.mTransformation.a1));
-    vector<unique_ptr<Node>> children(node.mNumChildren);
 
     vector<shared_ptr<Mesh>> meshes(node.mNumMeshes);
     for (int i = 0; i < meshes.size(); i++) {
         meshes[i] = allMeshes[node.mMeshes[i]];
     }
-    
+
+    vector<unique_ptr<Node>> children;
+    children.reserve(node.mNumChildren);
+
     auto builtNode = make_unique<Node>(node.mName.C_Str(), transform, parent, move(children), meshes);
 
-    for (int i = 0; i < children.size(); i++) {
-        builtNode->children[i] = build(scene, *node.mChildren[i], allMeshes, {*builtNode.get()});
+    for (int i = 0; i < node.mNumChildren; i++) {
+        builtNode->children.push_back(move(
+            build(scene, *node.mChildren[i], allMeshes, {*builtNode.get()})
+        ));
     }
 
     return builtNode;
