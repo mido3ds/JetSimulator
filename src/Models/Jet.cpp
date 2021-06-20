@@ -8,7 +8,7 @@
 #define max(a, b) (a>b?a:b)
 #define min(a, b) (a<b?a:b)
 
-Jet::Jet() :Model(JET_MODEL_PATH), app(App::getApp()) {}
+Jet::Jet() :Model(JET_MODEL_PATH), app(&App::getApp()) {}
 
 void Jet::update(float dt) {
     float dYaw=0, dPitch=0, dRoll=0;
@@ -63,7 +63,7 @@ void Jet::update(float dt) {
     }
 }
 
-void Jet::render(unique_ptr<PhongShader>& shader) {
+void Jet::render(PhongShader& shader) {
     Model::render(shader);
     for (auto& missile: missiles) missile.render(shader);
 }

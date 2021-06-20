@@ -86,8 +86,8 @@ bool Mesh::isLoaded() {
     return vao;
 }
 
-void Mesh::render(unique_ptr<PhongShader>& shader) {
-    shader->setMaterial(material);
+void Mesh::render(PhongShader& shader) {
+    shader.setMaterial(material);
 
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, elementCount * 3, GL_UNSIGNED_INT, (void*)0);

@@ -32,8 +32,8 @@ glm::mat4 Node::getTotalTransform() const {
     }
 }
 
-void Node::render(unique_ptr<PhongShader>& shader) {
-    shader->setModel(getTotalTransform());
+void Node::render(PhongShader& shader) {
+    shader.setModel(getTotalTransform());
 
     for (auto& mesh: meshes) {
         mesh->render(shader);
@@ -50,13 +50,13 @@ bool Node::attached() {
 
 void Node::disattachFromParent() {
     auto p = parent.lock();
-    p->disattachChild(this);
+    p->disattachChild(*this);
 }
 
-void Node::disattachChild(Node* ch) {
+void Node::disattachChild(Node& ch) {
     for (int i = 0; i < children.size(); i++) {
-        if (children[i].get() == ch) {
-            ch->transform = ch->getTotalTransform();
+        if (children[i].get() == &ch) {
+            ch.transform = ch.getTotalTransform();
             auto chsh = children[i];
             chsh->parent.reset();
             children.erase(children.begin() + i);

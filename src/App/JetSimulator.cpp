@@ -23,7 +23,7 @@ void JetSimulator::onCreate() {
     phongShader = make_unique<PhongShader>();
     jet = make_unique<Jet>();
     land = make_unique<Model>("assets/terrains/channeledLand/channeledLand.dae");
-    camera = make_unique<ModelTrackingCamera>(jet.get(), 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
+    camera = make_unique<ModelTrackingCamera>(*jet.get(), 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
     skybox = make_unique<SkyBox>();
     effects = {false}; // initially
 
@@ -79,8 +79,8 @@ void JetSimulator::onRender() {
     phongShader->setViewPos(camera->position);
     phongShader->setProjView(camera->projection * camera->view);
 	phongShader->setEffects(effects);
-    jet->render(phongShader);
-    land->render(phongShader);
+    jet->render(*phongShader.get());
+    land->render(*phongShader.get());
 
     skybox->render(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()), effects);
 }

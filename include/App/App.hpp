@@ -1,6 +1,9 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <string_view>
+
+using namespace std;
 
 class App {
 private:
@@ -15,7 +18,7 @@ private:
     App & operator =(App const &) = delete;
 public:
     struct Config {
-        char* title;
+        string_view title;
         int width, height;
         bool isFullscreen;
         bool resizable;
@@ -34,7 +37,7 @@ public:
     void run();
     void close();
 
-    static App* getApp();
+    static App& getApp();
 
 	
     bool isKeyPressed(int key);

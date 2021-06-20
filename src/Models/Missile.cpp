@@ -17,7 +17,7 @@ void Missile::update(float dt) {
     }
 }
 
-void Missile::render(unique_ptr<PhongShader>& shader) {
+void Missile::render(PhongShader& shader) {
     if (!exploded()) {
         node->render(shader);
     }

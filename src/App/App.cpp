@@ -27,8 +27,8 @@ App::~App() {
     glfwTerminate();
 }
 
-App* App::getApp() {
-    return staticAppPtr;
+App& App::getApp() {
+    return *staticAppPtr;
 }
 
 static float _yscroll = 0;
@@ -68,7 +68,7 @@ void App::createWindow() {
     glfwWindowHint(GLFW_SAMPLES, config.samples);
 
     GLFWmonitor *monitor = config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
-    window = glfwCreateWindow(config.width, config.height, config.title, monitor, nullptr);
+    window = glfwCreateWindow(config.width, config.height, config.title.data(), monitor, nullptr);
     if (!window) {
         glfwTerminate(); 
         fatal("Failed to create Window");

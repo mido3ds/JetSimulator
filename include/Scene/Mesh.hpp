@@ -30,7 +30,7 @@ public:
 
     void load();
     bool isLoaded();
-    void render(unique_ptr<PhongShader>& shader);
+    void render(PhongShader& shader);
 
     shared_ptr<const Material> material;
 };

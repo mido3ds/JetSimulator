@@ -6,9 +6,9 @@
 #define max(a, b) (a>b?a:b)
 #define min(a, b) (a<b?a:b)
 
-ModelTrackingCamera::ModelTrackingCamera(Model* target, float minDist, float maxDist, float fovy, float aspect, float near, float far) 
-    :Camera(fovy, aspect, near, far), target(target), 
-        distance((maxDist+minDist)/2.0f), minDist(minDist), maxDist(maxDist), app(App::getApp()) {
+ModelTrackingCamera::ModelTrackingCamera(Model& target, float minDist, float maxDist, float fovy, float aspect, float near, float far) 
+    :Camera(fovy, aspect, near, far), target(&target), 
+        distance((maxDist+minDist)/2.0f), minDist(minDist), maxDist(maxDist), app(&App::getApp()) {
     lastMousePos = app->getMousePos();
     assert(minDist <= maxDist);
 } 

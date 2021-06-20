@@ -22,5 +22,5 @@ public:
     bool exploded();
 
     void update(float dt);
-    void render(unique_ptr<PhongShader>& shader);
+    void render(PhongShader& shader);
 };

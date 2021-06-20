@@ -25,7 +25,7 @@ public:
     virtual void load();
     virtual void update(float dT);
 
-    virtual void render(unique_ptr<PhongShader>& shader);
+    virtual void render(PhongShader& shader);
 
     const string path;
 

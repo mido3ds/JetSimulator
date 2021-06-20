@@ -55,7 +55,7 @@ void Model::update(float dT) {
     );
 }
 
-void Model::render(unique_ptr<PhongShader>& shader) {
+void Model::render(PhongShader& shader) {
     rootNode->render(shader);
 }
 

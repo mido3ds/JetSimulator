@@ -28,6 +28,6 @@ public:
     Jet();
 
     virtual void update(float dt) override;
-    virtual void render(unique_ptr<PhongShader>& shader) override;
+    virtual void render(PhongShader& shader) override;
     void fireMissile();
 };

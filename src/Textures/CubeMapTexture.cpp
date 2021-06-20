@@ -1,5 +1,5 @@
 #include <Textures/CubeMapTexture.hpp>
-#include <Textures/Image.hpp>"
+#include <Textures/Image.hpp>
 
 CubeMapTexture::CubeMapTexture(const string& dir, 
         const string& right,
