@@ -19,7 +19,7 @@ void Model::load() {
     map<string, shared_ptr<Texture2D>> textMap;
     vector<shared_ptr<Material>> materials;
     for (int i = 0; i < scene->mNumMaterials; i++) {
-        materials.push_back(Material::build(scene->mMaterials[i], textMap, path));
+        materials.push_back(Material::build(*scene->mMaterials[i], textMap, path));
     }
 
     // textures
@@ -35,12 +35,12 @@ void Model::load() {
     vector<shared_ptr<Mesh>> meshes;
     for (int i = 0; i < scene->mNumMeshes; i++) {
         auto mesh = scene->mMeshes[i];
-        meshes.push_back(Mesh::build(mesh, materials[mesh->mMaterialIndex]));
+        meshes.push_back(Mesh::build(*mesh, materials[mesh->mMaterialIndex]));
         meshes[i]->load();
     }
 
     // nodes
-    rootNode = Node::build(scene, scene->mRootNode, move(meshes));
+    rootNode = Node::build(*scene, *scene->mRootNode, move(meshes));
     rootNode->transform = glm::identity<glm::mat4>();
 
     aiReleaseImport(scene);
@@ -59,20 +59,20 @@ void Model::render(PhongShader& shader) {
     rootNode->render(shader);
 }
 
-shared_ptr<Node> Model::findNodeByName(const string& name) const {
-    auto nodes = deque<shared_ptr<Node>>({rootNode});
+optional<reference_wrapper<Node>> Model::findNodeByName(const string& name) const {
+    auto nodes = deque<reference_wrapper<Node>> { ref(*rootNode.get()) };
 
     while (nodes.size() > 0) {
         auto node = nodes[0];
         nodes.pop_front();
 
-        if (node->name == name) {
+        if (node.get().name == name) {
             return node;
         }
 
-        auto children = node->getChildren();
+        auto children = node.get().getChildren();
         nodes.insert(nodes.end(), children.begin(), children.end());
     }
 
-    return {nullptr};
+    return {};
 }

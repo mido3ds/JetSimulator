@@ -4,7 +4,6 @@
 #include <Scene/Light.hpp>
 #include <Shaders/Effects.hpp>
 #include <glm/glm.hpp>
-#include <memory>
 
 class PhongShader: public Shader {
 private:
@@ -15,7 +14,7 @@ public:
     PhongShader();
     
     void setEffects(Effects effects);
-    void setMaterial(shared_ptr<const Material>& material);
+    void setMaterial(const Material& material);
     void setDirLight(const DirLight& light);
     void setPointLight(const PointLight& light, int lightNumber);
     void setSpotight(const SpotLight& light, int lightNumber);

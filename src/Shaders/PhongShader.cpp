@@ -23,15 +23,15 @@ PhongShader::PhongShader() {
 	uUseSepia = getUniformLocation("uUseSepia");
 	uUseVignette = getUniformLocation("uUseVignette");
 
-    setUniform(getUniformLocation("uMaterial.diffuse"), Texture2D::Usage::Diffuse); 
-    setUniform(getUniformLocation("uMaterial.specular"), Texture2D::Usage::Specular);
+    setUniform(getUniformLocation("uMaterial.diffuse"), uint8_t(Texture2D::Type::Diffuse)); 
+    setUniform(getUniformLocation("uMaterial.specular"), uint8_t(Texture2D::Type::Specular));
     uMaterial_shininess = getUniformLocation("uMaterial.shininess");
 }
 
-void PhongShader::setMaterial(shared_ptr<const Material>& material) {
-    material->diffuse->bind();
-    material->specular->bind();
-    setUniform(uMaterial_shininess, material->shininess);
+void PhongShader::setMaterial(const Material& material) {
+    material.diffuse->bind();
+    material.specular->bind();
+    setUniform(uMaterial_shininess, material.shininess);
 }
 
 void PhongShader::setEffects(Effects effects) {

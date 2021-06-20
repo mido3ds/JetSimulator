@@ -20,7 +20,6 @@ using namespace std;
 
 class Jet: public Model {
 private:
-    App* app;
     vector<Missile> missiles;
     int missileToFire = 0;
     float speed = JET_SPEED;

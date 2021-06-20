@@ -4,7 +4,7 @@
 
 using namespace std;
 
-static App* staticAppPtr = nullptr;
+static optional<reference_wrapper<App>> staticAppPtr = {};
 
 inline void fatal(char* string) {
     cerr << string << "\n";
@@ -15,7 +15,7 @@ App::App() {
     if (staticAppPtr) {
         fatal("Can only create one app");
     }
-    staticAppPtr = this;
+    staticAppPtr = {*this};
 
     if (!glfwInit()) {
         fatal("Failed to initialize GLFW");
@@ -23,7 +23,9 @@ App::App() {
 }
 
 App::~App() {
-    glfwDestroyWindow(window);
+    if (&window.value().get()) {
+        glfwDestroyWindow(&window.value().get());
+    }
     glfwTerminate();
 }
 
@@ -38,9 +40,9 @@ static void _scrollCallback(GLFWwindow* window, double dx, double dy) {
 
 static void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
-        staticAppPtr->onKeyPressed(key, mods);
+        staticAppPtr.value().get().onKeyPressed(key, mods);
     } else if (action == GLFW_RELEASE) {
-        staticAppPtr->onKeyReleased(key, mods);
+        staticAppPtr.value().get().onKeyReleased(key, mods);
     }
 }
 
@@ -68,23 +70,23 @@ void App::createWindow() {
     glfwWindowHint(GLFW_SAMPLES, config.samples);
 
     GLFWmonitor *monitor = config.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
-    window = glfwCreateWindow(config.width, config.height, config.title.data(), monitor, nullptr);
+    window = {*glfwCreateWindow(config.width, config.height, config.title.data(), monitor, nullptr)};
     if (!window) {
         glfwTerminate(); 
         fatal("Failed to create Window");
     }
 
-    glfwSetInputMode(window, GLFW_CURSOR, config.cursorHidden? GLFW_CURSOR_DISABLED:GLFW_CURSOR_NORMAL);
-    if (config.cursorCentered) glfwSetCursorPos(window, config.width/2.0, config.height/2.0);
+    glfwSetInputMode(&window.value().get(), GLFW_CURSOR, config.cursorHidden? GLFW_CURSOR_DISABLED:GLFW_CURSOR_NORMAL);
+    if (config.cursorCentered) glfwSetCursorPos(&window.value().get(), config.width/2.0, config.height/2.0);
 
     
-    glfwSetScrollCallback(window, _scrollCallback);
-    glfwSetKeyCallback(window, _keyCallback);
-    glfwSetMouseButtonCallback(window, _mouseCallback);
+    glfwSetScrollCallback(&window.value().get(), _scrollCallback);
+    glfwSetKeyCallback(&window.value().get(), _keyCallback);
+    glfwSetMouseButtonCallback(&window.value().get(), _mouseCallback);
 
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(&window.value().get());
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        glfwDestroyWindow(window); 
+        glfwDestroyWindow(&window.value().get()); 
         glfwTerminate(); 
         fatal("Failed to initialize GLAD");
     }    
@@ -95,7 +97,7 @@ void App::mainLoop() {
         lastFrame = glfwGetTime(), 
         acc = 0;
 
-    while (!glfwWindowShouldClose(window) && !glfwGetKey(window,KEY_ESCAPE)) {
+    while (!glfwWindowShouldClose(&window.value().get()) && !glfwGetKey(&window.value().get(),KEY_ESCAPE)) {
         this->yscroll = _yscroll;
         _yscroll = 0;
 
@@ -108,7 +110,7 @@ void App::mainLoop() {
         }
         this->onRender();
 
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(&window.value().get());
         glfwPollEvents();
 
         lastFrame = currentFrame;
@@ -126,34 +128,34 @@ void App::run() {
 }
 
 bool App::isKeyPressed(int key) {
-    return glfwGetKey(window, key);
+    return glfwGetKey(&window.value().get(), key);
 }
 
 glm::vec2 App::getMousePos() {
     double x, y;
-    glfwGetCursorPos(window, &x, &y);
+    glfwGetCursorPos(&window.value().get(), &x, &y);
     return glm::vec2(x, y);
 }
 
 void App::close() {
-    glfwSetWindowShouldClose(window, GLFW_TRUE);
+    glfwSetWindowShouldClose(&window.value().get(), GLFW_TRUE);
 }
 
 int App::getWidth() {
     int width, height;
-    glfwGetWindowSize(window, &width, &height);
+    glfwGetWindowSize(&window.value().get(), &width, &height);
     return width;
 }
 
 int App::getHeight() {
     int width, height;
-    glfwGetWindowSize(window, &width, &height);
+    glfwGetWindowSize(&window.value().get(), &width, &height);
     return height;
 }
 
 float App::getAspectRatio() {
     int width, height;
-    glfwGetWindowSize(window, &width, &height);
+    glfwGetWindowSize(&window.value().get(), &width, &height);
     return (float)width/height;
 }
 

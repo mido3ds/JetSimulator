@@ -2,12 +2,14 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <string_view>
+#include <functional>
+#include <optional>
 
 using namespace std;
 
 class App {
 private:
-    GLFWwindow* window;
+    optional<reference_wrapper<GLFWwindow>> window;
     float updateTime;
     float yscroll=0;
 

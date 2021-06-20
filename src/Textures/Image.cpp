@@ -4,14 +4,25 @@
 
 Image::Image(const string& path) :path(path) {}
 
+void Image::_free() {
+    stbi_image_free(&data.value().get());
+    data = {};
+}
+
 Image::~Image() {
-    stbi_image_free(data);
-    data = nullptr;
+    if (data) {
+        _free();
+    }
 }
 
 void Image::load() {
     stbi_set_flip_vertically_on_load(true);
-    data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    auto dataptr = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    
+    if (data) {
+        _free();
+    }
+    data = {*dataptr};
     
     switch (channels) {
         case 1: glInternalFormat = GL_R8; glFormat = GL_RED; break;

@@ -12,7 +12,7 @@ using namespace std;
 
 class Material {
 public:
-    static shared_ptr<Material> build(aiMaterial const* mat, 
+    static shared_ptr<Material> build(const aiMaterial& mat, 
         map<string,shared_ptr<Texture2D>>& textMap, 
         const string& path);
 

@@ -19,7 +19,7 @@ private:
 
     Mesh & operator =(Mesh const &) = delete;
 public:
-    static shared_ptr<Mesh> build(aiMesh* mesh, shared_ptr<const Material> material);
+    static shared_ptr<Mesh> build(aiMesh& mesh, shared_ptr<const Material> material);
 
     Mesh(vector<glm::vec3> positions, 
         vector<glm::vec3> normals, 

@@ -3,26 +3,26 @@
 #include <glm/gtc/type_ptr.hpp>
 using namespace std;
 
-shared_ptr<Mesh> Mesh::build(aiMesh* mesh, shared_ptr<const Material> material) {
-    assert(mesh->HasFaces() && mesh->HasNormals() && mesh->HasPositions());
+shared_ptr<Mesh> Mesh::build(aiMesh& mesh, shared_ptr<const Material> material) {
+    assert(mesh.HasFaces() && mesh.HasNormals() && mesh.HasPositions());
 
-    auto positions = vector<glm::vec3>(mesh->mNumVertices), 
-                            normals = vector<glm::vec3>(mesh->mNumVertices);
-    auto textCoords = vector<glm::vec2>(mesh->mNumVertices);
-    auto indices = vector<glm::ivec3>(mesh->mNumFaces);
+    auto positions = vector<glm::vec3>(mesh.mNumVertices), 
+                            normals = vector<glm::vec3>(mesh.mNumVertices);
+    auto textCoords = vector<glm::vec2>(mesh.mNumVertices);
+    auto indices = vector<glm::ivec3>(mesh.mNumFaces);
 
     for (int i = 0; i < positions.size(); i++) {
-        positions[i] = glm::make_vec3(&mesh->mVertices[i].x);
-        normals[i] = glm::make_vec3(&mesh->mNormals[i].x);
+        positions[i] = glm::make_vec3(&mesh.mVertices[i].x);
+        normals[i] = glm::make_vec3(&mesh.mNormals[i].x);
 
-        if (mesh->HasTextureCoords(0)) {
-            textCoords[i] = glm::make_vec2(&mesh->mTextureCoords[0][i].x);
+        if (mesh.HasTextureCoords(0)) {
+            textCoords[i] = glm::make_vec2(&mesh.mTextureCoords[0][i].x);
         }
     }
 
     for (int i = 0; i < indices.size(); i++) {
-        indices[i] = glm::ivec3(mesh->mFaces[i].mIndices[0], 
-            mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2]);
+        indices[i] = glm::ivec3(mesh.mFaces[i].mIndices[0], 
+            mesh.mFaces[i].mIndices[1], mesh.mFaces[i].mIndices[2]);
     }
 
     return make_shared<Mesh>(positions, normals, textCoords, indices, move(material));
@@ -87,7 +87,7 @@ bool Mesh::isLoaded() {
 }
 
 void Mesh::render(PhongShader& shader) {
-    shader.setMaterial(material);
+    shader.setMaterial(*material.get());
 
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, elementCount * 3, GL_UNSIGNED_INT, (void*)0);

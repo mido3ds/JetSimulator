@@ -9,7 +9,6 @@
 class ModelTrackingCamera: public Camera {
 private:
     glm::vec3 normal;
-    App * const app;
     glm::vec2 lastMousePos;
     const float minDist, maxDist;
 public:

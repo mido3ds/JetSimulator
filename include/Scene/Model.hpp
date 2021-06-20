@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <optional>
+#include <functional>
 
 using namespace std;
 
@@ -16,9 +18,9 @@ private:
     Model(Model const&) =delete;
     Model& operator=(Model const&) =delete;
 protected:
-    shared_ptr<Node> rootNode;
+    unique_ptr<Node> rootNode;
 
-    shared_ptr<Node> findNodeByName(const string& name) const;
+    optional<reference_wrapper<Node>> findNodeByName(const string& name) const;
 public:
     Model(const string& path);
 

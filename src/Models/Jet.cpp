@@ -8,32 +8,34 @@
 #define max(a, b) (a>b?a:b)
 #define min(a, b) (a<b?a:b)
 
-Jet::Jet() :Model(JET_MODEL_PATH), app(&App::getApp()) {}
+Jet::Jet() :Model(JET_MODEL_PATH) {}
 
 void Jet::update(float dt) {
     float dYaw=0, dPitch=0, dRoll=0;
 
+    auto& app = App::getApp();
+
     // rotation
-    if (app->isKeyPressed(KEY_W)) {
+    if (app.isKeyPressed(KEY_W)) {
         dPitch = +ROTATE_SPEED * dt;
-    } else if (app->isKeyPressed(KEY_S)) {
+    } else if (app.isKeyPressed(KEY_S)) {
         dPitch = -ROTATE_SPEED * dt;
     }
-    if (app->isKeyPressed(KEY_D)) {
+    if (app.isKeyPressed(KEY_D)) {
         dRoll = +ROTATE_SPEED * dt;
-    } else if (app->isKeyPressed(KEY_A)) {
+    } else if (app.isKeyPressed(KEY_A)) {
         dRoll = -ROTATE_SPEED * dt;
     }
 
     // translation
-    if (app->isKeyPressed(KEY_UP)) {
+    if (app.isKeyPressed(KEY_UP)) {
         pos += dt * speed * front;
-    } else if (app->isKeyPressed(KEY_DOWN)) {
+    } else if (app.isKeyPressed(KEY_DOWN)) {
         pos -= dt * speed * front;
     } 
-    if (app->isKeyPressed(KEY_RIGHT)) {
+    if (app.isKeyPressed(KEY_RIGHT)) {
         pos += dt * speed * right;
-    } else if (app->isKeyPressed(KEY_LEFT)) {
+    } else if (app.isKeyPressed(KEY_LEFT)) {
         pos -= dt * speed * right;
     }
 
@@ -73,12 +75,12 @@ void Jet::fireMissile() {
         auto missileName = string(MISSILE_NAME) + to_string(missiles.size());
 
         auto node = findNodeByName(missileName);
-        assert(node.get() && "missile not found!");
-        node->disattachFromParent();
+        assert(node.has_value() && "missile not found!");
+        auto uniqueNode = node.value().get().disattachFromParent();
 
         missiles.push_back(
             Missile(
-                node,
+                move(uniqueNode),
                 MISSILE_TIME,
                 // TODO: this is just a hack, missile speed problem is not solved yet
                 (MISSILE_SPD + speed) * 20

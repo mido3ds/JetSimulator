@@ -21,15 +21,12 @@ void CubeMapTexture::load() {
     glGenTextures(1, &texId);
     bind();
 
-    int width, height, nrChannels;
-    unsigned char* data;
-
     for (int i = 0; i < paths.size(); i++) {
         Image image(paths[i]);
         image.load();
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, image.glInternalFormat, 
-            image.width, image.height, 0, image.glFormat, GL_UNSIGNED_BYTE, image.data);
+            image.width, image.height, 0, image.glFormat, GL_UNSIGNED_BYTE, &image.data.value().get());
         glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
     }
     

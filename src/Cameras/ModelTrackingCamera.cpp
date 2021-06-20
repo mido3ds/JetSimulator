@@ -8,15 +8,15 @@
 
 ModelTrackingCamera::ModelTrackingCamera(Model& target, float minDist, float maxDist, float fovy, float aspect, float near, float far) 
     :Camera(fovy, aspect, near, far), target(&target), 
-        distance((maxDist+minDist)/2.0f), minDist(minDist), maxDist(maxDist), app(&App::getApp()) {
-    lastMousePos = app->getMousePos();
+        distance((maxDist+minDist)/2.0f), minDist(minDist), maxDist(maxDist) {
+    lastMousePos = App::getApp().getMousePos();
     assert(minDist <= maxDist);
 } 
 
 void ModelTrackingCamera::update(float dt) {
     // update yaw and pitch
-    glm::vec2 mousePos = app->getMousePos();
-    if (/*app->isKeyPressed(MOUSE_BUTTON_MIDDLE)*/true) {    
+    glm::vec2 mousePos = App::getApp().getMousePos();
+    if (/*App::getApp().isKeyPressed(MOUSE_BUTTON_MIDDLE)*/true) {    
         yaw -= MOUSE_SENSITIVITY * (mousePos.x - lastMousePos.x);
         yaw = glm::wrapAngle(yaw);
 
@@ -29,7 +29,7 @@ void ModelTrackingCamera::update(float dt) {
     lastMousePos = mousePos;
 
     // update distance 
-    distance += -app->getScroll();
+    distance += -App::getApp().getScroll();
     distance = glm::clamp(distance, minDist, maxDist);
 
     // update view
