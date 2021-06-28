@@ -1,15 +1,15 @@
 #pragma once
 #include "Camera.hpp"
-#include <App/App.hpp>
 #include <glm/glm.hpp>
 #include <Scene/Model.hpp>
+#include <System.hpp>
 
 #define MOUSE_SENSITIVITY 0.008
 
 class ModelTrackingCamera: public Camera {
 private:
     glm::vec3 normal;
-    glm::vec2 lastMousePos;
+    MousePos lastMousePos;
     const float minDist, maxDist;
 public:
     ModelTrackingCamera(Model& target, float minDist, float maxDist, 

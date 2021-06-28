@@ -1,5 +1,4 @@
 #pragma once
-#include <App/App.hpp>
 #include <Shaders/PhongShader.hpp>
 #include <Cameras/ModelTrackingCamera.hpp>
 #include <Models/Jet.hpp>
@@ -10,7 +9,7 @@
 
 using namespace std;
 
-class JetSimulator: public App {
+class JetSimulator {
 private:
     unique_ptr<PhongShader> phongShader;
     unique_ptr<Jet> jet;
@@ -27,11 +26,10 @@ private:
         specular: glm::vec3(0.2f, 0.2f, 0.2f),
     };
 public:
-    virtual Config getConfig();
-    virtual void onCreate();
-    virtual void onDestroy();
-    virtual void onUpdate(float dt);
-    virtual void onRender(); 
-    virtual void onKeyPressed(int key, int modifierKey);
-    virtual void onKeyReleased(int key, int modifierKey);
+    JetSimulator();
+
+    void onUpdate(float dt);
+    void onRender(); 
+    void onKeyPressed(Key key, Key modifierKey);
+    void onKeyReleased(Key key, Key modifierKey);
 };

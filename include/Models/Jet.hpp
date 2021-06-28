@@ -1,7 +1,6 @@
 #pragma once
 #include <Scene/Model.hpp>
 #include <Shaders/PhongShader.hpp>
-#include <App/App.hpp>
 #include "Missile.hpp"
 #include <vector>
 #include <memory>

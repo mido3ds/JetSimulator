@@ -1,9 +1,9 @@
 #include <Models/Jet.hpp>
-#include <App/App.hpp>
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/gtx/transform.hpp>
 #include <string>
 #include <sstream>
+#include <System.hpp>
 
 #define max(a, b) (a>b?a:b)
 #define min(a, b) (a<b?a:b)
@@ -13,29 +13,27 @@ Jet::Jet() :Model(JET_MODEL_PATH) {}
 void Jet::update(float dt) {
     float dYaw=0, dPitch=0, dRoll=0;
 
-    auto& app = App::getApp();
-
     // rotation
-    if (app.isKeyPressed(KEY_W)) {
+    if (System::Input::isKeyPressed(Key::W)) {
         dPitch = +ROTATE_SPEED * dt;
-    } else if (app.isKeyPressed(KEY_S)) {
+    } else if (System::Input::isKeyPressed(Key::S)) {
         dPitch = -ROTATE_SPEED * dt;
     }
-    if (app.isKeyPressed(KEY_D)) {
+    if (System::Input::isKeyPressed(Key::D)) {
         dRoll = +ROTATE_SPEED * dt;
-    } else if (app.isKeyPressed(KEY_A)) {
+    } else if (System::Input::isKeyPressed(Key::A)) {
         dRoll = -ROTATE_SPEED * dt;
     }
 
     // translation
-    if (app.isKeyPressed(KEY_UP)) {
+    if (System::Input::isKeyPressed(Key::UP)) {
         pos += dt * speed * front;
-    } else if (app.isKeyPressed(KEY_DOWN)) {
+    } else if (System::Input::isKeyPressed(Key::DOWN)) {
         pos -= dt * speed * front;
     } 
-    if (app.isKeyPressed(KEY_RIGHT)) {
+    if (System::Input::isKeyPressed(Key::RIGHT)) {
         pos += dt * speed * right;
-    } else if (app.isKeyPressed(KEY_LEFT)) {
+    } else if (System::Input::isKeyPressed(Key::LEFT)) {
         pos -= dt * speed * right;
     }
 

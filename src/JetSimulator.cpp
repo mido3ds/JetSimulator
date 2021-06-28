@@ -1,34 +1,18 @@
-#include <App/JetSimulator.hpp>
+#include <JetSimulator.hpp>
 #include <glad/glad.h>
 #include <glm/ext.hpp>
+#include <System.hpp>
 
-App::Config JetSimulator::getConfig() {
-    Config c;
-    c.title = "JetSimulator";
-    c.width = 800;
-    c.height = 600;
-    c.isFullscreen = false;
-    c.resizable = false;
-    c.cursorHidden = true;
-    c.cursorCentered = true;
-    c.updateRate = 100;
-    c.samples = 4;
-
-    c.glMajorVersion = 3;
-    c.glMinorVersion = 3;
-    return c;
-}
-
-void JetSimulator::onCreate() {
+JetSimulator::JetSimulator() {
     phongShader = make_unique<PhongShader>();
     jet = make_unique<Jet>();
     land = make_unique<Model>("assets/terrains/channeledLand/channeledLand.dae");
-    camera = make_unique<ModelTrackingCamera>(*jet.get(), 5, 12, glm::pi<float>()/2, getAspectRatio(), .1, 100000);
+    camera = make_unique<ModelTrackingCamera>(*jet.get(), 5, 12, glm::pi<float>()/2, System::Graphics::getAspectRatio(), .1, 100000);
     skybox = make_unique<SkyBox>();
     effects = {false}; // initially
 
     phongShader->use();
-	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2((int)getWidth(), (int)getHeight()));
+	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2(System::Graphics::getWidth(), System::Graphics::getHeight()));
     jet->load();
     land->load();
     skybox->load();
@@ -42,28 +26,29 @@ void JetSimulator::onCreate() {
     glCullFace(GL_BACK);
 }
 
-void JetSimulator::onDestroy() { }
-
 // TODO: should be able to move mouse while hitting one of those buttons
-void JetSimulator::onKeyPressed(int key, int modifierKey) {
-	if (key == KEY_1) {
+void JetSimulator::onKeyPressed(Key key, Key modifierKey) {
+    switch (key) {
+    case Key::NUMBER_1:
 		effects.fog = !effects.fog;
-	}
-	if (key == KEY_2) {
+        break;
+    case Key::NUMBER_2:
 		effects.vignette = !effects.vignette;
-	}
-	if (key == KEY_3) {
+        break;
+    case Key::NUMBER_3:
 		effects.grayscale = !effects.grayscale;
-	}
-	if (key == KEY_4) {
+        break;
+    case Key::NUMBER_4:
 		effects.sepia = !effects.sepia;
-	}
-	if (key == MOUSE_BUTTON_LEFT) {
+        break;
+    case Key::MOUSE_BUTTON_LEFT:
 		jet->fireMissile();
-	}
+        break;
+    default: break;   
+    }
 }
 
-void JetSimulator::onKeyReleased(int key, int modifierKey) {}
+void JetSimulator::onKeyReleased(Key key, Key modifierKey) {}
 
 void JetSimulator::onUpdate(float dt) {
     jet->update(dt);
@@ -82,5 +67,5 @@ void JetSimulator::onRender() {
     jet->render(*phongShader.get());
     land->render(*phongShader.get());
 
-    skybox->render(camera->projection, camera->view, glm::vec2((int)getWidth(), (int)getHeight()), effects);
+    skybox->render(camera->projection, camera->view, glm::vec2(System::Graphics::getWidth(), System::Graphics::getHeight()), effects);
 }
