@@ -12,7 +12,8 @@ JetSimulator::JetSimulator() {
     effects = {false}; // initially
 
     phongShader->use();
-	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2(System::Graphics::getWidth(), System::Graphics::getHeight()));
+    auto rect = System::Graphics::getWindowRect();
+	phongShader->setUniform(phongShader->getUniformLocation("uResolution"), glm::vec2(rect.width, rect.height));
     jet->load();
     land->load();
     skybox->load();
@@ -67,5 +68,6 @@ void JetSimulator::onRender() {
     jet->render(*phongShader.get());
     land->render(*phongShader.get());
 
-    skybox->render(camera->projection, camera->view, glm::vec2(System::Graphics::getWidth(), System::Graphics::getHeight()), effects);
+    auto rect = System::Graphics::getWindowRect();
+    skybox->render(camera->projection, camera->view, glm::vec2(rect.width, rect.height), effects);
 }

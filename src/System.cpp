@@ -52,21 +52,15 @@ namespace System {
     };
 
     namespace Graphics {
-        int _width, _height;
-
-        int getWidth() {
-            glfwGetWindowSize(_window, &_width, &_height);
-            return _width;
-        }
-
-        int getHeight() {
-            glfwGetWindowSize(_window, &_width, &_height);
-            return _height;
+        WindowRect _rect;
+        WindowRect getWindowRect() {
+            glfwGetWindowSize(_window, &_rect.width, &_rect.height);
+            return _rect;
         }
 
         float getAspectRatio() {
-            glfwGetWindowSize(_window, &_width, &_height);
-            return (float)_width/_height;
+            glfwGetWindowSize(_window, &_rect.width, &_rect.height);
+            return (float)_rect.width/_rect.height;
         }
 
         inline void _init() {

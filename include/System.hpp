@@ -6,6 +6,7 @@ using namespace std;
 
 struct Scroll { double dx, dy; };
 struct MousePos { double x, y; };
+struct WindowRect { int width, height; };
 
 namespace System {
     namespace Input {
@@ -15,8 +16,7 @@ namespace System {
     }
 
     namespace Graphics {
-        int getWidth();
-        int getHeight();
+        WindowRect getWindowRect();
         float getAspectRatio();
     }
 
