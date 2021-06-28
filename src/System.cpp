@@ -156,13 +156,13 @@ namespace System {
         fatal(string(desc) + string(", Error code = ") + to_string(code));
     }
 
-    inline void _init() {
+    void _init() {
         glfwSetErrorCallback(_errorCallback);
         Graphics::_init();
         _sim = new JetSimulator();
     }
 
-    inline void _mainLoop() {
+    void _mainLoop() {
         float currentFrame,
             lastFrame = glfwGetTime(), 
             acc = 0,
@@ -186,7 +186,7 @@ namespace System {
         }
     }
 
-    inline void _destroy() {
+    void _destroy() {
         delete _sim;
         Graphics::_destroy();
     }
@@ -194,12 +194,4 @@ namespace System {
     void close() {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
     }
-}
-
-int main() {
-    System::_init();
-    System::_mainLoop();
-    System::_destroy();
-
-    return 0;
 }
